@@ -1,0 +1,1 @@
+Protected Mode must be set to the same value (enabled or disabled) for all zones.
