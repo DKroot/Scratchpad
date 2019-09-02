@@ -1,0 +1,43 @@
+-- COUNT(DISTINCT) with NULLs
+WITH data
+AS
+(
+SELECT 'INT' AS account_type FROM DUAL
+UNION ALL
+SELECT 'EXT' AS account_type FROM DUAL
+UNION ALL
+SELECT NULL AS account_type FROM DUAL
+)
+SELECT COUNT(DISTINCT account_type)
+FROM data;
+
+-- NULLs in UNION ALL
+WITH data
+AS
+(
+SELECT 'INT' AS account_type FROM DUAL
+UNION ALL
+SELECT 'EXT' AS account_type FROM DUAL
+UNION ALL
+SELECT NULL AS account_type FROM DUAL
+)
+SELECT *
+FROM data
+WHERE account_type = 'INT' OR account_type IS NULL;
+
+-- Aggregating data with NULLs
+WITH data
+AS
+(
+SELECT 1 AS v FROM DUAL
+UNION ALL
+SELECT 2 AS v FROM DUAL
+UNION ALL
+SELECT NULL AS v FROM DUAL
+)
+SELECT AVG(v)
+FROM data;
+
+-- CASE without ELSE returns NULL
+SELECT CASE WHEN 1 = 2 THEN 'true' END
+FROM DUAL;

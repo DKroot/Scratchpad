@@ -1,0 +1,1 @@
+SELECT (TRUE :: INT) AS true_int, (FALSE :: INT) AS false_int;

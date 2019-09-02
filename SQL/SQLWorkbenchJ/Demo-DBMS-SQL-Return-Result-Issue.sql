@@ -1,0 +1,14 @@
+-- DBMS_SQL.RETURN_RESULT Demo
+DECLARE  
+  cur SYS_REFCURSOR;  
+  q VARCHAR2(32767) := q'[
+    SELECT SYSDATE AS now
+    FROM dual
+  ]'; 
+BEGIN
+  OPEN cur
+  FOR q;
+  
+  DBMS_SQL.RETURN_RESULT(cur);
+END;
+/

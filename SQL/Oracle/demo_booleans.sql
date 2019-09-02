@@ -1,0 +1,40 @@
+SET SERVEROUTPUT ON;
+
+DECLARE 
+  b BOOLEAN := FALSE;
+  n NUMBER := 1;
+  b_s CHAR(1) := CASE WHEN b THEN 'Y' ELSE 'N' END;
+  result VARCHAR2(32767);
+BEGIN 
+  IF NOT b THEN 
+    DBMS_OUTPUT.PUT_LINE ('OK');
+  END IF;
+  
+  DBMS_OUTPUT.PUT_LINE (CASE WHEN b THEN 'PL/SQL: True' ELSE 'PL/SQL: False' END);
+  DBMS_OUTPUT.PUT_LINE (b_s);
+  
+  SELECT CASE WHEN b_s = 'Y' THEN 'SQL: True' ELSE 'SQL: False' END
+  INTO result
+  FROM DUAL;
+
+  DBMS_OUTPUT.PUT_LINE (result);
+END;
+/
+
+DECLARE 
+  n1 NUMBER := NULL;
+  n2 NUMBER := 0;
+  result VARCHAR2(32767);
+BEGIN  
+  SELECT CASE WHEN n1 <> 0 THEN 'Not zero' ELSE 'False' END
+  INTO result
+  FROM DUAL;
+  
+  SELECT CASE WHEN n2 <> 0 THEN 'Not zero' ELSE 'False' END
+  INTO result
+  FROM DUAL;
+  
+  DBMS_OUTPUT.PUT_LINE (result);
+END;
+/
+
