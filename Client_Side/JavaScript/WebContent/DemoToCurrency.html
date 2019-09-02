@@ -1,0 +1,93 @@
+<html>
+<body>
+
+<script language="JavaScript">
+<!-- Hide
+
+function ToCurrency(value, withcents, withcommas, withparentheses) {
+  var validchars = '0123456789+-.()';
+  var curval = ''+value;
+  var dollars;
+  var cents;
+  var comma_pos=0;
+  var result = '';
+  var i;
+  var ch;
+  var zero = withcents ? '0.00' : '0';
+  
+  //Validate
+  for (i=0; i<curval.length; i++) { //remove commas
+    ch=curval.charAt(i);
+    if (ch != ',') {
+      result += ch;
+      if (validchars.indexOf(ch) < 0) {
+        alert('The entry is not a valid number');
+        return zero;
+      }
+    }
+  }
+  if (result=='' || result==0) {
+    return zero;
+  }
+  if (result.charAt(0)=='(' && result.charAt(result.length-1)==')')
+    curval = -parseFloat(result.substring(1,result.length));
+  else  
+    curval = parseFloat(result); //returns 0 instead of NaN on Windows platform
+  if (isNaN(curval) || curval==0) {
+    alert('The entry is not a valid number');
+    return zero;
+  }
+  result=''+curval;
+  if (result.indexOf('E')>0 || result.indexOf('e')>0) { //too big or too small
+    alert('The entry is too big or too small for currency amount');
+    return zero;
+  }
+
+  //Format
+  dollars = Math.floor(Math.abs(curval));
+  if (withcents) {
+    cents = Math.round((Math.abs(curval)-dollars)*100);
+    if (cents==100) {
+      dollars++;
+      cents='00';
+    } else if (cents<10)
+      cents='0'+cents;
+  }
+  if (withcommas) {
+    comma_pos = 3;
+    dollars += '';
+    while (comma_pos < dollars.length) {
+      dollars = dollars.substring(0,dollars.length-comma_pos)+','+dollars.substring(dollars.length-comma_pos, dollars.length+1);
+      comma_pos = comma_pos+4
+    }
+  }  
+  result=dollars;
+  if (withcents) result+='.'+cents;
+  
+  if (curval < 0) result = withparentheses ? '('+result+')' : '-'+result;
+  
+  return result;
+}
+// End Hide -- >
+</script>
+
+<form name="form1">
+Enter an amount to test currency formatting function.<br>
+You may use commas and/or parentheses in your entry.
+<p>
+<input type="text" name="input" size=20>
+<p>
+<input type="button" value="Format" 
+   onClick="with (document.form1) {
+              output.value = ToCurrency(input.value, chkCents.checked, chkCommas.checked, chkParentheses.checked);
+            }
+           ">
+<INPUT type="checkbox" id=checkbox1 name=chkCents>With cents
+<INPUT type="checkbox" id=checkbox1 name=chkCommas>With commas
+<INPUT type="checkbox" id=checkbox1 name=chkParentheses>With parentheses for negative numbers           
+<p>
+<input type="text" name="output" size=20>
+</form>
+
+</body>
+</html>

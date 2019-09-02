@@ -1,0 +1,33 @@
+<states>
+    <state abr="NJ">
+        <name>New Jersey</name>
+        <cities>
+            <city name="Edison" />
+            <city name="Rahway" />
+            <city name="Atlantic City" />
+            <city name="Hoboken" />
+            <city name="Jersey City" />
+            <city name="Newark" />
+            <city name="Trenton" />
+            <city name="Union City" />
+        </cities>
+    </state>
+    <state abr="CA">
+        <name>California</name>
+        <cities>
+            <city name="Anaheim" />
+            <city name="Beverly Hills" />
+            <city name="Elk Grove" />
+            <city name="Fairfield" />
+            <city name="Fremont" />
+            <city name="Indian Wells" />
+            <city name="Long Beach" />
+        </cities>
+    </state>
+    <state abr="ME">
+        <name>Maine</name>
+    </state>
+    <state abr="MA">
+        <name>Massachusetts</name>
+    </state>
+</states>

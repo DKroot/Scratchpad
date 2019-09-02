@@ -1,0 +1,33 @@
+{
+  "compilerOptions": { //alphabetically ordered options
+    // Allow default imports from modules with no default export. This does not affect code emit.
+    "allowSyntheticDefaultImports": true,
+
+    // Enables experimental support for ES decorators.
+    "experimentalDecorators": true,
+
+    // Module code generation: "none", "commonjs", "amd", "system", "umd", "es6" or "es2015".
+    "module": "amd",
+
+    /* There are two possible module resolution strategies: Node and Classic. You can use the
+    --moduleResolution flag to specify the module resolution strategy. If not specified,
+    the default is Classic for --module AMD | System | ES2015 or Node otherwise. */
+    "moduleResolution": "node",
+
+    // Raise error on expressions and declarations with an implied any type.
+    "noImplicitAny": true,
+
+    // TypeScript will issue an error when this is used without an explicit (or inferred) type.
+    "noImplicitThis": true,
+
+    // Generates corresponding .map file(s).
+    "sourceMap": true,
+
+    /* In strict null checking mode, the null and undefined values are not in the domain of every
+    type and are only assignable to themselves and any */
+    "strictNullChecks": true,
+
+    // ES2015 (ES6) output supported via e.g. core-js polyfills
+    "target": "es2015"
+  }
+}

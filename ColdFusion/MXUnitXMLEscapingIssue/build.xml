@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="MXUnit XML Escaping Issue" default="test">
+  <target name="-init">
+    <property name="report.dir" value="build/testreport"
+      description="Directory for generated test report" />
+  </target>
+
+  <target name="-init.test" depends="-init">
+    <property name="server" value="localhost"
+      description="Running tests require build deployed on this ColdFusion server" />
+    <property name="port" value="8500"
+      description="Running tests require build deployed on this ColdFusion server" />
+    <property name="mxunit.context" value="/mxunit"
+      description="MXUnit context. Requires MXUnit server deployment." />
+    <property name="app.component.path" value="MXUnitXMLEscapingIssue"
+      description="Application context name. Requires application deployment at /${app.context.name}" />
+    <property name="app.context" value="/${app.component.path}"
+      description="Application context name. Requires application deployment at /${app.context.name}" />
+
+    <property name="-mxunit.runner" value="${mxunit.context}/runner/HttpAntRunner.cfc"/>
+
+    <taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask"
+      classpath="mxunit-ant-java5.jar" />
+
+    <delete dir="${report.dir}" />
+    <mkdir dir="${report.dir}/xml" />
+  </target>
+
+  <target name="-run.not.authenticated" unless="user">
+    <mxunittask server="${server}" port="${port}"
+      defaultrunner="${-mxunit.runner}"
+      outputdir="${report.dir}/xml"
+      errorproperty="-test.failed"
+      failureproperty="-test.failed"
+      verbose="true"> <!-- haltonerror will preclude XML output -->
+        <directory path="${app.context}" recurse="false"
+          componentPath="${app.component.path}" packageName="MXTests" />
+    </mxunittask>
+  </target>
+
+  <target name="-run.authenticated" if="user">
+    <mxunittask server="${server}" port="${port}"
+      defaultrunner="${-mxunit.runner}"
+      outputdir="${report.dir}/xml"
+      errorproperty="-test.failed"
+      failureproperty="-test.failed"
+      verbose="true"
+      authmethod="ntlm"
+      username="${user}"
+      password="${pwd}">
+        <directory path="${app.context}" recurse="false"
+          componentPath="${app.component.path}" packageName="MXTests" />
+    </mxunittask>
+  </target>
+
+  <target name="test" depends="-init.test, -run.not.authenticated, -run.authenticated"
+      description="Run tests">
+    <fail if="-test.failed" message="Test failed. Run report to see the reason."/>
+  </target>
+
+  <target name="report" depends="-init"
+      description="Produce HTML test report">
+
+    <mkdir dir="${report.dir}/html" />
+    <junitreport todir="${report.dir}/html">
+      <fileset dir="${report.dir}/xml" includes="*.xml" />
+      <report format="frames" todir="${report.dir}/html"/>
+    </junitreport>
+  </target>
+</project>

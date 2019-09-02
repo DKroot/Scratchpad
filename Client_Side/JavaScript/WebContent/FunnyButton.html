@@ -1,0 +1,100 @@
+<!-- This script has been in the http://www.javascripts.com Javascript Public Library! -->
+<!-- Note that though this material may have been in a public depository, certain author copyright restrictions may apply. -->
+
+<HTML>
+
+<HEAD>
+
+<script language="JavaScript">
+<!-- This is the Button with the typewritter text
+
+// 1998 Colby Dillion 
+// dd5458@arkansas.net
+// You may freely use this script as long as you leave the information above intact
+
+var max=0;
+
+function textlist()
+
+{
+
+        max=textlist.arguments.length;
+
+        for (i=0; i<max; i++)
+
+                this[i]=textlist.arguments[i];
+
+}
+
+tl=new textlist
+
+(
+// Change these with your own text, you can add as many as you want
+        "Click Here",
+                
+                "Click Here",
+                
+                "Click Here"
+
+);
+
+var x=0; pos=0;
+
+var l=tl[0].length;
+
+function typebutt() 
+
+{        
+
+        document.form1.typebutt.value=tl[x].substring(0,pos)+"";
+
+        if(pos++==l)
+
+        {
+
+                pos=0;
+
+                setTimeout("typebutt()",1500);
+
+                x++;
+
+                if(x==max)
+
+                        x=0;
+
+                l=tl[x].length;
+
+        } else
+
+                setTimeout("typebutt()",50);
+
+}
+
+// end -->
+</script>
+
+<TITLE>Button with typing text</TITLE>
+
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" LINK="#000000" VLINK="#FF8040" onLoad="typebutt()">
+This script can be used as a submit button or just used as a ticker.<BR>
+Clicking this button will take you to my homepage.<BR>
+<form name="form1" action="http://www.javascripts.com/repository/www.geocities.com/capecanaveral/hangar/8296">
+<input type="submit" name="typebutt" VALUE="Submit">
+<BR>
+</form>
+
+
+
+
+By:  Colby Dillion<BR>
+E-mail:  dd5458@arkansas.net<BR>
+URL:  www.geocities.com/capecanaveral/hangar/8296
+</BODY>
+
+</HTML>
+<!-- Tommy Raven (Min) says Moo. -->
+
+
+

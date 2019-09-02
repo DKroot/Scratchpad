@@ -1,0 +1,37 @@
+<html>
+
+<head>
+  <title>JavaScript regular expression demo</title>
+
+  <script language="JavaScript">
+    function applyregexp() {
+      with(document.forms[0]) {
+        var re = new RegExp(txtRegExp.value, 'gi');
+        txtString.value = txtString.value.replace(re, txtReplace.value);
+      }
+
+      return false;
+    }
+  </script>
+</head>
+
+<body>
+
+  <h1>JavaScript regular expression demo</h1>
+
+  <form method="post">
+    String:
+    <input type="text" name="txtString" value="The quick brown fox jumped over the lazy dog" size="50" maxlength="255">
+    <br>Regular expression:
+    <input type="text" name="txtRegExp" value=" o.+$">
+    <br>
+    <input type="button" value="Replace" onClick="applyregexp()">Replace value:
+    <input type="text" name="txtReplace" value="!!!">
+    <p>
+      <input type="button" value="Get substring (5)" onClick="with (document.forms[0]) txtSub.value = txtString.value.slice(0,5)">Substring value:
+      <input type="text" name="txtSub" value="">
+  </form>
+
+</body>
+
+</html>
