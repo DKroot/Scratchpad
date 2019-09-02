@@ -1,0 +1,58 @@
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.11'
+    id 'java'
+}
+
+// == Configuration ==
+
+description = 'Java Demos'
+defaultTasks('test')
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile(
+            // Ordered from high-level down to low-level
+
+            // CSV Parser and Printer
+            'org.apache.commons:commons-csv:1.0',
+
+            // Generic utilities. Google Guava is preferred over Apache Commons Lang 3.
+            'com.google.guava:guava:18.0',
+
+            // Handy JavaBeans helpers
+            'commons-beanutils:commons-beanutils:1.9.3',
+
+            // Logging API: SLF4J
+            'org.slf4j:slf4j-api:1.7.7'
+    )
+
+    testCompile(
+            // Extends "compile" + "providedCompile" configurations
+
+            // JUnit: Enough said
+            'junit:junit:4.11'
+    )
+
+    runtime(
+            // Extends compile + providedCompile. Libraries which are used only transitively at runtime:
+
+            // Logging Implementation: LogBack
+            'ch.qos.logback:logback-classic:1.1.2'
+    )
+}
+
+test {
+    testLogging {
+        // set options for log level LIFECYCLE
+        events "started", "passed", "skipped", "failed"
+        // make the standard output streams visible at console when running tests
+        showStandardStreams = true
+    }
+
+    // configure java.util.logging for the test JVM(s)
+    systemProperty 'java.util.logging.config.file', 'build/resources/test/logging.properties'
+}

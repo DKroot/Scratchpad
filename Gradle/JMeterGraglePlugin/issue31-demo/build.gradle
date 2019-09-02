@@ -1,0 +1,322 @@
+/*
+ * iRePORT Main Project - Build Script
+ * Subprojects are defined in settings.gradle
+ * msbuild. unitTest, featureTest tasks are Windows-only
+ *
+ * Environment-specific variables and project properties:
+ *
+ *  -Penv={target env. name}
+ *      Target environments: Local, Dev, Stage. Optional, defaults to Dev.
+ *  -PwebSiteHome={Deployment site directory}
+ *      Optional, defaults to the default IIS site directory: 'C:/inetpub/wwwroot'
+ *  -PadoConnectionWithPassword={ADO.NET connection string with DB user credentials}
+ *      Optional, defaults to the one in Web.config
+ *  -Pdb={DB JDBC Connection String}
+ *      Optional, defaults to Dev DB
+ *  -PdbUser={DB user}
+ *      Optional, defaults to Dev DB
+ *  -PdbPwd={DB user password}
+ *      Optional, defaults to Dev DB
+ *  -Puser={iRePORT user}
+ *      Optional, defaults to ainsztea in the JMeter test plan
+ *  -Ppassword={iRePORT user password}
+ *      Optional, defaults to test password in the JMeter test plan
+ *  -PperfTestThreads={# of threads to use in the JMeter test plan}
+ *      Optional, defaults to 1
+ *  -PperfTestLoops={# of times to loop through the JMeter test plan}
+ *      Optional, defaults to 1
+ */
+
+// ## Configuration ##
+
+// msbuild plug-in must be specified in a classic way in order to apply plug-in conditionally.
+// The JDBC Driver used by Liquibase is specified as a build-level dependency.
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url "https://code.lds.org/nexus/content/groups/main-repo/"
+        }
+        maven {
+            url 'https://dl.bintray.com/jmeter-gradle-plugin/jmeter'
+        }
+    }
+
+    dependencies {
+        classpath "com.ullink.gradle:gradle-msbuild-plugin:2.10"
+
+        // ### Liquibase dependencies for Oracle ###
+        classpath "com.oracle:ojdbc7:12.1.0.2"
+        classpath "org.liquibase.ext:liquibase-oracle:3.2"
+
+        classpath "net.foragerr.jmeter:jmeter-gradle-plugin:0.6.3-2.13"
+        //classpath "net.foragerr.jmeter:jmeter-gradle-plugin:latest.release"
+    }
+}
+
+plugins { id "org.liquibase.gradle" version "1.1.1" } // Liquibase 3.3.5
+
+//apply plugin: 'java'
+apply plugin: 'net.foragerr.jmeter'
+
+description = 'iRePORT Application'
+// project name is read-only: defaults to project dir. name, hence might vary. Don't rely on project name in the build!
+
+// ### Project Properties ###
+
+//def release = hasProperty("release") ? release : "10.0"
+def webSiteHome = hasProperty("webSiteHome") ? webSiteHome : "C:/inetpub/wwwroot"
+def env = hasProperty("env") ? env : "Dev"
+
+// #### DB properties with defaults for Dev DB ####
+
+def db = hasProperty("db") ? db : "***"
+def dbUser = hasProperty("dbUser") ? dbUser : "***"
+def dbPwd = hasProperty("dbPwd") ? dbPwd : "***"
+
+// #### Performance test plan properties ####
+
+def jmeterProperties = []
+if (hasProperty("env")) {
+    jmeterProperties.push("env=$env")
+}
+if (hasProperty("user")) {
+    jmeterProperties.push("user=$user")
+}
+if (hasProperty("password")) {
+    jmeterProperties.push("password=$password")
+}
+if (hasProperty("perfTestThreads")) {
+    jmeterProperties.push("threads=$perfTestThreads")
+}
+if (hasProperty("perfTestLoops")) {
+    jmeterProperties.push("loops=$perfTestLoops")
+}
+
+//println "JMeter properties: [${jmeterProperties.join(',')}]"
+
+// /Project Properties
+
+println "Project ${description} from ${projectDir.path}"
+println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir}). Gradle project path = '${path}'."
+if (System.properties.'sun.java.command'.contains('launcher.daemon')) {
+    println "Executed by Gradle Daemon"
+}
+
+// ## Configuration ##
+
+def os = System.getProperty("os.name").toLowerCase()
+//def systemEnv = System.getenv() // a Java Map of env. vars
+
+def logDir = new File("$webSiteHome/logs")
+
+if (os.contains("windows")) {
+    apply plugin: 'com.ullink.msbuild'
+
+    def vsProject = 'iReport.Service'
+
+    msbuild { // Configure msbuild task
+        projectFile = file("src/main/asp.net/NIHiReport/iReport.Service/${vsProject}.csproj") // relative to the project root
+
+        // MsBuild project name (/p:Project=...)
+        projectName = 'NIHiReport'
+
+        // Verbosity (/v:detailed, by default uses gradle logging level)
+        //verbosity = 'detailed'
+
+        // targets to execute (/t:Clean;Rebuild, no default)
+        targets = ['Clean', 'Rebuild']
+
+        // == Below values override settings from the project file ==
+
+        // overrides project OutputPath
+        destinationDir = 'build/msbuild/bin'
+
+        // overrides project IntermediaryOutputPath
+        intermediateDir = 'build/msbuild/obj'
+
+        // Generates XML documentation file (from javadoc through custom DocLet)
+        generateDoc = false
+
+        // Build properties (/p:SomeProperty=Value):
+        parameters.DeployOnBuild = 'true'
+        parameters.PublishProfile = 'local_ireport_publish' // Publishes to build/app/
+        parameters.VisualStudioVersion = '12.0' // VS 2013
+
+        // Other msbuild options can be set:
+        // loggerAssembly, debugType, optimize, debugSymbols, configuration, platform, defineConstants ...
+    }
+}
+
+liquibase {
+    activities {
+        def liquibaseScript ="sql/Release-Migration/Release-Delta.xml"
+        if (file(liquibaseScript).exists()) {
+            main {
+                changeLogFile liquibaseScript
+                url db
+                username dbUser
+                password dbPwd
+                //driver 'com.microsoft.sqlserver.jdbc.SQLServerDriver'
+                contexts env
+                // changeLogParameters([ myToken: 'myvalue', second: 'secondValue'])
+
+                // Failed SQL is logged on DEBUG level.
+                logLevel 'debug'
+            }
+        }
+    }
+}
+
+jmeter {
+    //workDir // default: $buildDir/jmeter
+
+    //TODO report: this fails
+    //reportDir = file("build/perfTests") // default: $buildDir/jmeter-report
+
+    // JMeter log file.
+    //jmLog // default: $reportDir/jmeter.log
+
+    //testFileDir // default: src/test/jmeter
+
+    // Produce simple table HTML report in jmReport.
+    enableReports = true // default: false
+
+    // Produce extended HTML reports in jmReport.
+    enableExtendedReports = false // default: true
+
+    // JMeter version
+    //jmVersion // default: from jmeter-plugin.properties
+
+    // Arbitrary JMeter properties passed to JMeter via -J.
+    jmUserProperties = jmeterProperties
+
+    // Suppress using timestamp in the result in order to stabilize filename.
+    resultFilenameTimestamp = "none"
+
+    ignoreErrors = false
+}
+
+// ## Custom tasks ##
+
+if (os.contains("windows")) {
+  task unitTest(dependsOn: ':src:main:asp.net:NIHiReport:Nete.Ireport.UnitTests:nunit', description:'Run unit tests')
+
+  task featureTest(dependsOn: ':src:main:asp.net:NIHiReport:Nete.Ireport.EndToEndTests:nunit',
+      description:'Run feature tests on a deployed application')
+}
+
+task perfTest(dependsOn: ['jmClean', 'jmRun'],
+    description:'Run performance tests on a deployed application. ' +
+    'Use --no-daemon to see progress. Use --info to see all JMeter command-line arguments.')
+
+task configure(description:'Configure application for a particular environment') << {
+    if (project.hasProperty('adoConnectionWithPassword')) {
+        // If property is not supplied, assume everything needed is already in property file(s)
+
+        println("Configuring application for this environment ...")
+
+        // Puppet requires forward slashes only as path separators:
+        // https://docs.puppetlabs.com/references/latest/type.html#file-attribute-path
+        def configFile = "${projectDir.getPath().replace('\\', '/')}/build/app/Web.config"
+        println("Checking ${configFile} ...")
+
+        def result = exec {
+            // == Pass Puppet facts ==
+            environment["FACTER_CONFIG_FILE"] = configFile
+
+            /*environment["FACTER_ADO_PROVIDER"] = project.hasProperty('adoProvider') ?
+                project['adoProvider'] : 'Oracle.ManagedDataAccess.Client';*/
+            environment["FACTER_ADO_PROVIDER"] = 'Oracle.ManagedDataAccess.Client'
+            environment["FACTER_ADO_CONNECTION"] = project['adoConnectionWithPassword']
+
+            // TBD Fail the build if Puppet is not installed
+            // TBD Puppet launcher requires Command Extensions and Delayed Expansion options to be enabled
+            commandLine 'cmd'
+            args '/e:on', '/v:on', '/c', 'puppet.bat'
+            args 'apply', 'configure.pp', '--detailed-exitcodes'
+            /* An exit code of '2' means there were changes, an exit code of '4' means there were failures during
+             * the transaction, and an exit code of '6' means there were both changes and failures.
+             * If --detailed-exitcodes is omitted Puppet always return 0 (which is completely ridiculous).
+             */
+            ignoreExitValue = true
+        }
+
+        assert (result.exitValue < 4) : 'Puppet configure failed'
+    }
+}
+
+task hotDeploy(dependsOn: configure, description:'Sync web app content to the website') << {
+    println "Deploying from ${projectDir.getPath().replace('\\', '/')}/build/app/ to the IIS website: ${webSiteHome}"
+    // Using Ant sync to copy only changed files and preserve timestamps
+    ant.sync(toDir: "${webSiteHome}/", verbose: 'true') {
+        fileset(dir: "build/app/", excludes: "logs/")
+    }
+    /* captureStandardOutput does not affect Ant logger bridging, only stdout from Ant.
+     * Run on info level (-i) to see files copied.  See
+     * http://gradle.1045684.n5.nabble.com/How-to-log-ant-stdout-with-gradle-td1433435.html
+     */
+
+     if (!logDir.isDirectory()) {
+        logDir.mkdirs()
+     }
+}
+
+task vars(description:'Print properties and settings') << {
+    /*
+    println("== Environment variables ==\n")
+    for (var in env.sort()) {
+        println "${var.key}=${var.value}"
+    }
+    */
+
+    println("\n## Project properties ##\n")
+    for (var in project.properties.sort()) {
+        if (var.key != "properties") {
+            def value = var.key.toLowerCase().contains("password") ? "*****" : var.value
+            println "${var.key}=${value}"
+        }
+    }
+
+    println("\n## Puppet facts ##\n")
+    exec {
+        // == Pass Puppet facts ==
+        environment["FACTER_PROJECT_DIR"] = projectDir.getPath().replace('\\', '/')
+        if (project.hasProperty('connectionString')) {
+          environment["FACTER_DB_CONNECTION"] = project["connectionString"]
+        }
+
+        if (os.contains("windows")) {
+            // TBD Facter launcher requires Command Extensions and Delayed Expansion options to be enabled
+            commandLine 'cmd'
+            args '/e:on', '/v:on', '/c', 'facter.bat'
+        } else {
+            commandLine 'facter'
+        }
+    }
+
+    println("\n## Puppet configuration settings ##\n")
+    exec {
+        if (os.contains("windows")) {
+            // TBD Facter launcher requires Command Extensions and Delayed Expansion options to be enabled
+            commandLine 'cmd'
+            args '/e:on', '/v:on', '/c', 'puppet.bat'
+        } else {
+            commandLine 'puppet'
+        }
+        args 'config', 'print'
+    }
+}
+
+// ## Build cycle ##
+
+// Insert custom tasks into the build cycle
+if (os.contains("windows")) {
+    assemble.dependsOn msbuild
+    check.dependsOn unitTest
+    build.dependsOn hotDeploy
+}
+
+defaultTasks 'build'

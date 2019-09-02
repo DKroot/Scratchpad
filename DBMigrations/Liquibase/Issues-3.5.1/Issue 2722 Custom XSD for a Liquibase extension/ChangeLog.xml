@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ora="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
+  http://www.liquibase.org/xml/ns/dbchangelog-ext
+  https://raw.githubusercontent.com/liquibase/liquibase-oracle/master/src/main/java/liquibase/ext/ora/xml/dbchangelog-ext.xsd">
+
+  <changeSet author="DK" id="17.0-Obsolete-Synonyms" runOnChange="true" context="Dev,Prod">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="1"><![CDATA[
+      SELECT COUNT(1) FROM user_objects
+      WHERE object_type = 'SYNONYM' AND object_name = 'ICD_ASSIGNS'
+      ]]></sqlCheck>
+    </preConditions>
+
+    <ora:dropSynonym synonymName="ICD_ASSIGNS" />
+  </changeSet>
+</databaseChangeLog>

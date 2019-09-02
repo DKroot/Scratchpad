@@ -1,0 +1,4 @@
+CREATE OR REPLACE TYPE korobskd.string_list
+AS
+TABLE OF VARCHAR2(32767)
+/

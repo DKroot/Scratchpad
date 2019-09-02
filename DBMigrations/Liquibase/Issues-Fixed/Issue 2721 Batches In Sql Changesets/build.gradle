@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://code.lds.org/nexus/content/groups/main-repo/" } // Oracle JDBC driver
+    }
+
+    dependencies {
+        classpath('org.liquibase:liquibase-gradle-plugin:1.2.1') {
+            exclude group: "org.liquibase", module: "liquibase-core"
+        }
+        classpath "org.liquibase:liquibase-core:3.5.1"
+        // ### Liquibase dependencies for Oracle ###
+        classpath "com.oracle:ojdbc7:12.1.0.2"
+        classpath "org.liquibase.ext:liquibase-oracle:3.2"
+    }
+}
+
+apply plugin: 'org.liquibase.gradle'
+
+/*
+plugins {
+    //id "org.liquibase.gradle" version "1.1.1" // Liquibase 3.3.5
+    id "org.liquibase.gradle" version "1.2.1" // Liquibase 3.4.2
+}
+*/
+
+// ### Project Properties ###
+
+def env = project.hasProperty("env") ? env : "Dev"
+
+// #### DB properties with defaults for Dev DB ####
+
+def db = project.hasProperty("db") ? db : "jdbc:oracle:thin:@//flt-scan-irdb-stg.era.nih.gov:1562/irdbstg"
+def dbUser = project.hasProperty("dbUser") ? dbUser : "link_od_ireport"
+def dbPwd = project.hasProperty("dbPwd") ? dbPwd : "er-iht-wmu6-luye"
+
+liquibase {
+    activities {
+        def liquibaseScript = 'Batches.sql'
+        if (file(liquibaseScript).exists()) {
+            main {
+                changeLogFile liquibaseScript
+                url db
+                username dbUser
+                password dbPwd
+                contexts env
+
+                // Failed SQL is logged on DEBUG level.
+                logLevel 'debug'
+            }
+        }
+    }
+}

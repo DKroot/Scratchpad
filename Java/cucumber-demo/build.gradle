@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group 'org.houseofsoft'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'io.cucumber:gherkin:5.1.0'
+    testCompile 'io.cucumber:cucumber-core:4.2.2'
+    testCompile 'io.cucumber:cucumber-java:4.2.2'
+    testCompile 'io.cucumber:cucumber-expressions:6.2.0'
+
+    testRuntime 'io.cucumber:cucumber-html:0.2.7'
+}

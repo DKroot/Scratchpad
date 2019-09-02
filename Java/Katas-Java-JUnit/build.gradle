@@ -1,0 +1,65 @@
+apply plugin: "java"
+
+description = 'Katas in Java and JUnit'
+
+// == Configuration ==
+
+defaultTasks 'test'
+
+def env = System.getenv() // a Java Map of env. vars
+def artifactoryServer = (env.ARTIFACTORY_SERVER != null) ? env.ARTIFACTORY_SERVER : 'localhost:8081'
+// default to the local server
+
+println "${description} build run by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
+println "Artifactory server (required for uncached dependencies only): ${artifactoryServer}"
+
+repositories {
+    maven {
+        // Artifactory repository: required unless all dependencies have been already cached by Gradle 
+        name 'Public Internet repositories through Artifactory'
+        url "http://${artifactoryServer}/artifactory/repo"
+    }
+}
+
+dependencies {
+    compile (
+        'com.google.guava:guava:15.0',
+        'org.apache.commons:commons-lang3:3.1', // Guava's Strings does not support centering        
+        'ch.qos.logback:logback-classic:1.0.13', // technically we only need SLF4J API to compile        
+        'org.projectlombok:lombok:1.12.2'
+    )
+    
+    runtime ( // Extends compile        
+    )
+
+    testCompile ( // Extends compile + providedCompile configurations
+        'junit:junit:4.11'
+    )
+
+    testRuntime ( // Extends runtime + testCompile 
+    )
+}
+
+/*
+If we exclude Lombok here, it is removed from Gradle IDE container 
+
+configurations { // could not find a better way to exclude
+    runtime.exclude group: 'org.projectlombok'
+}
+*/
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+test {
+    testLogging { // set options for log level LIFECYCLE        
+        events "started","passed","skipped","failed"
+        // make the standard output streams visible at console when running tests
+        showStandardStreams = true
+        // show stack traces of exceptions that occur during test execution
+        exceptionFormat "full"        
+    }
+}
+
+// == Custom tasks ==
+
+task printEnv(description:'Print ennvironment') << { println "Environment: ${env}" }

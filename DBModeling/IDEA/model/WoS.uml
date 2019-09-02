@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_abstracts</OriginalElement>
+  <nodes>
+    <node x="338.0" y="382.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_abstracts</node>
+    <node x="156.0" y="456.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_grants</node>
+    <node x="57.0" y="94.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_patent_mapping</node>
+    <node x="304.0" y="456.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_titles</node>
+    <node x="0.0" y="168.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_references</node>
+    <node x="283.0" y="168.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_publications</node>
+    <node x="171.0" y="382.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_keywords</node>
+    <node x="0.0" y="382.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_addresses</node>
+    <node x="0.0" y="456.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_authors</node>
+    <node x="0.0" y="286.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_pmid_mapping</node>
+    <node x="225.0" y="286.0">2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_document_identifiers</node>
+  </nodes>
+  <notes>
+    <note x="0.0" y="0.0">
+      <node>2f8fa5b0-f340-4603-9438-472efd3c3ec4.TABLE:pardi.public.wos_patent_mapping</node>
+      <value>Ancillary table\nUpdated semi-annually on average</value>
+      <edge>
+        <point x="0.0" y="-14.5" />
+        <point x="0.0" y="22.0" />
+      </edge>
+    </note>
+  </notes>
+  <edges />
+  <settings layout="Hierarchic Group" zoom="0.7626353790613718" x="707.7171597633137" y="-540.9207100591716" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Key columns</Category>
+  </Categories>
+</Diagram>
+

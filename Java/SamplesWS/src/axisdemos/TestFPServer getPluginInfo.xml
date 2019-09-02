@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://schemas.microsoft.com/clr/nsassem/FP.Server/FP%2C%20Version%3D1.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull" xmlns:types="http://schemas.microsoft.com/clr/nsassem/FP.Server/FP%2C%20Version%3D1.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull/encodedTypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <q1:getPluginInfo xmlns:q1="http://functionpro.com/server.request">
+      <pluginID xsi:type="xsd:string">FP::Tracer</pluginID>
+    </q1:getPluginInfo>
+  </soap:Body>
+</soap:Envelope>

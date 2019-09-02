@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ivy-module version="1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
+  <info organisation="DK" module="samplesj2ee"/>
+  <configurations>
+    <conf name="compile"/>
+    <conf name="ide" extends="compile"/>
+  </configurations>
+  <dependencies defaultconf="compile->default;ide->ide(default)">
+    <dependency org="apache" name="commons-collections" rev="latest.integration"/>
+    <dependency org="oracle" name="oc4j" rev="10.1.2"/>
+    <dependency org="junit" name="junit" rev="3.+"/>
+  </dependencies>
+</ivy-module>

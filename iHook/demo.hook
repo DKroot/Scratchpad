@@ -1,0 +1,31 @@
+#! /bin/bash
+echo %HIDETIMER
+echo %WINDOWSIZE 700 250
+echo %CANCEL ENABLE
+echo %OPENDRAWER
+
+echo %TITLE Parameters: $*. First parameter\'s prefix = ${1:0:4}
+
+out() {
+ echo stdout output 1
+ echo stderr output 1 >&2
+ echo stdout output 2
+ echo stderr output 2 >&2
+ echo demo of %char output
+}
+
+out
+
+integer timer=0 duration=10 left percent_complete
+while (( timer <= duration )); do
+  let left=duration-timer
+  let percent_complete=100*timer/duration
+  echo Completed: $percent_complete %
+  echo "%${percent_complete} Exiting in $left seconds"
+  sleep 1
+  let timer+=1
+
+done
+
+echo %100
+exit 0

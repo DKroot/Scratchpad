@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="yes"?>
+<fp:XI version="1.015" xmlns:fp="http://functionpro.com/schema/xi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://functionpro.com/schema/xi
+XI.xsd">
+<fp:domain name="learn/reservation" version="1.04">
+	<fp:header>
+		<fp:alias id="fp" name="base"/>
+	</fp:header>
+  <fp:artifacts>
+    <fp:document name="EducationEvent" id="learn/reservation:EducationEvent"/>
+    <fp:document name="ParticipantID" id="learn/reservation:ParticipantID"/>
+    <fp:document name="EventSchedule" id="learn/reservation:EventSchedule">
+      <fp:field name="Evnt" type="learn/reservation:EducationEvent"/>
+      <fp:field name="Seats" type="learn/reservation:enumSeats"/>
+      <fp:field name="Status" type="learn/reservation:enumStatus"/>
+      <fp:field name="StartDate" type="event"/>
+      <fp:function name="Attend">
+        <fp:parameters>
+          <fp:param type="learn/reservation:ParticipantID" name="ID"/>
+        </fp:parameters>
+        <fp:script/>
+      </fp:function>
+    </fp:document>
+    <fp:variant name="enumSeats" id="learn/reservation:enumSeats">
+      <fp:member name="Available"/>
+      <fp:member name="NoMore"/>
+    </fp:variant>
+    <fp:variant name="enumStatus" id="learn/reservation:enumStatus">
+      <fp:member name="Draft"/>
+      <fp:member name="Active"/>
+      <fp:member name="Cancelled"/>
+      <fp:member name="Passed"/>
+    </fp:variant>
+  </fp:artifacts>
+  <fp:processes/>
+</fp:domain>
+</fp:XI>

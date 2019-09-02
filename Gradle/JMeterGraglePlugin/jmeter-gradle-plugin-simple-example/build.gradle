@@ -1,0 +1,37 @@
+//plugins {
+//	id "net.foragerr.jmeter" version "0.1.1-2.13"
+//}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'net.foragerr.jmeter'
+
+sourceCompatibility = 1.6
+version = '1.0'
+
+buildscript {
+	repositories {
+		mavenCentral()
+		maven {
+      url 'https://dl.bintray.com/jmeter-gradle-plugin/jmeter'
+    }
+	}
+
+	dependencies {
+		classpath "net.foragerr.jmeter:jmeter-gradle-plugin:latest.release"
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+	testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+jmeter {
+	enableReports = true
+	enableExtendedReports = true
+}

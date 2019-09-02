@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <!-- 
+        Some useful patterns (see docs for more details):
+        
+        %msg - message
+        %level - level
+        %highlight(%level) - ANSI-highlighted level
+        %logger - logger
+        %logger{length} - abbreviated logger
+        %date - date and time in ISO 8601 format
+        %date{HH:mm:ss.SSS} - time with milliseconds
+        %relative - number of milliseconds elapsed since the start of the application
+        %thread - thread
+        %xException{depth} - exception stack trace up to depth number of lines, including class packaging info
+        %rootException{depth} - exception stack trace, root cause first, including class packaging info
+        %n - platform-dependent line separator
+        {} - use empty options to separate conversion words from the following literal letters   
+      -->
+      <pattern>%msg &lt;&lt;%level @%relative{}ms %logger{30}&gt;&gt;%n%rootException{50}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- == Target code == -->
+  
+  <logger name="gov" level="DEBUG" />
+  <logger name="com.nete" level="DEBUG" />  
+  <logger name="org.houseofsoft" level="DEBUG" />
+
+  <!-- == Useful output from libraries == -->
+  
+  <!-- Hibernate: Show generated SQL -->
+  <logger name="org.hibernate.SQL" level="DEBUG" />
+  
+  <!-- Hibernate: Show bound parameters --> 
+  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" /> 
+  
+  <!-- Hibernate: Show all read values --> 
+  <!-- logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" /-->
+  
+  <!-- jdbcLogDriver: Show all details -->
+  <logger name="net.rkbloom.logdriver" level="DEBUG" />
+
+  <root level="INFO">
+    <appender-ref ref="Console" />
+  </root>
+</configuration>

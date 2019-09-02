@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+  <!--<changeSet author="DK" id="update_ned_masked_data_formats" runOnChange="true">
+    <sql><![CDATA[
+      ALTER TABLE ned_masked_data_formats RENAME COLUMN pattern TO masking_pattern;
+
+      INSERT INTO ned_masked_data_formats (format_name, masking_pattern, description)
+      VALUES ('FORMATTED_SSN', '{\d*3}-{\d*2}-{\d*4}', 'SSN separated by dashes');
+    ]]></sql>
+    <rollback>
+      <sql><![CDATA[
+        ALTER TABLE ned_masked_data_formats RENAME COLUMN masking_pattern TO pattern;
+
+        DELETE FROM ned_masked_data_formats
+        WHERE format_name = 'FORMATTED_SSN';
+      ]]></sql>
+    </rollback>
+  </changeSet>-->
+
+  <changeSet author="DK" id="rename_ned_masked_data_formats_pattern" runOnChange="true">
+    <sql><![CDATA[
+      ALTER TABLE ned_masked_data_formats RENAME COLUMN pattern TO masking_pattern;
+    ]]></sql>
+    <rollback>
+      <sql><![CDATA[
+        ALTER TABLE ned_masked_data_formats RENAME COLUMN masking_pattern TO pattern;
+      ]]></sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet author="DK" id="update_ned_masked_data_formats" runOnChange="true">
+    <sql><![CDATA[
+      INSERT INTO ned_masked_data_formats (format_name, masking_pattern, description)
+      VALUES ('FORMATTED_SSN', '{\d*3}-{\d*2}-{\d*4}', 'SSN separated by dashes');
+    ]]></sql>
+    <rollback>
+      <sql><![CDATA[
+        DELETE FROM ned_masked_data_formats
+        WHERE format_name = 'FORMATTED_SSN';
+      ]]></sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet author="DK" id="ned_data_mask_pkg-1.0" runOnChange="true">
+    <sqlFile path="../src/ned_data_mask_pkg.sql" relativeToChangelogFile="true" endDelimiter="\n/\s*(\n|$)" />
+    <rollback>
+      <sqlFile path="../tags/v0.9/src/ned_data_mask_pkg.sql" relativeToChangelogFile="true" endDelimiter="\n/\s*(\n|$)" />
+    </rollback>
+  </changeSet>
+</databaseChangeLog>
