@@ -31,14 +31,12 @@ DO $block$
   BEGIN
     CALL ins_tx_default_scope('foo');
     CALL ins_tx_default_scope('bar');
-    CALL ins_tx_default_scope('baz');
   END $block$;
 
 DO $block$
   BEGIN
+    CALL ins_tx_default_scope('baz');
     CALL ins_tx_default_scope('qux');
-    CALL ins_tx_default_scope('quux');
-    CALL ins_tx_default_scope('quuz');
   END $block$;
 
 DROP PROCEDURE IF EXISTS ins_tx_with_commits(TEXT);
@@ -63,11 +61,34 @@ END $block$;
 
 DO $block$
   BEGIN
-    CALL ins_tx_with_commits('corge');
-    CALL ins_tx_with_commits('grault');
---     CALL ins_tx_with_commits('garply');
+    CALL ins_tx_with_commits('quux');
+    CALL ins_tx_with_commits('quuz');
   END $block$;
 
+-- [2D000] ERROR: invalid transaction termination
+/*DO $block$
+  BEGIN
+    CALL ins_tx_with_commits('corge');
+    CALL ins_tx_with_commits('grault');
+  EXCEPTION
+    WHEN OTHERS THEN --
+      RAISE NOTICE E'Processing FAILED';
+      RAISE;
+  END $block$;*/
+
+-- [2D000] ERROR: invalid transaction termination
+/*DO $outer_block$
+  BEGIN
+    DO $block$
+      BEGIN
+        CALL ins_tx_with_commits('corge');
+        CALL ins_tx_with_commits('grault');
+      END $block$;
+  EXCEPTION
+    WHEN OTHERS THEN --
+      RAISE NOTICE E'Processing FAILED';
+      RAISE;
+  END $outer_block$;*/
 
 DROP PROCEDURE IF EXISTS ins_tx_with_commits_and_exception_block(TEXT);
 CREATE PROCEDURE ins_tx_with_commits_and_exception_block(a_key TEXT)
@@ -87,13 +108,14 @@ BEGIN
   INSERT INTO tmp_demo_transactions(key, tx_id)
   SELECT a_key || ',' || a_key, txid_current();
   COMMIT;
-EXCEPTION WHEN OTHERS THEN
-  RAISE WARNING 'Exception occurred';
+EXCEPTION
+  WHEN OTHERS THEN RAISE WARNING 'Exception occurred';
   RAISE;
 END $block$;
 
-DO $block$
+-- [2D000] ERROR: cannot commit while a subtransaction is active
+/*DO $block$
   BEGIN
     CALL ins_tx_with_commits_and_exception_block('waldo');
     CALL ins_tx_with_commits_and_exception_block('fred');
-  END $block$;
+  END $block$;*/
