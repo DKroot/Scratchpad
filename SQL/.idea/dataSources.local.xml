@@ -16,6 +16,7 @@
               <name qname="foreign_irdb_spires" />
               <name qname="production" />
               <name qname="public" />
+              <name qname="korobskd" />
             </node>
           </node>
         </introspection-scope>
