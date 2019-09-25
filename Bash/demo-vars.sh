@@ -1,4 +1,4 @@
-#!/usr/bin/env stdbuf -o L -e L bash
+#!/usr/bin/env bash
 set -e
 set -o pipefail
 
@@ -12,7 +12,9 @@ set -o pipefail
 #   Valid: $0 "param 1 with a space" --param="value 2 with a space"
 #   Invalid: $0 -x
 
-echo -e "## Parameters ##"
+echo "PATH=$PATH"
+
+echo -e "\n## Parameters ##"
 echo "Number of parameters = $#"
 echo "Script = $0"
 echo "Parameter 1 = $1"
