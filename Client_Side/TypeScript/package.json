@@ -1,0 +1,15 @@
+{
+  "name": "typescript_scratchpad",
+  "main": "",
+  "repository": "https://citbasscm.nih.gov/svn/itas/project2/java/",
+  "scripts": {
+    "tsc": "tsc",
+    "tslint": "tslint"
+  },
+  "author": "Dmitriy 'DK' Korobskiy",
+  "devDependencies": {
+    "ts-node": "^3.2.0",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
+  }
+}

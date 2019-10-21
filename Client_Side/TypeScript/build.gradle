@@ -1,0 +1,117 @@
+/*
+ * Run: > gradlew [task] [task] ... [option] ...
+ *
+ * Changes below are auto-imported into the IntelliJ IDEA project with the following exceptions:
+ * 1. Gradle is using `build/` output directory while the auto-imported IDEA modules use `out/`.
+ *
+ * Pre-requisites:
+ *
+ *  Java 12+
+ *  Git CLI (e.g. Git for Windows)
+ *
+ * TypeScript tasks:
+ *
+ *  compileTypeScript (cTS) compile TypeScript code (-> npmInstall)
+ *  npm_run_tslint (n_r_t)  lint TypeScript sources
+ *
+ * npm tasks:
+ *
+ *  npmInstall (nI)         download project's Node.js and all npm packages (-> npmSetup, nodeSetup)
+ *  npm_ls                  show project's npm package tree
+ *  npm_{arg}_{arg}_...     arbitrary project's npm CLI pattern invocation
+ *
+ *
+ * Other tasks:
+ *
+ *  vars (v)                show environment variables and JVM System Properties
+ *  properties (prop)       show project properties
+ *  dependencies (depe)     show dependency trees (these are also available in build scans)
+ */
+
+plugins {
+
+    //region Client-side stack
+    id 'de.richsource.gradle.plugins.typescript' version '1.8.0'
+
+    id 'com.moowork.node' version '1.3.1'
+    //endregion
+
+    // SonarQube
+    id "org.sonarqube" version "2.7"
+}
+
+repositories {
+    mavenCentral()
+}
+
+description = "TypeScript Scratchpad"
+//def os = System.getProperty('os.name').toLowerCase()
+
+println description
+println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
+//def env = project.hasProperty("env") ? env : "Local"
+
+// Node.js configuration
+node {
+    // Version of node to use.
+    version = '10.15.3'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = true
+}
+
+//region Configure the TypeScript compile task
+import com.moowork.gradle.node.NodeExtension
+import com.moowork.gradle.node.variant.VariantBuilder
+
+String nodeExecutable() {
+    NodeExtension nodeExt = NodeExtension.get(project)
+    return new VariantBuilder(nodeExt).build().nodeExec
+}
+
+compileTypeScript {
+    compilerExecutable "${nodeExecutable()} node_modules/typescript/lib/tsc.js"
+
+    // Use ./tsconfig.json to configure TypeScript compiler
+    // TBD file('.') ?
+    projectFile = new File('.')
+
+    // TBD file("${project.buildDir}/resources/main/static/components") ?
+    outputDir = new File("${project.buildDir}/resources/main/static/components")
+
+    dependsOn 'npmInstall'
+}
+//processResources.dependsOn compileTypeScript
+//endregion
+
+npm_run_tslint {
+    args = ['src/**/*.ts']
+}
+//check.dependsOn npm_run_tslint
+
+task configureNpmRegistry(type: NpmTask) {
+    args = ['config', 'set', 'registry', 'http://registry.npmjs.org/']
+}
+/* This is required in order to avoid a certificate error. More info:
+    https://stackoverflow.com/questions/45884752/npm-err-code-unable-to-get-issuer-cert-locally */
+npmInstall.dependsOn configureNpmRegistry
+
+task vars() {
+    group 'Help'
+    description 'Print environment variables and JVM System Properties'
+    doLast {
+        def systemEnv = System.getenv() // a Java Map of env. vars
+        def systemProp = System.properties // a Java Map of system properties
+
+        println("== Environment variables ==\n")
+        for (var in systemEnv.sort()) {
+            println "${var.key}=${var.value}"
+        }
+
+        println("\n== JVM System Properties ==\n")
+        for (var in systemProp.sort()) {
+            println "${var.key}=${var.value}"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TypeScript file" type="NodeJSConfigurationType" application-parameters="-P $ProjectFileDir$ $FilePath$" path-to-js-file="node_modules/ts-node/dist/bin.js" working-dir="$PROJECT_DIR$">
+    <method v="2" />
+  </configuration>
+</component>

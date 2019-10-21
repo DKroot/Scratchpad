@@ -1,5 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run scratchpad script" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" path-to-js-file="/usr/local/bin/ts-node" application-parameters="-P /Users/DK/Cloud/Scratchpad/ClientSide/TypeScript /Users/DK/Cloud/Scratchpad/ClientSide/TypeScript/truthyToBoolean.ts" working-dir="$PROJECT_DIR$">
-    <method />
-  </configuration>
-</component>

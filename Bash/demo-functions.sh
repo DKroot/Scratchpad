@@ -1,4 +1,4 @@
-#!/usr/bin/env stdbuf -o L -e L bash
+#!/usr/bin/env bash
 set -e
 set -o pipefail
 

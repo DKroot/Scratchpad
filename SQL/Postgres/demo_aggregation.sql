@@ -1,12 +1,13 @@
 -- GROUP BY and pick NOT NULLs
+WITH cte(a, b) AS (
+  VALUES ('foo', NULL),
+    ('foo', 'baz'),
+    ('foo', 'qux'),
+    ('bar', 'baz'),
+    ('baz', NULL)
+)
 SELECT a, max(b), min(b), string_agg(b, ', ')
-FROM (
-         VALUES ('foo', NULL),
-                ('foo', 'baz'),
-                ('foo', 'qux'),
-                ('bar', 'baz'),
-                ('baz', NULL)
-     ) AS t(a, b)
+FROM cte
 GROUP BY a;
 
 -- Counting duplicates
