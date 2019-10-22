@@ -22,9 +22,9 @@ function translate_ITAS_URI(uri: string | null): string | null {
         .replace("/ReleaseNotesSubmitSpring.do", RoutePath.RELEASE_NOTES)
         .replace(/\/leavedetailreport\.do(.+)&payPeri=(\d)&/, "/leavedetailreport.do$1&payPeri=0$2&")
         // TODO EMP is hard-coded for Employee reports for now
-        .replace(/\/leavedetailreport\.do\?&rDate=(.+)&payYr=(\d+)&payPeri=(\d+)&emp=(.+)(>|$)/,
+        .replace(/\/leavedetailreport\.do\?&rDate=(.+)&payYr=(\d+)&payPeri=(\d+)&emp=(.+)$/,
             "/report-popup.html?ReportType=LEAVE_DETAIL_REPORT&BeginDate=$1&EndDate=$1&selEmp=$4&selPayPeriod=$2$3" +
-            "&currentRole=EMP&reportTitle=Leave+Detail+Report$5")
+            "&currentRole=EMP&reportTitle=Leave+Detail+Report")
         .replace(/^\/\w+\//, "/index.html?popup=true#/")
         .replace(".jsp", "");
   }
@@ -44,7 +44,7 @@ function translate_ITAS_links(html: string | null): string | null {
   let result = html;
   if (result !== null) {
     result = result
-        .replace(/<a(.+)href=(['"])(.+)(['"])/,
+        .replace(/<a(.+?)href=(['"])(.+?)(['"])/g,
             (match: string, p1: string, p2: string, p3: string, p4: string, offset: number, s: string) =>
                 `<a${p1}href=${p2}${translate_ITAS_URI(p3)}${p4}`);
   }
@@ -62,3 +62,13 @@ translate_ITAS_URI("/menu/aboutemployeechanges.jsp");
 translate_ITAS_links("<a href='https://hr.nih.gov/hr-systems/itas'>");
 // noinspection HtmlUnknownTarget
 translate_ITAS_links("<a id='my_link' href='/menu/accessibility.jsp'>Link</a>");
+translate_ITAS_links(
+    `<a href="/leavedetailreport.do?&rDate=01/30/2019&payYr=2019&payPeri=3&emp=HZA3AHAD" target="_blank"`);
+translate_ITAS_links(`
+    <TD width=35 ALIGN=CENTER><a href="/leavedetailreport.do?&rDate=01/30/2019&payYr=2019&payPeri=3&emp=HZA3AHAD"
+        target="_blank"><FONT SIZE=1 FACE=Helvetica COLOR=Blue><STRONG>M</STRONG></a></FONT></TD>
+    <TD width=35 ALIGN=CENTER><a href="/leavedetailreport.do?&rDate=01/31/2019&payYr=2019&payPeri=3&emp=HZA3AHAD"
+        target="_blank"><FONT SIZE=1 FACE=Helvetica COLOR=Blue><STRONG>M</STRONG></a></FONT></TD>
+    <TD width=35 ALIGN=CENTER><a href="/leavedetailreport.do?&rDate=02/01/2019&payYr=2019&payPeri=3&emp=HZA3AHAD"
+        target="_blank"><FONT SIZE=1 FACE=Helvetica COLOR=Blue><STRONG>M</STRONG></a></FONT></TD>`);
+translate_ITAS_links(`<TD width=35 ALIGN=CENTER><a href="/leavedetailreport.do?&rDate=01/30/2019&payYr=2019&payPeri=3&emp=HZA3AHAD" target="_blank"><FONT SIZE=1 FACE=Helvetica COLOR=Blue><STRONG>M</STRONG></a></FONT></TD> <TD width=35 ALIGN=CENTER><a href="/leavedetailreport.do?&rDate=01/31/2019&payYr=2019&payPeri=3&emp=HZA3AHAD" target="_blank"><FONT SIZE=1 FACE=Helvetica COLOR=Blue><STRONG>M</STRONG></a></FONT></TD> <TD width=35 ALIGN=CENTER><a href="/leavedetailreport.do?&rDate=02/01/2019&payYr=2019&payPeri=3&emp=HZA3AHAD" target="_blank"><FONT SIZE=1 FACE=Helvetica COLOR=Blue><STRONG>M</STRONG></a></FONT></TD>`);
