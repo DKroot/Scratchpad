@@ -31,6 +31,10 @@ echo -e "\n### Simple command with quoted arguments ###"
 parallel --halt soon,fail=1 --verbose --line-buffer --tagstring '|job#{#} s#{%}|' echo "Processing '{}' ..." ::: \
   arg1 'arg(2)' arg3
 
+echo -e "\n### Simple command piping arguments to stdout ###"
+parallel --halt soon,fail=1 --verbose --line-buffer --tagstring '|job#{#} s#{%}|' 'echo {} | cat' ::: \
+  arg1 'arg(2)' arg3
+
 echo -e "\n### A command with multi-line arguments ###"
 parallel --null --halt soon,fail=1 --verbose --line-buffer --tagstring '|job#{#} s#{%}|' \
   echo "Processing {} ..." ::: '1: line1
