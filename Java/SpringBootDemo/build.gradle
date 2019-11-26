@@ -1,0 +1,108 @@
+plugins {
+
+    //region Server-side stack
+    id 'java'
+
+    // Spring Boot plug-in adds some tasks and configurations depending on other plug-ins
+    // Configures any JavaCompile tasks with no configured encoding to use UTF-8
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+
+    // Automatically import the spring-boot-dependencies BOM
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+
+    id 'io.freefair.lombok' version '3.8.0'
+    //endregion
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url = 'https://repo.spring.io/libs-release'
+        name = 'Spring Releases'
+    }
+}
+
+group = 'org.houseofsoft'
+version = '0.9.3'
+description = 'Spring Boot Demo'
+
+sourceCompatibility = '12'
+targetCompatibility = '12'
+
+def os = System.getProperty('os.name').toLowerCase()
+
+// TBD fix: Gradle is using `build/` output while the auto-imported IDE module uses `out/`
+//project.buildDir = 'build'
+
+println description
+println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
+def env = project.hasProperty("env") ? env : "Local"
+
+dependencies {
+    //compileOnly 'org.projectlombok:lombok:1.18.0'
+
+    // Spring Boot Bill of Materials (BOM)
+    // TBD is this automatically done by io.spring.dependency-management plug-in?
+    implementation 'org.springframework.boot:spring-boot-dependencies:2.1.6.RELEASE'
+
+    //region Spring Boot Starters inheriting versions from the BOM
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation 'org.springframework.boot:spring-boot-starter-jersey'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    //endregion
+
+    // TBD migrate to version constraints
+
+    implementation 'javax.activation:activation:1.1.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation 'org.slf4j:slf4j-api:1.7.26'
+    implementation 'org.slf4j:log4j-over-slf4j:1.7.25'
+    implementation 'com.google.guava:guava:21.0'
+
+    // Provides null-check annotations
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    implementation 'org.springframework.boot:spring-boot-devtools:2.1.6.RELEASE'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+}
+
+// Spring Boot configuration
+bootJar {
+    // For local development
+    excludeDevtools = false
+
+    // Default: ${rootProject.name}-${version}.jar
+    // See https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html for more info
+    archiveFileName = "${rootProject.name}.jar"
+
+// By default, the executable archive’s main class will be configured automatically by looking for
+// a class with a public static void main(String[]) method in directories on the task’s classpath.
+//    mainClassName = 'gov.nih.cit.itasng.Application'
+}
+
+// Spring Boot Actuator’s info endpoint automatically publishes information about a build
+springBoot {
+    buildInfo()
+}
+
+task vars() {
+    group 'Help'
+    description 'Print environment variables and JVM System Properties'
+    doLast {
+        def systemEnv = System.getenv() // a Java Map of env. vars
+        def systemProp = System.properties // a Java Map of system properties
+
+        println("== Environment variables ==\n")
+        for (var in systemEnv.sort()) {
+            println "${var.key}=${var.value}"
+        }
+
+        println("\n== JVM System Properties ==\n")
+        for (var in systemProp.sort()) {
+            println "${var.key}=${var.value}"
+        }
+    }
+}
