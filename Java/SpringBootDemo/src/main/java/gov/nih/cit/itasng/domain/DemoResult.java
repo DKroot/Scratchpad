@@ -35,7 +35,8 @@ public class DemoResult implements Serializable {
   private Date dbDateTime;
 
   public String getFoo () {
-    throw new RuntimeException("error");
-//    return "foo";
+//    throw new Exception("error");
+//    throw new RuntimeException("error");
+    return "foo";
   }
 }

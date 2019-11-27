@@ -12,6 +12,6 @@ import javax.ws.rs.ext.Provider;
  */
 // @formatter:on
 @Provider
-public class JsonParseExceptionMapper extends JaxRsExceptionMapper<JsonParseException> {
+public class JsonParseExceptionMapper extends JaxRsRequestErrorMapper<JsonParseException> {
 
 }

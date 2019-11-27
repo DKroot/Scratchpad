@@ -2,7 +2,6 @@ package gov.nih.cit.itasng.rest;
 
 import gov.nih.cit.itasng.domain.DemoResult;
 import java.util.ArrayList;
-import java.util.List;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DemoResource extends RestResource {
 
-//  private static final String DEMO_SP = "tmp_demo_args";
+  //  private static final String DEMO_SP = "tmp_demo_args";
 
   //region Injected beans (via a RequiredArgsConstructor). Auto-wired by Spring 4.3+.
   //  @Nonnull private final StoredProcRepository repository;
@@ -53,6 +52,7 @@ public class DemoResource extends RestResource {
     //    log.debug("Demo record: {}", hitList.get(0));
     var hitList = new ArrayList<DemoResult>();
     hitList.add(new DemoResult(1, "foo"));
-    return Response.ok(hitList).build();
+    throw new RuntimeException("Error!");
+//    return Response.ok(hitList).build();
   }
 }

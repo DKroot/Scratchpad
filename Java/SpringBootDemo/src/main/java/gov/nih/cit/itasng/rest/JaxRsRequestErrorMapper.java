@@ -12,7 +12,7 @@ import javax.ws.rs.ext.ExceptionMapper;
  * target="_blank">How to customize error response when deserializing failed</a>.
  */
 // @formatter:on
-abstract class JaxRsExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
+abstract class JaxRsRequestErrorMapper<T extends Throwable> implements ExceptionMapper<T> {
 
   private final static String JAX_RS_UNEXPECTED_ERROR_MSG = "Invalid request";
 
