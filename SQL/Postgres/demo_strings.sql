@@ -1,3 +1,5 @@
+
+-- Escape sequences
 SELECT E'a\nb' AS foo;
 
 -- region Types in CREATE TABLE AS
