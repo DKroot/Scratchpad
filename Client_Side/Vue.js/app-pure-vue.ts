@@ -4,7 +4,7 @@ import * as VueRouter from "vue-router";
 import { AxiosError } from "axios";
 
 //region App components
-import MessageComponent from "./messageComponent";
+import MessageComponent from "./messageComponent-pure-vue";
 //endregion
 
 Vue.use(VueRouter);
