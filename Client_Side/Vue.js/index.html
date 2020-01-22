@@ -23,21 +23,40 @@
 
 <script>
   requirejs.config({
-    // By default load required library modules from lib/
-    baseUrl: 'lib',
+    // By default load required library modules from `./`
+    baseUrl: '.',
 
+    /*
+    By default modules would be loaded from {module}.js files (filename = module).
+    Specify {module} (or '{module}'): '{filename}' mapping if filename != module.
+    Specify path fallbacks ([filenames]) for minimized / normal version consumption pattern.
+    */
     paths: {
-      'messageComponent': '../messageComponent',
+      // 'messageComponent': '../messageComponent',
+      //'messageComponent-pure-vue': '../messageComponent-pure-vue',
 
-      /*
-       By default modules would be loaded from {module}.js files (filename = module).
-       Specify {module} (or '{module}'): '{filename}' mapping if filename != module.
-       Specify path fallbacks ([filenames]) for minimized / normal version consumption pattern.
-       */
-      'reflect-metadata': 'Reflect'
+      // All third-party libraries must be included here. Use path fallbacks for minimized libs.
+      axios: "lib/axios",
+      // axios: ["../lib/axios.min", "../lib/axios"],
+      // "js-cookie": "../lib/js.cookie",
+      "reflect-metadata": "lib/Reflect",
+      // text: "../lib/text",
+      // "vee-validate": ["../lib/vee-validate.min", "../lib/vee-validate"],
+
+      vue: "lib/vue",
+      // Vue Devtools don't work with minified Vue.
+//      vue: ["../lib/vue.min", "../lib/vue"],
+
+      // "vue-class-component": ["../lib/vue-class-component.min", "../lib/vue-class-component"],
+      // "vue-class-component": ["../lib/vue-class-component.min", "../lib/vue-class-component"],
+      // "vue-property-decorator": "../lib/vue-property-decorator.umd",
+      "vue-router": "lib/vue-router"
+      // "vue-router": ["../lib/vue-router.min", "../lib/vue-router"]
     }
   });
-  require(["app.js"]);
+
+  // require(["app.js"]);
+  require(["app-pure-vue.js"]);
 </script>
 </body>
 </html>

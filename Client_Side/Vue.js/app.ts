@@ -1,9 +1,11 @@
-import MessageComponent from "./messageComponent";
-
 import * as Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import * as VueRouter from "vue-router";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+
+//region App components
+import MessageComponent from "./messageComponent";
+//endregion
 
 Vue.use(VueRouter);
 
