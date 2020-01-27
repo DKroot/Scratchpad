@@ -10,19 +10,23 @@
     // Enable experimental support for emitting certain types of metadata for declarations
     "emitDecoratorMetadata": true,
 
-    // Module code generation: "none", "commonjs", "amd", "system", "umd", "es6" or "es2015".
-    "module": "amd",
+    // Module generation: "None", "CommonJS", "AMD", "System", "UMD", "ES6", "ES2015" or "ESNext".
+    // "ES6" and "ES2015" values may be used when targeting "ES5" or lower.
+    "module": "AMD",
 
     /* There are two possible module resolution strategies: Node and Classic. You can use the
     --moduleResolution flag to specify the module resolution strategy. If not specified,
     the default is Classic for --module AMD | System | ES2015 or Node otherwise. */
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
 
     // Raise error on expressions and declarations with an implied any type.
     "noImplicitAny": true,
 
-    // TypeScript will issue an error when this is used without an explicit (or inferred) type.
+    // Raise error on 'this' expressions with an implied any type.
     "noImplicitThis": true,
+
+    // Report error when not all code paths in function return a value.
+    "noImplicitReturns": true,
 
     // Generates corresponding .map file(s).
     "sourceMap": true,
@@ -31,7 +35,11 @@
     type and are only assignable to themselves and any */
     "strictNullChecks": true,
 
-    // ES2017 output supported via e.g. `core-js` polyfill
-    "target": "es2017"
-  }
+    // this aligns with Vue's browser support
+    "target": "ES5"
+  },
+  "include": [
+    "*.ts",
+    "*.vue"
+  ]
 }

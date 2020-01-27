@@ -1,9 +1,9 @@
-define(["require", "exports", "vue", "vue-router", "./messageComponent-pure-vue"], function (require, exports, Vue, VueRouter, messageComponent_pure_vue_1) {
+define(["require", "exports", "vue", "vue-router", "./messageComponent-pure-vue"], function (require, exports, vue_1, vue_router_1, messageComponent_pure_vue_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     //endregion
-    Vue.use(VueRouter);
-    const routes = [
+    vue_1.default.use(vue_router_1.default);
+    var routes = [
         {
             path: "/",
             component: messageComponent_pure_vue_1.default
@@ -13,30 +13,30 @@ define(["require", "exports", "vue", "vue-router", "./messageComponent-pure-vue"
           component: ParameterizedComponent
         }*/
     ];
-    const router = new VueRouter({
-        routes
+    var router = new vue_router_1.default({
+        routes: routes
     });
     // noinspection JSUnusedLocalSymbols
-    const appOptions = {
-        router,
-        data() {
+    var appOptions = {
+        router: router,
+        data: function () {
             return {
                 user: null,
                 loading: false
             };
         },
         methods: {
-            onLoading() {
+            onLoading: function () {
                 // @ts-ignore
                 this.loading = true;
                 console.log("Loading...");
             },
-            onLoaded() {
+            onLoaded: function () {
                 // @ts-ignore
                 this.loading = false;
                 console.log("Loaded.");
             },
-            onLoadingError(error, serviceUrl) {
+            onLoadingError: function (error, serviceUrl) {
                 // @ts-ignore
                 this.loading = false;
                 console.log("Loading error for", serviceUrl, error.response);
@@ -44,6 +44,6 @@ define(["require", "exports", "vue", "vue-router", "./messageComponent-pure-vue"
         }
     };
     //as ComponentOptions<App>;
-    new Vue(appOptions).$mount("#app");
+    new vue_1.default(appOptions).$mount("#app");
 });
 //# sourceMappingURL=app-pure-vue.js.map

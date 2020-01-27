@@ -1,8 +1,6 @@
-import * as Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import * as VueRouter from "vue-router";
+import Vue from "vue";
 import { AxiosError } from "axios";
-
+import VueRouter from "vue-router";
 //region App components
 import MessageComponent from "./messageComponent-pure-vue";
 //endregion
