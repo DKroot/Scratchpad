@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue.js Scratchpad</title>
+
+  <script src="lib/require.js" data-main="script"></script>
+</head>
+<body>
+
+<h1>Vue.js Scratchpad</h1>
+
+<div v-show="true" id="app" style="display: none">
+  <input v-model="user" autofocus="true" placeholder="Enter any user name">
+  <!--<button @click.prevent="onRenderComponent">Render</button>-->
+
+  <p v-show="loading">Loading...</p>
+  <router-view v-show="!loading" :user="user"
+               @loading="onLoading" @success="onLoaded"
+               @loading-error="onLoadingError"></router-view>
+</div>
+
+<script>
+  requirejs.config({
+    // By default load required library modules from lib/
+    baseUrl: 'lib',
+
+    paths: {
+      'messageComponent': '../messageComponent',
+      // 'parameterizedComponent': '../parameterizedComponent-2.6',
+
+      /*
+       By default modules would be loaded from {module}.js files (filename = module).
+       Specify {module} (or '{module}'): '{filename}' mapping if filename != module.
+       Specify path fallbacks ([filenames]) for minimized / normal version consumption pattern.
+       */
+      'reflect-metadata': 'Reflect'
+    }
+  });
+  require(["app-pure-vue.js"]);
+</script>
+</body>
+</html>

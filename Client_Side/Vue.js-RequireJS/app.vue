@@ -48,7 +48,7 @@ define(['Vue'], function(Vue){
     methods: {
       loadAnother: function(){
         // example of dynamic Vue loading
-        require(['vue!dynamics'], function(compo){
+        require(['requirejs_vue!dynamics'], function(compo){
           // mount it
           compo.$mount('#dynamic-placeholder');
         })

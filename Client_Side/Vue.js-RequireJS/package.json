@@ -1,0 +1,18 @@
+{
+  "name": "vue-scratchpad",
+  "version": "1.0.0",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "requirejs": "~2.3.6",
+    "requirejs-vue": "~1.1.5",
+    "vue": "~2.6.11",
+    "vue-class-component": "~7.1.0",
+    "vue-property-decorator": "~8.3.0",
+    "vue-router": "~3.1.5"
+  },
+  "devDependencies": {
+    "node-static": "~0.7.11",
+    "tslint": "~5.5.0",
+    "typescript": "~3.7.5"
+  }
+}
