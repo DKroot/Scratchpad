@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Vue.js Scratchpad</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+
+  <script src="node_modules/requirejs/require.js"></script>
+</head>
+<body>
+
+<h1>Vue.js Scratchpad</h1>
+
+<div v-show="true" id="app" style="display: none">
+  <input v-model="user" autofocus="true" placeholder="Enter any user name">
+  <!--<button @click.prevent="onRenderComponent">Render</button>-->
+
+  <p v-show="loading">Loading...</p>
+  <router-view v-show="!loading" :user="user"
+               @loading="onLoading" @success="onLoaded"
+               @loading-error="onLoadingError"></router-view>
+</div>
+
+<script>
+  requirejs.config({
+    // By default load modules from `./`
+    baseUrl: '.',
+
+    /*
+    By default, modules would be loaded from {module}.js files (filename = module).
+    Specify {module} (or "{module}"): "{filepath_no_extension}" mapping if filename != module.
+    Specify fall-backs ([filepath1, filepath2]) for minimized / normal version consumption pattern.
+    */
+    paths: {
+      // All third-party libraries must be included here. Use path fall-backs for minimized libs.
+      axios: "node_modules/axios/dist/axios.min",
+      vue: "node_modules/vue/dist/vue.min",
+      "vue-router": "node_modules/vue-router/dist/vue-router.min"
+    }
+  });
+
+  require(["app-pure-vue.js"]);
+</script>
+</body>
+</html>
