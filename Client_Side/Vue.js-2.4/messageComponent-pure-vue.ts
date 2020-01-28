@@ -11,7 +11,7 @@ const MessageComponent = Vue.extend({
   template: `
     <p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
       Message Component for user {{ user }}.<br>
-      Data size = {{ userDataSize }}.
+      Received {{ userDataSize }} bytes.
     </p>
   `,
   methods: {

@@ -19,20 +19,6 @@ const router = new VueRouter({
   routes
 });
 
-interface App extends Vue {
-  user: string;
-  loading: boolean;
-
-  onLoading(): void;
-
-  onLoaded(): void;
-
-  onLoadingError(error: AxiosError, serviceUrl: string): void;
-
-  // beforeRouteUpdate(to: Route, from: Route, next: Function): void;
-}
-
-// noinspection JSUnusedLocalSymbols
 const appOptions = {
   router,
   data() {
@@ -61,6 +47,5 @@ const appOptions = {
     }
   }
 };
-//as ComponentOptions<App>;
 
 new Vue(appOptions).$mount("#app");

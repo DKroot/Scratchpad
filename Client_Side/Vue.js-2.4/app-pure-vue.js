@@ -7,16 +7,11 @@ define(["require", "exports", "vue", "vue-router", "./messageComponent-pure-vue"
         {
             path: "/",
             component: messageComponent_pure_vue_1.default
-        } /*,
-        {
-          path: "/cwp/:id",
-          component: ParameterizedComponent
-        }*/
+        }
     ];
     const router = new VueRouter({
         routes
     });
-    // noinspection JSUnusedLocalSymbols
     const appOptions = {
         router,
         data() {
@@ -43,7 +38,6 @@ define(["require", "exports", "vue", "vue-router", "./messageComponent-pure-vue"
             }
         }
     };
-    //as ComponentOptions<App>;
     new Vue(appOptions).$mount("#app");
 });
 //# sourceMappingURL=app-pure-vue.js.map
