@@ -1,7 +1,10 @@
 import "reflect-metadata";
-import Vue from "vue";
-// import Vue, { ComponentOptions } from "vue";
-import VueRouter from "vue-router";
+import Vue = require("vue");
+//import * as Vue from "vue";
+// import Vue from "vue";
+import VueRouter = require("vue-router");
+// import * as VueRouter from "vue-router";
+// import VueRouter from "vue-router";
 import { AxiosError } from "axios";
 //region App imports
 import { MessageComponent } from "./messageComponent";

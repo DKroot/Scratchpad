@@ -1,4 +1,7 @@
-import Vue from "vue";
+import "reflect-metadata";
+import Vue = require("vue");
+// import * as Vue from "vue";
+// import Vue from "vue";
 import axios from "axios";
 
 export const MessageComponent = Vue.extend({

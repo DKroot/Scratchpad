@@ -13,47 +13,38 @@
 </template>
 
 <style>
-/* app's stylesheet */
-body {
-  background: grainsboro;
-  color: chucknorris;
-}
-li {
+  /* app's stylesheet */
+  body {
+    background: aqua;
+    color: coral;
+  }
+
+  li {
     list-style-type: cjk-ideographic;
-}
+  }
 </style>
 
-<script>
-// require Vue
-define(['Vue'], function(Vue){
+<script lang="ts">
+  // require Vue
   // create and return app instance
   // refer template as `template`
-  return new Vue({
-    template: template,
-    
+  import Vue from "vue";
+
+  export default Vue.extend({
     data: {
       // sample data: Japanese numbers
-      items: [
-        'ichi',
-        'ni',
-        'san',
-        'shi',
-        'go',
-        'roku',
-        'shichi',
-        'hachi'
-      ]
+      items: ['ichi', 'ni', 'san', 'shi', 'go', 'roku', 'shichi', 'hachi']
     },
-    
+
     methods: {
-      loadAnother: function(){
+      loadAnother: function () {
         // example of dynamic Vue loading
-        require(['requirejs_vue!dynamics'], function(compo){
+        // noinspection TypeScriptUnresolvedFunction
+        require(['requirejs_vue!dynamics'], (compo: any) => {
           // mount it
           compo.$mount('#dynamic-placeholder');
         })
       }
     }
-  })
-});
+  });
 </script>

@@ -1,7 +1,7 @@
-define(["require", "exports", "vue", "axios"], function (require, exports, vue_1, axios_1) {
+define(["require", "exports", "vue", "axios", "reflect-metadata"], function (require, exports, Vue, axios_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.MessageComponent = vue_1.default.extend({
+    exports.MessageComponent = Vue.extend({
         props: ["user"],
         data() {
             return {
