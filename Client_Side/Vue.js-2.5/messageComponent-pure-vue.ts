@@ -1,10 +1,8 @@
-import "reflect-metadata";
-import Vue from "vue";
-// 2.4 import Vue = require("vue");
 // import * as Vue from "vue";
 import axios from "axios";
+import Vue from "vue";
 
-export const MessageComponent = Vue.extend({
+const MessageComponent = Vue.extend({
   props: ["user"],
   data() {
     return {
@@ -14,7 +12,7 @@ export const MessageComponent = Vue.extend({
   template: `
     <p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
       Message Component for user {{ user }}.<br>
-      Data size = {{ userDataSize }}.
+      Received {{ userDataSize }} bytes.
     </p>
   `,
   methods: {
@@ -52,3 +50,5 @@ export const MessageComponent = Vue.extend({
   }
 });
 // Vue.component("MessageComponent", MessageComponent);
+
+export default MessageComponent;
