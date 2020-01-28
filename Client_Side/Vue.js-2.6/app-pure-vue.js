@@ -1,9 +1,9 @@
-define(["require", "exports", "vue", "vue-router", "./messageComponent", "reflect-metadata"], function (require, exports, Vue, VueRouter, messageComponent_1) {
+define(["require", "exports", "vue", "vue-router", "./messageComponent", "reflect-metadata"], function (require, exports, vue_1, vue_router_1, messageComponent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // import ParameterizedComponent from "./parameterizedComponent";
     //endregion
-    Vue.use(VueRouter);
+    vue_1.default.use(vue_router_1.default);
     const routes = [
         {
             path: "/",
@@ -14,7 +14,7 @@ define(["require", "exports", "vue", "vue-router", "./messageComponent", "reflec
           component: ParameterizedComponent
         }*/
     ];
-    const router = new VueRouter({
+    const router = new vue_router_1.default({
         routes
     });
     // noinspection JSUnusedLocalSymbols
@@ -39,6 +39,6 @@ define(["require", "exports", "vue", "vue-router", "./messageComponent", "reflec
             }
         }
     };
-    new Vue(appOptions).$mount("#app");
+    new vue_1.default(appOptions).$mount("#app");
 });
 //# sourceMappingURL=app-pure-vue.js.map

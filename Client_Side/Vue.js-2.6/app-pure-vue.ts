@@ -1,14 +1,16 @@
 import "reflect-metadata";
-import Vue = require("vue");
+import Vue, { ComponentOptions } from "vue";
+// 2.4 import Vue = require("vue");
 //import * as Vue from "vue";
-// import Vue from "vue";
-import VueRouter = require("vue-router");
+
+import VueRouter from "vue-router";
+// 2.7 import VueRouter = require("vue-router");
 // import * as VueRouter from "vue-router";
-// import VueRouter from "vue-router";
+
 import { AxiosError } from "axios";
+
 //region App imports
 import { MessageComponent } from "./messageComponent";
-import { ComponentOptions } from "vue";
 // import ParameterizedComponent from "./parameterizedComponent";
 //endregion
 

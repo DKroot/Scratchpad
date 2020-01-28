@@ -1,5 +1,4 @@
 import * as Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
 import * as VueRouter from "vue-router";
 import { AxiosError } from "axios";
 
@@ -13,11 +12,7 @@ const routes = [
   {
     path: "/",
     component: MessageComponent
-  }/*,
-  {
-    path: "/cwp/:id",
-    component: ParameterizedComponent
-  }*/
+  }
 ];
 
 const router = new VueRouter({
