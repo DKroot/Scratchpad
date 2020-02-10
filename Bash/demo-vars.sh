@@ -42,8 +42,8 @@ fi
 args=("$@")
 argc=${#args[@]}
 echo "Array of parameters = ${args[@]}, length = $argc"
-if (( argc > 0 )); then
-  echo "Last parameter = ${args[$argc-1]}"
+if ((argc > 0)); then
+  echo "Last parameter = ${args[$argc - 1]}"
   echo "All parameters except last: \${*%%\$last} = ${*%%$last}"
 fi
 echo "All parameters: \$* = $*"
@@ -78,33 +78,36 @@ f=
 while getopts vf: opt; do
   case "$opt" in
     v)
-      vflag=on;;
+      vflag=on
+      ;;
     f)
-      f="$OPTARG";;
+      f="$OPTARG"
+      ;;
     \?) # unknown flag
-       echo "Valid parameters: $0 [-v] [-f filename] [something ...]"
-       exit 1;;
+      echo "Valid parameters: $0 [-v] [-f filename] [something ...]"
+      exit 1
+      ;;
   esac
 done
-shift `expr $OPTIND - 1`
+shift $(expr $OPTIND - 1)
 
 echo "\$vflag = $vflag"
 echo "\$f = $f"
 echo "Other parameters: \$* = $*"
 
 var="foo"
-echo "\n### Variables and sub-processes ###"
+echo -e "\n### Variables and sub-processes ###"
 echo "Variable change is not visible from a sub-shell introduced by piping"
-cat "$0" | while IFS= read -r line; do
+while IFS= read -r line; do
   var="bar"
-done
+done < "$0"
 echo "var=$var"
 
 var="foo"
 echo "Variable change is OK here (without piping)"
 while IFS=: read user enc_passwd uid gid full_name home shell; do
   var="bar"
-done </etc/passwd
+done < /etc/passwd
 echo "var=$var"
 
 var="foo"
