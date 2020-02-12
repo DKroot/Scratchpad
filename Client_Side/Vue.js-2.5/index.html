@@ -34,8 +34,14 @@
     paths: {
       // All third-party libraries must be included here. Use path fall-backs for minimized libs.
       axios: "node_modules/axios/dist/axios.min",
-      vue: "node_modules/vue/dist/vue.min",
-      "vue-router": "node_modules/vue-router/dist/vue-router.min"
+
+      /*
+      See https://stackoverflow.com/questions/59958983/cant-make-vue-js-typescript-requirejs-stack-work-after-vue-js-2-5-upgrade
+      */
+      Vue: "node_modules/vue/dist/vue.min",
+      vue: "vue-loader",
+      "Vue-router": "node_modules/vue-router/dist/vue-router.min",
+      "vue-router": "vue-router-loader"
     }
   });
 
