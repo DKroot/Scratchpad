@@ -4,10 +4,8 @@ for (const el of a) {
   console.log(el);
 }
 
-/*
-let b: any[] | null = null;
+/*let max = 12;
 
-for (const el of b) { // ERROR Does not compile
-  console.log(el);
-}
-*/
+for (const i in max) {
+  console.log(i);
+}*/
