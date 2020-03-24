@@ -41,15 +41,16 @@ class ListNode(object):
     def out(self):
         cur = self
         while True:
-            print cur.val,
+            print(cur.val, end=' ')
             cur = cur.next
             if cur is None:
                 break
-            print '->',
+            print('->', end=' ')
 
 
 class Solution(object):
-    def addTwoNumbers(self, l1, l2):
+    @staticmethod
+    def add_two_numbers(l1, l2):
         """
         :type l1: ListNode
         :type l2: ListNode
@@ -80,22 +81,22 @@ class Solution(object):
 
 
 if __name__ == '__main__':
-    print "1 + 2 =",
-    Solution().addTwoNumbers(ListNode(1), ListNode(2)).out()
-    print ''
+    print("1 + 2 =", end=' ')
+    Solution.add_two_numbers(ListNode(1), ListNode(2)).out()
+    print('')
 
-    print "342 + 465 =",
-    Solution().addTwoNumbers(ListNode.from_seq([2, 4, 3]), ListNode.from_seq([5, 6, 4])).out()
-    print ''
+    print("342 + 465 =", end=' ')
+    Solution.add_two_numbers(ListNode.from_seq([2, 4, 3]), ListNode.from_seq([5, 6, 4])).out()
+    print('')
 
-    print "19 + 9 =",
-    Solution().addTwoNumbers(ListNode.from_seq([9, 1]), ListNode(9)).out()
-    print ''
+    print("19 + 9 =", end=' ')
+    Solution.add_two_numbers(ListNode.from_seq([9, 1]), ListNode(9)).out()
+    print('')
 
-    print "8 + 42 =",
-    Solution().addTwoNumbers(ListNode(8), ListNode.from_seq([2, 4])).out()
-    print ''
+    print("8 + 42 =", end=' ')
+    Solution.add_two_numbers(ListNode(8), ListNode.from_seq([2, 4])).out()
+    print('')
 
-    print "5 + 5 =",
-    Solution().addTwoNumbers(ListNode(5), ListNode(5)).out()
-    print ''
+    print("5 + 5 =", end=' ')
+    Solution.add_two_numbers(ListNode(5), ListNode(5)).out()
+    print('')

@@ -19,7 +19,8 @@
 
 
 class Solution(object):
-    def lengthOfLongestSubstring(self, s):
+    @staticmethod
+    def length_of_longest_substring(s):
         """
         :type s: str
         :rtype: int
@@ -38,8 +39,14 @@ class Solution(object):
 
 
 if __name__ == '__main__':
-    print "abcabcbb:", Solution().lengthOfLongestSubstring("abcabcbb")
-    print "bbbbb:", Solution().lengthOfLongestSubstring("bbbbb")
-    print "pwwkew:", Solution().lengthOfLongestSubstring("pwwkew")
-    print "'':", Solution().lengthOfLongestSubstring("")
+    # noinspection SpellCheckingInspection
+    print("abcabcbb:", Solution.length_of_longest_substring("abcabcbb"))
+
+    # noinspection SpellCheckingInspection
+    print("bbbbb:", Solution.length_of_longest_substring("bbbbb"))
+
+    # noinspection SpellCheckingInspection
+    print("pwwkew:", Solution.length_of_longest_substring("pwwkew"))
+
+    print("'':", Solution.length_of_longest_substring(""))
 

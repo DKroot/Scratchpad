@@ -53,7 +53,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="true" project-jdk-name="Anaconda3" project-jdk-type="Python SDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="true" project-jdk-name="Python 3" project-jdk-type="Python SDK">
     <output url="file://$PROJECT_DIR$/bin" />
   </component>
 </project>
