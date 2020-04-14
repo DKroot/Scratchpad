@@ -20,6 +20,7 @@
     // TypeScript will issue an error when this is used without an explicit (or inferred) type.
     "noImplicitThis": true,
 
+    // Used by `tsc` CLI and IDEA. Overridden (ignored) by the project Gradle build.
     //"outDir": "target/classes/static/components",
 
     // Generates corresponding .map file(s).
@@ -29,7 +30,36 @@
     type and are only assignable to themselves and any */
     "strictNullChecks": true,
 
-    // ES2015 (ES6) output supported via e.g. core-js polyfills
-    "target": "es2015"
-  }
+    // this aligns with Vue's 2.x browser support
+    "target": "ES5",
+
+    // Compile-time declaration libraries: include only the ones actually needed
+    "lib": [
+      //region ES5 defaults
+      "DOM",
+      "ES5",
+      "ScriptHost",
+      //endregion
+
+      // Object.assign()
+      // String.prototype.includes()
+      // String.prototype.startsWith(), String.prototype.endsWith()
+      "ES2015.Core",
+
+      // Map
+      "ES2015.Collection",
+
+      // Array.prototype.includes()
+      "ES2016.Array.Include",
+
+      // Object.values()
+      "ES2017.Object",
+
+      // String.prototype.padStart()
+      "ES2017.String"
+    ]
+  },
+  "include": [
+    "src/main/ts/*"
+  ]
 }
