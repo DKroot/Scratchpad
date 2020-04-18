@@ -1,7 +1,11 @@
-#!/usr/bin/env stdbuf -o L -e L bash
+#!/usr/bin/env bash
+# shellcheck disable=SC2078
+# shellcheck disable=SC2154
+# shellcheck disable=SC2158
+# shellcheck disable=SC2194
+
 set -e
 set -o pipefail
-set -x
 
 # Get a script directory, same as by $(dirname $0)
 #script_dir=${0%/*}
@@ -30,8 +34,7 @@ fi
 
 # Uninitialized variable is false.
 echo -e "\nchecking [[ -n \"\$foo\" ]]"
-if [[ -n "$foo" ]] # More pedantically correct.
-then
+if [[ -n "$foo" ]]; then # More pedantically correct.
   echo "Uninitialized variable is true."
 else
   echo "Uninitialized variable is false."
@@ -71,13 +74,13 @@ fi
 
 declare -i i=1
 printf "Arithmetic comparison: "
-(( i+i == 2 )) && echo "true" || echo "false"
+(( i + i == 2 )) && echo "true" || echo "false"
 
 printf "Compound comparison: "
 [[ ${i} -gt 1 || "foo" == "foo" ]] && echo "true" || echo "false"
 
 printf "Compound comparison (arithmetic): "
-[[ $(( i+i == 2 )) || "foo" == "bar" ]] && echo "true" || echo "false"
+[[ $(( i + i == 2 )) || "foo" == "bar" ]] && echo "true" || echo "false"
 
 echo -e "\nassigning integer variable to zero: declare -i i=0"
 declare -i i=0
@@ -85,10 +88,10 @@ declare -i i=0
 #(( i=0 )) # Terminates (with set -e)
 
 echo -e "\nassigning integer variable to zero: (( i=0 )) || :"
-(( i=0 )) || :
+((i = 0)) || :
 
 echo -e "\nassigning integer variable to zero: (( i=0 )) || true"
-(( i=0 )) || true
+((i = 0)) || true
 
 #let i=0 # Terminates (with set -e)
 
@@ -106,6 +109,7 @@ case foo in
     ;;
   *)
     echo "Case else"
+    ;;
 esac
 
 var_label=f
@@ -115,6 +119,7 @@ case foo in
     ;;
   *)
     echo "Case else"
+    ;;
 esac
 
 echo -e "\nDone."
