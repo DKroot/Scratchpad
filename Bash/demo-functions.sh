@@ -9,9 +9,12 @@ echo -e "\n## Running under ${USER}@${HOSTNAME} in ${PWD} ##\n"
 
 foo() {
   echo "Inside foo()"
+
+  echo "Arg 1='$1'"
+  echo "Arg 2='$2'"
   # Exits the script
   exit 1
 }
 
-foo
+foo "" "bar" "baz"
 echo -e "\nDone."
