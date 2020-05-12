@@ -4,10 +4,10 @@ set -o pipefail
 
 # Examples:
 #   Valid: $0 -v -f filename
-#   Valid: $0 -ffilename -v
+#   Valid: $0 -f filename -v
 #   Valid: $0 -vf filename
-#   Valid: $0 -vffilename
-#   Valid: $0 -vffilename thing1 thing 2
+#   Valid: $0 -vf filename
+#   Valid: $0 -vf filename thing1 thing 2
 #   Valid: $0 thing1 thing 2
 #   Valid: $0 "param 1 with a space" --param="value 2 with a space"
 #   Invalid: $0 -x
@@ -32,7 +32,9 @@ if [[ $1 ]]; then
 fi
 echo "Optional argument 1 with spaces replaced by underscores: ${1// /_}"
 
-[[ $# -lt 1 || "$1" == "-h" ]] && echo "Print usage: no params or the first argument = '-h'"
+if (($# < 1)) || [[ "$1" == "-h" ]]; then
+  echo "Print usage: no params or the first argument = '-h'"
+fi
 
 echo "Optional argument 2 defaulting to 'default: \${2:-default] = ${2:-default}"
 echo "Optional argument 2: \${2:--default} = ${2:--default}"
@@ -41,17 +43,27 @@ if [[ ! $2 ]]; then
   echo "Argument 2 is blank or undefined"
 fi
 
-echo "All arguments: \$* = $*"
-printf "All arguments: \$@ = %s\n" "$@"
+echo "All arguments (double-quoted): \$* = $*"
+__IFS="$IFS"; IFS=';'
+echo "All arguments (double-quoted): IFS=';' \$* = $*"
+IFS="$__IFS"
 
-declare -a args=( "$@" )
-declare -i argc=${#args[@]}
-printf "Array of arguments = %s, length = %s\n" "${args[@]}" "$argc"
-if ((argc > 0)); then
-  echo "Last argument = ${args[$argc - 1]}"
-  echo "All arguments except last: \${*%%\$last} = ${*%%$last}"
+# shellcheck disable=SC2028
+cat <<'HEREDOC'
+Argument array: "%s\n" "$@"
+-----
+HEREDOC
+printf "%s\n" "$@"
+echo '-----'
+
+# Intermediate array is required in order to be indexed
+args=("$@")
+if (($# > 0)); then
+  tail="${args[$#- 1]}"
+  # shellcheck disable=SC2145
+  echo "Tail (last argument) = $tail"
+  echo "Head (all arguments except last): \${*%%\$tail} = ${*%%$tail}"
 fi
-pause
 
 function f() {
   echo "Inside the function"
@@ -61,8 +73,14 @@ function f() {
   echo "\$2 = $2"
   echo "\$3 = $3"
   echo "\$4 = $4"
-  echo "\$* = $*"
-  printf "\$@ = %s\n" "$@"
+  cat <<'HEREDOC'
+Argument array: "%s\n" "$@"
+-----
+HEREDOC
+  printf "%s\n" "$@"
+  echo '-----'
+  IFS=';'
+  echo "All arguments (double-quoted): IFS=';' \$* = $*"
 }
 
 echo
@@ -72,25 +90,26 @@ f "$@"
 echo
 echo "Passing hardcoded arguments with spaces to a direct function call"
 f param1 "param 2 with a space" param3 --param="value 4 with a space"
+pause
 
 echo -e "\n### Options Processing ###"
 vflag=off
 f=
 while getopts vf: opt; do
   case "$opt" in
-    v)
-      vflag=on
-      ;;
-    f)
-      f="$OPTARG"
-      ;;
-    \?) # unknown flag
-      echo "Valid parameters: $0 [-v] [-f filename] [something ...]"
-      exit 1
-      ;;
+  v)
+    vflag=on
+    ;;
+  f)
+    f="$OPTARG"
+    ;;
+  \?) # unknown flag
+    echo "Valid parameters: $0 [-v] [-f filename] [something ...]"
+    exit 1
+    ;;
   esac
 done
-shift $(( OPTIND - 1))
+shift $((OPTIND - 1))
 
 echo "\$vflag = $vflag"
 echo "\$f = $f"
@@ -102,7 +121,7 @@ echo "Variable change is not visible from a sub-shell introduced by piping"
 while IFS= read -r line; do
   echo "$line"
   var="bar"
-done < "$0"
+done <"$0"
 echo "var=$var"
 
 var="foo"
@@ -110,7 +129,7 @@ echo "Variable change is OK here (without piping)"
 while IFS=: read -r user enc_passwd uid gid full_name home shell; do
   echo "User record: $user $enc_passwd $uid $gid $full_name $home $shell"
   var="bar"
-done < /etc/passwd
+done </etc/passwd
 echo "var=$var"
 
 var="foo"
