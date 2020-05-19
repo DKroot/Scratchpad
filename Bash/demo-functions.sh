@@ -7,14 +7,25 @@ set -o pipefail
 #absolute_script_dir=$(cd "${script_dir}" && pwd)
 echo -e "\n## Running under ${USER}@${HOSTNAME} in ${PWD} ##\n"
 
-foo() {
+fun() {
   echo "Inside foo()"
 
   echo "Arg 1='$1'"
   echo "Arg 2='$2'"
+  cat <<'HEREDOC'
+Argument array: "%s\n" "$@"
+-----
+HEREDOC
+  printf "%s\n" "$@"
+  echo '-----'
+
+  echo "Variable='$var'"
+
   # Exits the script
   exit 1
 }
 
-foo "" "bar" "baz"
+var="foo"
+
+fun "" "bar" "baz"
 echo -e "\nDone."

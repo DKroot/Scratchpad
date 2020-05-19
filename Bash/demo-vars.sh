@@ -48,7 +48,6 @@ __IFS="$IFS"; IFS=';'
 echo "All arguments (double-quoted): IFS=';' \$* = $*"
 IFS="$__IFS"
 
-# shellcheck disable=SC2028
 cat <<'HEREDOC'
 Argument array: "%s\n" "$@"
 -----
