@@ -8,8 +8,8 @@ set -o pipefail
 echo -e "\n## Running under ${USER}@${HOSTNAME} in ${PWD} ##\n"
 echo "Shell options: $-"
 
-fun() {
-  echo "Inside foo()"
+returning_fun() {
+  echo -e "\nInside returning_fun()"
   echo "Shell options: $-"
 
   echo "Arg 1='$1'"
@@ -23,11 +23,23 @@ HEREDOC
 
   echo "Variable='$var'"
 
+  mapfile -t $1 <<<"bar"
+}
+
+erroring_fun() {
+  echo -e "\nInside erroring_fun()"
+  echo "Shell options: $-"
+
   # This should error out and stop the script
   foo
 }
 
 var="foo"
 
-fun "" "bar" "baz"
+echo "var='$var'"
+returning_fun "var" "bar" "baz"
+echo "var='$var'"
+
+erroring_fun
+
 echo -e "\nDone."
