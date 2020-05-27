@@ -28,7 +28,7 @@
       </database-info>
       <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
       <secret-storage>master_key</secret-storage>
-      <auth-required>false</auth-required>
+      <auth-provider>no-auth</auth-provider>
       <schema-mapping>
         <introspection-scope>
           <node kind="schema" qname="main" />
@@ -41,7 +41,7 @@
       </database-info>
       <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
       <secret-storage>master_key</secret-storage>
-      <auth-required>false</auth-required>
+      <auth-provider>no-auth</auth-provider>
       <schema-mapping>
         <introspection-scope>
           <node kind="schema" qname="main" />
