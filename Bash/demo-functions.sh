@@ -23,6 +23,8 @@ HEREDOC
   printf "%s\n" "$@"
   echo '-----'
 
+  echo "Param 1 with replacement='${1/a/A}'"
+
   echo "Variable='$var'"
 
   # shellcheck disable=SC2016
