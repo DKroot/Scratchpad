@@ -12,10 +12,12 @@ returning_fun() {
   echo -e "\nInside returning_fun()"
   echo "Shell options: $-"
 
-  echo "Arg 1='$1'"
-  echo "Arg 2='$2'"
+  for param in "$@"; do
+    echo "Arg='$param'"
+  done
+
   cat <<'HEREDOC'
-Argument array: "%s\n" "$@"
+Argument array:
 -----
 HEREDOC
   printf "%s\n" "$@"
@@ -23,7 +25,9 @@ HEREDOC
 
   echo "Variable='$var'"
 
-  mapfile -t $1 <<<"bar"
+  # shellcheck disable=SC2016
+  echo 'Change `var` indirectly (`eval`-like)'
+  mapfile -t "$1" <<<"bar"
 }
 
 erroring_fun() {
@@ -37,7 +41,7 @@ erroring_fun() {
 var="foo"
 
 echo "var='$var'"
-returning_fun "var" "bar" "baz"
+returning_fun "var" "foo bar baz"
 echo "var='$var'"
 
 erroring_fun
