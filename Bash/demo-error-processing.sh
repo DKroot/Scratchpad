@@ -1,4 +1,4 @@
-#!/usr/bin/env stdbuf -o L -e L bash
+#!/usr/bin/env bash
 set -e
 set -o pipefail
 
@@ -6,33 +6,69 @@ set -o pipefail
 script_dir=${0%/*}
 absolute_script_dir=$(cd "${script_dir}" && pwd)
 cd "${absolute_script_dir}"
-echo -e "\n## Running under ${USER}@${HOSTNAME} at ${PWD} ##\n"
+#echo -e "\n## Running under ${USER}@${HOSTNAME} at ${PWD} ##\n"
 
-echo -e "## Bash command execution ##"
+echo -e "\n## Sub-shells ##"
+
+echo -e "### Bash sub-shell: a compound command ###"
 bash -c "set -e
   echo 'Job #1'
   for file in *.sh; do
     echo \"Processing \${file} ...\"
-    # Fails early correctly on the first error
+    # STOP here
     #foo
   done"
 
-echo -e "\n## Bash command pipeline execution ##"
+echo -e "\n### Bash sub-shell: a compound pipeline ###"
 bash -c "set -e &&
   echo 'Job #1' &&
   for file in *.sh; do
     echo \"Processing \${file} ...\" &&
     :
-    # Fails early correctly on the first error
+    # STOP here
     #foo
   done"
 
-echo -e "\n## Sub-shells ##"
-# The error doesn't propagate in interpolated string
-echo "A value from sub-shell='$(foo)'"
+# WARNING. The error doesn't propagate in interpolated string
+echo -e \n "### A value from sub-shell='$(foo)' ###"
 
-# The error propagates correctly here
+# STOP here. The error propagates correctly here
 #var=$(foo)
+
+# WARNING. The error doesn't propagate in process substitution
+echo -e "\n### Process substitution: pure ###"
+cat < <(foo)
+
+echo -e "\n### Process substitution with 'set -e' ###"
+# WARNING. The error doesn't propagate in process substitution
+cat < <(set -e; foo)
+
+echo -e "\n## Co-processes ##"
+
+echo -e "\n### Co-process for 'ls' ###"
+coproc ls
+# As of Bash 4, `COPROC_PID` has to be saved before it gets reset on process termination
+_co_pid=$COPROC_PID
+var="foo"
+echo "Co-process stdout fd = ${COPROC[0]}"
+while IFS= read -r line; do
+  echo "Processing $line ..."
+  var="bar"
+done <& "${COPROC[0]}"
+echo "var=$var"
+wait "$_co_pid"
+
+echo -e "\n### Co-process for an invalid command ###"
+# STOP here
+#coproc foo
+coproc { ls; foo; }
+_co_pid=$COPROC_PID
+echo "Co-process stdout fd = ${COPROC[0]}"
+while IFS= read -r line; do
+  echo "Processing $line ..."
+done <& "${COPROC[0]}"
+# STOP here
+wait "$_co_pid"
 
 echo -e "\n## Abbreviated conditions don't fail the script ##"
 [[ "${foo}" == "bar" ]] && echo "This should not be executed"
@@ -42,39 +78,40 @@ echo -e "\n## Abbreviated conditions don't fail the script ##"
 
 echo -e "\n## Executing external scripts ##"
 echo "Executing a script with exit code 0"
-"${absolute_script_dir}/demo_exit_code.sh"
+"${absolute_script_dir}/demo-exit-code.sh"
 
 echo "Sourcing a script with exit code 0"
-. "${absolute_script_dir}/demo_exit_code.sh"
+. "${absolute_script_dir}/demo-exit-code.sh"
 
 echo -e "\n## Wait loop ##"
-# Failing command in a pipeline
-bad_command | head -1 &
+# STOP on `wait`. Failing command in a pipeline
+#bash -c 'sleep 5; bad_command' | head -1 &
+# shellcheck disable=SC2002
+cat "$0" | head -1 &
 pid=$!
 
 # Wait on a background job completion
 declare -i elapsed=0
-declare -i WAIT_MSG_INTERVAL=240 # Print every 4 minutes (should be < ClientAliveInterval in /etc/ssh/sshd_config)
+declare -i WAIT_MSG_INTERVAL=2 # Print every 2 seconds
 # `ps -p ${pid}` works on macOS and CentOS. On both OSes `ps ${pid}` works as well.
 while ps -p ${pid} >/dev/null; do
   sleep 1
   if ((++elapsed % WAIT_MSG_INTERVAL == 0)); then
     echo "Waiting for the completion of the main script. $((elapsed / 60))m and counting ..."
-    echo -e "\nCurrently running queries in Postgres:"
-    psql -v ON_ERROR_STOP=on -c 'SELECT * FROM running;'
+#    echo -e "\nCurrently running queries in Postgres:"
+#    psql -v ON_ERROR_STOP=on -c 'SELECT * FROM running;'
   fi
 done
 
 # Return the exit code of the terminated background process. This works in Bash 4.4 despite what Bash docs say:
 # "If neither jobspec nor pid specifies an active child process of the shell, the return status is 127."
 wait ${pid}
-
-echo 'After the failure: this should have not be seen!' >&2
+#echo 'ERROR After the failure: this should not be seen!' >&2
 
 echo -e "\n## Parallel run with two jobs using & ##"
 {
   echo 'Job #1'
-  wc *.sh
+  wc "*.sh"
 } &
 {
   echo 'Job #2'
@@ -93,6 +130,7 @@ wait
 echo 'After the failure: this should have not be seen!' >&2
 
 echo -e "\n## GNU Parallel ##"
+# shellcheck disable=SC2016
 parallel --halt soon,fail=1 --line-buffer 'set -e
   #set -o pipefail
   echo "Job #{#}, slot #{%}"
@@ -104,6 +142,7 @@ parallel --halt soon,fail=1 --line-buffer 'set -e
 #echo "This should not be seen!" >&2
 
 echo -e "\n## GNU Parallel: two job arguments (single-line) ##"
+# shellcheck disable=SC2016
 parallel --halt soon,fail=1 --line-buffer ::: "echo 'Job #1' && wc *.sh" \
   'echo "Job #2"; for file in *.sh; do echo "Processing $file ..."; done'
 

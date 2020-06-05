@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -e
+set -o pipefail
 
 readonly STR=foo
 # Arrays can't be exported

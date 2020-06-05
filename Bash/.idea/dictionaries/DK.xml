@@ -2,6 +2,8 @@
   <dictionary name="DK">
     <words>
       <w>erroring</w>
+      <w>now,fail</w>
+      <w>soon,fail</w>
     </words>
   </dictionary>
 </component>
