@@ -58,6 +58,16 @@ done <& "${COPROC[0]}"
 echo "var=$var"
 wait "$_co_pid"
 
+echo -e "\n### Co-process for a pipeline ###"
+coproc { grep -E -v '^(#|root|sync|halt|shutdown)' /etc/passwd \
+    | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }'; }
+# As of Bash 4, `COPROC_PID` has to be saved before it gets reset on process termination
+_co_pid=$COPROC_PID
+while read -r user dir; do
+  echo "User: $user, home: $dir"
+done <& "${COPROC[0]}"
+wait "$_co_pid"
+
 echo -e "\n### Co-process for an invalid command ###"
 # STOP here
 #coproc foo
