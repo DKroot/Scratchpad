@@ -35,6 +35,14 @@ echo -e \n "### A value from sub-shell='$(foo)' ###"
 # STOP here. The error propagates correctly here
 #var=$(foo)
 
+strings=$(ls)
+echo -e "\n### Read loop: strings ###"
+while read -r line; do
+  echo "$line"
+  var="foo"
+done <<< "$strings"
+echo "var=$var"
+
 # WARNING. The error doesn't propagate in process substitution
 echo -e "\n### Process substitution: pure ###"
 cat < <(foo)
@@ -69,15 +77,16 @@ done <& "${COPROC[0]}"
 wait "$_co_pid"
 
 echo -e "\n### Co-process for an invalid command ###"
+coproc { ls; }
+# STOP on wait
+#coproc { ls; foo; }
 # STOP here
 #coproc foo
-coproc { ls; foo; }
 _co_pid=$COPROC_PID
 echo "Co-process stdout fd = ${COPROC[0]}"
 while IFS= read -r line; do
   echo "Processing $line ..."
 done <& "${COPROC[0]}"
-# STOP here
 wait "$_co_pid"
 
 echo -e "\n## Abbreviated conditions don't fail the script ##"
