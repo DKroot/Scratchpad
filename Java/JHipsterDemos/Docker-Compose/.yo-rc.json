@@ -1,0 +1,48 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "gov.nih.cit.itasng"
+    },
+    "jhipsterVersion": "6.9.1",
+    "applicationType": "monolith",
+    "baseName": "jhipster_docker_compose",
+    "packageName": "gov.nih.cit.itasng",
+    "packageFolder": "gov/nih/cit/itasng",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mssql",
+    "prodDatabaseType": "mssql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "MjdkMDk2ZDIxNDcyN2EzMGI5ODBkMDU4N2I5NTA5OGYyZGFlNWMwMWYzZmE2ODNkMGM2OTFjZWZiNDE3YTk0YzM3OGRlYWMwMDk0OWQxNmE2YjgzNzgwNzIzMDI4MDFkMWE3NDAyMzgzMGM2ZGFmOGM5YWI2MTc0ZmY0Y2Y4NGI=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1591805878881,
+    "testFrameworks": ["cucumber"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [
+      {
+        "name": "generator-jhipster-ansible",
+        "version": "0.3.0"
+      },
+      {
+        "name": "generator-jhipster-apiutils",
+        "version": "0.8.1"
+      }
+    ],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}
