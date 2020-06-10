@@ -1,0 +1,50 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "gov.nih.cit.itasng"
+    },
+    "jhipsterVersion": "6.9.1",
+    "applicationType": "monolith",
+    "baseName": "demo_vue_docker",
+    "packageName": "gov.nih.cit.itasng",
+    "packageFolder": "gov/nih/cit/itasng",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mssql",
+    "prodDatabaseType": "mssql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "ZDYyMWI5N2Y1MWZjMThjMjRmYWIzMjMzMGQwNTMxMWM0MWUyYWE1ZjJlOGJmOGM4NGM3NzE0ZGUyMWM1MzdlZmJlMWRmODRjNTM4MGYwZGRhNzU1NGZlZjU4ZjliN2Y3MTVhNmVlYjY2ZjQ4N2VlMTMxNzUxZTE1YTYyMGVjYWY=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "vue",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1591816389037,
+    "testFrameworks": ["cucumber"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [
+      {
+        "name": "generator-jhipster-vuejs",
+        "version": "1.8.2"
+      }
+    ],
+    "enableTranslation": false,
+    "blueprints": [
+      {
+        "name": "generator-jhipster-vuejs",
+        "version": "1.8.2"
+      }
+    ]
+  }
+}
