@@ -45,6 +45,10 @@
         "name": "generator-jhipster-vuejs",
         "version": "1.8.2"
       }
-    ]
+    ],
+    "appsFolders": ["demo_vue_docker"],
+    "directoryPath": "../",
+    "monitoring": "no",
+    "consoleOptions": []
   }
 }

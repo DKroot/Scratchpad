@@ -1,0 +1,92 @@
+println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
+def systemEnv = System.getenv() // a Java Map of env. vars
+def sysPath = systemEnv.getOrDefault("PATH", systemEnv.Path)
+println "Using PATH=${sysPath}"
+
+task main() {
+    doLast {
+        println "\nExecuting `ls`"
+        println "====="
+        exec {
+            commandLine 'ls', '-a'
+        }
+        println "====="
+
+        println "\nExecuting `ls` and suppress failures"
+        println "====="
+        def result = exec {
+            ignoreExitValue = true
+            commandLine 'ls', 'foo'
+        }
+        //assert (result.exitValue > 0) : 'Execution failed'
+        println "====="
+
+        println "\nExecuting `growlnotify`"
+        println "====="
+        exec {
+            commandLine 'growlnotify', '-v'
+        }
+        println "====="
+
+        println "\nExecuting `7z`"
+        println "====="
+        exec {
+            commandLine '7z'
+        }
+        println "====="
+
+        println "\nExecuting `docker`"
+        println "====="
+        exec {
+            commandLine 'docker', '-v'
+        }
+        println "====="
+
+        println "\nExecuting `docker-compose`"
+        println "====="
+        exec {
+            commandLine 'docker-compose', '-v'
+        }
+        println "====="
+
+        println "\nExecuting `docker-compose down`"
+        println "====="
+        exec {
+            commandLine 'docker-compose', 'down'
+        }
+        println "====="
+    }
+}
+
+
+task dockerComposeDown() {
+    group 'Deployment'
+    description 'Stops a Docker Compose cluster and removes stopped containers'
+
+    doLast {
+        exec {
+            // Safe to use when the cluster is not up
+            commandLine 'docker-compose', 'down'
+        }
+    }
+}
+
+task vars() {
+    group 'Help'
+    description 'Prints environment variables and JVM System Properties'
+    doLast {
+        def systemProp = System.properties // a Java Map of system properties
+
+        println("== Environment variables ==\n")
+        for (var in systemEnv.sort()) {
+            println "${var.key}=${var.value}"
+        }
+
+        println("\n== JVM System Properties ==\n")
+        for (var in systemProp.sort()) {
+            println "${var.key}=${var.value}"
+        }
+    }
+}
+
+defaultTasks = ['main']
