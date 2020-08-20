@@ -102,6 +102,10 @@ echo "Executing a script with exit code 0"
 echo "Sourcing a script with exit code 0"
 . "${absolute_script_dir}/demo-exit-code.sh"
 
+#echo "Executing a script with exit code 1"
+# This fails fast correctly
+#"${absolute_script_dir}/demo-exit-code.sh" 1
+
 echo -e "\n## Wait loop ##"
 # STOP on `wait`. Failing command in a pipeline
 #bash -c 'sleep 5; bad_command' | head -1 &
@@ -193,7 +197,7 @@ job_bar() {
 export -f job_foo job_bar
 parallel --halt soon,fail=1 --line-buffer ::: job_foo job_bar
 
-echo -e "\n### GNU Parallel: function command arguments with --halt now ###"
+#echo -e "\n### GNU Parallel: function command arguments with --halt now ###"
 job_baz() {
   set -e
   echo 'Job #1'
@@ -210,4 +214,7 @@ job_qux() {
   done
 }
 export -f job_baz job_qux
-parallel --halt now,fail=1 --line-buffer ::: job_baz job_qux
+# This fails fast correctly
+# parallel --halt now,fail=1 --line-buffer ::: job_baz job_qux
+
+echo -e "\nThe end."
