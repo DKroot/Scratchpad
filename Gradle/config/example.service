@@ -1,0 +1,12 @@
+[Unit]
+Description=ITASNG Dev (no SSO) web application
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/java -jar /apps/itas/apps/itasng/itasng.jar \\
+    --custom.prop='${custom_prop}' \\
+    --server.servlet.context-path=/itasng-dev
+ExecStop=/usr/bin/curl -X POST localhost:4242/itasng-dev/actuator/shutdown
+
+[Install]
+WantedBy=multi-user.target
