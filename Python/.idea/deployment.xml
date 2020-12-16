@@ -18,6 +18,14 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="ITASNG Dev">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$/Python_Katas" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
   </component>
 </project>

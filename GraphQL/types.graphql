@@ -1,0 +1,25 @@
+# list all types defined in the schema
+query Types {
+    __schema {
+        types {
+            name
+            kind
+            description
+            fields {
+                name
+            }
+        }
+    }
+}
+
+# list a type
+query Type {
+    __type(name: "Organization") {
+        name
+        kind
+        description
+        fields {
+            name
+        }
+    }
+}

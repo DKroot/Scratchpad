@@ -1,0 +1,55 @@
+
+query Org($org_account_name: String!) {
+    organization(login: $org_account_name) {
+        name
+        description
+        id
+    }
+}
+
+query OrgTeams($org_account_name: String!) {
+    organization(login: $org_account_name) {
+        teams(first: 100) {
+            edges {
+                node {
+                    name
+                    id
+                    slug
+                }
+            }
+        }
+    }
+}
+
+query Team($org_account_name: String!, $team_slug: String!) {
+    organization(login: $org_account_name) {
+        team(slug: $team_slug) {
+            name
+            id
+        }
+    }
+}
+
+query OrgMembers($org_account_name: String!) {
+    organization(login: $org_account_name) {
+        membersWithRole(first: 100) {
+            edges {
+                node {
+                    login
+                    # Not available with just under the `admin:org` scope
+                    #                email
+                    name
+                    id
+                }
+            }
+        }
+    }
+}
+
+mutation AddMemberToTeam {
+    addAssigneesToAssignable(input:{subjectId:"MDU6SXNzdWUyMzEzOTE1NTE=",content:HOORAY}) {
+        assignable {
+
+        }
+    }
+}

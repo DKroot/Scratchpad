@@ -1,0 +1,6 @@
+# Current API user
+query {
+    viewer {
+        login
+    }
+}
