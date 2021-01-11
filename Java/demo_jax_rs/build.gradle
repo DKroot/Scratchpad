@@ -1,0 +1,132 @@
+plugins {
+    //region Server-side stack
+    id 'java'
+
+    /*
+    Adds Spring Boot tasks and configurations depending on other plug-ins.
+    The version of this plug-in determines Spring Boot dependency version.
+    */
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+
+    // Automatically import the spring-boot-dependencies BOM
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+
+    /*
+    Adds Lombok dependency to `annotationProcessor` and `compileOnly` configurations of each source set.
+    The `javadoc` task will be configured to read the `delombok`-ed sources instead of the actual sources.
+    Recommended to use by Lombok.
+    */
+    id 'io.freefair.lombok' version '5.1.0'
+    //endregion
+}
+
+repositories {
+    // Use the local Maven cache e.g. from other projects
+    mavenLocal()
+
+    mavenCentral()
+
+    jcenter()
+
+    maven {
+        name = 'Spring Releases'
+        url = 'https://repo.spring.io/libs-release'
+    }
+}
+
+group = 'org.houseofsoft'
+version = '1.0.0'
+description = 'Demo JAX-RS'
+
+//sourceCompatibility = '12'
+//targetCompatibility = '12'
+
+def os = System.getProperty('os.name').toLowerCase()
+
+// TBD fix: Gradle is using `build/` output while the auto-imported IDE module uses `out/`
+//project.buildDir = 'build'
+
+println description
+println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
+def env = project.hasProperty("env") ? env : "Local"
+
+dependencies {
+    //region Spring Boot-managed dependencies
+    /*
+    Versions are specified by the Sprint Boot BOM, which is added by `io.spring.dependency-management`.
+    See the list of all managed dependencies here:
+    https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-dependency-versions.html
+    */
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // Core starter, including auto-configuration support, logging and YAML
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // Starter for building RESTful web apps using `JAX-RS` and `Jersey`. An alternative to `spring-boot-starter-web`.
+    implementation 'org.springframework.boot:spring-boot-starter-jersey'
+
+    /*
+    Starter to provide the web app servlet, serving static content using Spring MVC and Tomcat as the default
+    embedded container.
+    */
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Starter for using Spring Boot’s Actuator which provides features to help you monitor and manage your application
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    //endregion
+
+    //region Other dependencies of specific (fixed or dynamic) versions.
+
+    // Google Guava: a common-purpose library
+    implementation 'com.google.guava:guava:29.+'
+
+    // FindBugs: provides null-check annotations
+    implementation 'com.google.code.findbugs:jsr305:3.+'
+
+//    implementation "io.jsonwebtoken:jjwt-api:0.+"
+//    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.+"
+//    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.+"
+
+//    testImplementation 'com.opengamma.strata:strata-basics:2.+'
+    //endregion
+}
+
+// Spring Boot configuration
+bootJar {
+    // For local development
+    excludeDevtools = false
+
+    // Default: ${rootProject.name}-${version}.jar
+    // See https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html for more info
+    archiveFileName = "${rootProject.name}.jar"
+
+// By default, the executable archive’s main class will be configured automatically by looking for
+// a class with a public static void main(String[]) method in directories on the task’s classpath.
+//    mainClassName = 'gov.nih.cit.itasng.Application'
+}
+
+// Spring Boot Actuator’s info endpoint automatically publishes information about a build
+springBoot {
+    buildInfo()
+}
+
+task vars() {
+    group 'Help'
+    description 'Print environment variables and JVM System Properties'
+    doLast {
+        def systemEnv = System.getenv() // a Java Map of env. vars
+        def systemProp = System.properties // a Java Map of system properties
+
+        println("== Environment variables ==\n")
+        for (var in systemEnv.sort()) {
+            println "${var.key}=${var.value}"
+        }
+
+        println("\n== JVM System Properties ==\n")
+        for (var in systemProp.sort()) {
+            println "${var.key}=${var.value}"
+        }
+    }
+}

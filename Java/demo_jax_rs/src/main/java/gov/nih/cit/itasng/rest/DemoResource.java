@@ -52,7 +52,7 @@ public class DemoResource extends RestResource {
     //    log.debug("Demo record: {}", hitList.get(0));
     var hitList = new ArrayList<DemoResult>();
     hitList.add(new DemoResult(1, "foo"));
-    throw new RuntimeException("Error!");
-//    return Response.ok(hitList).build();
+//    throw new RuntimeException("Error!");
+    return Response.ok(hitList).build();
   }
 }
