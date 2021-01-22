@@ -289,7 +289,8 @@ build-iPhoneSimulator/
 ## Documentation cache and generated files:
 **/.yardoc/
 **/_yardoc/
-**/doc/
+# DISABLED: too broad
+#**/doc/
 **/rdoc/
 
 ## Environment normalization:

@@ -41,14 +41,15 @@ description = 'Demo JAX-RS'
 //sourceCompatibility = '12'
 //targetCompatibility = '12'
 
-def os = System.getProperty('os.name').toLowerCase()
+def systemEnv = System.getenv() // a Java Map of env. vars
+//def os = System.getProperty('os.name').toLowerCase()
 
 // TBD fix: Gradle is using `build/` output while the auto-imported IDE module uses `out/`
 //project.buildDir = 'build'
 
 println description
 println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
-def env = project.hasProperty("env") ? env : "Local"
+//def env = project.hasProperty("env") ? env : "Local"
 
 dependencies {
     //region Spring Boot-managed dependencies
@@ -85,11 +86,11 @@ dependencies {
     // FindBugs: provides null-check annotations
     implementation 'com.google.code.findbugs:jsr305:3.+'
 
-//    implementation "io.jsonwebtoken:jjwt-api:0.+"
-//    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.+"
-//    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.+"
+    implementation 'io.swagger:swagger-jersey2-jaxrs:1.6.+'
+    implementation 'io.springfox:springfox-swagger2:3.+'
 
-//    testImplementation 'com.opengamma.strata:strata-basics:2.+'
+    // FIXME How do we access it?
+    implementation 'io.springfox:springfox-swagger-ui:3.+'
     //endregion
 }
 
@@ -114,19 +115,21 @@ springBoot {
 
 task vars() {
     group 'Help'
-    description 'Print environment variables and JVM System Properties'
+    description 'Prints environment, JVM System Properties and other project info.'
     doLast {
-        def systemEnv = System.getenv() // a Java Map of env. vars
         def systemProp = System.properties // a Java Map of system properties
 
         println("== Environment variables ==\n")
-        for (var in systemEnv.sort()) {
-            println "${var.key}=${var.value}"
+        systemEnv.sort().each { key, value ->
+            println "${key}=${value}"
         }
 
         println("\n== JVM System Properties ==\n")
-        for (var in systemProp.sort()) {
-            println "${var.key}=${var.value}"
+        systemProp.sort().each { key, value ->
+            println "${key}=${value}"
         }
+
+//        println("\n== Node executable ==\n")
+//        println nodeExecutable()
     }
 }
