@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @ApplicationPath("/api")
 public class JerseyConfig extends ResourceConfig {
 
-  public static final String SWAGGER_API_ROOT = "/api";
+  public static final String API_ROOT = "/api";
 
   public JerseyConfig() {
     registerClasses(GenericExceptionMapper.class, FailedRequestExceptionMapper.class);
 
     var swaggerConfig = new BeanConfig();
-    swaggerConfig.setBasePath(SWAGGER_API_ROOT);
+    swaggerConfig.setBasePath(API_ROOT);
     SwaggerConfigLocator.getInstance()
         .putConfig(SwaggerContextService.CONFIG_ID_DEFAULT, swaggerConfig);
 
