@@ -1,7 +1,6 @@
 package org.houseofsoft;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import org.houseofsoft.rest.JerseyConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +9,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
 import springfox.documentation.service.StringVendorExtension;
 import springfox.documentation.service.VendorExtension;
 import springfox.documentation.spi.DocumentationType;
@@ -42,22 +40,18 @@ public class Application extends SpringBootServletInitializer {
   }
 
   public ApiInfo apiInfo() {
-    StringVendorExtension vendorExtension = new StringVendorExtension("", "");
-    Collection<VendorExtension> vendorExtensions = new ArrayList<>();
-    vendorExtensions.add(vendorExtension);
+    @SuppressWarnings("rawtypes") // required in order to pass it to `new ApiInfo()`
+    var vendorExtensions = new ArrayList<VendorExtension>();
+    vendorExtensions.add(new StringVendorExtension("", ""));
 
-    Contact contactInfo = new Contact("AtechRef", "www.atechref.com",
-        "atechsoft@gmail.com");
-
-    return new ApiInfo(
-        "SpringBoot-Swagger2-JaxRS",
-        "Example project showing how to integrate spring boot " +
-            "web app using jaxrs instead of springmvc with swagger and springfox.",
-        "1.0",
-        "For Demo only",
-        contactInfo,
-        "Apache 2.0",
-        "www.apache.org",
+    return new ApiInfo( //
+        "SpringBoot-Swagger2-JaxRS", //
+        "Example project", //
+        "1.0", //
+        "N/A", //
+        null, //
+        "Apache 2.0", //
+        "www.apache.org", //
         vendorExtensions);
   }
 }
