@@ -1,7 +1,8 @@
-package gov.nih.cit.itasng;
+package org.houseofsoft;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import org.houseofsoft.rest.JerseyConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -33,7 +34,7 @@ public class Application extends SpringBootServletInitializer {
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2) //
         .select() //
-        .apis(RequestHandlerSelectors.basePackage("gov.nih.cit.itasng.rest")) //
+        .apis(RequestHandlerSelectors.basePackage(JerseyConfig.class.getPackageName())) //
         .paths(PathSelectors.any()) //
         .build() //
         .enable(true) //

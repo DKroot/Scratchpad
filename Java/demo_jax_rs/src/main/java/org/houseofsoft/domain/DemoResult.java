@@ -1,4 +1,4 @@
-package gov.nih.cit.itasng.domain;
+package org.houseofsoft.domain;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,8 +1,6 @@
-package gov.nih.cit.itasng.rest;
+package org.houseofsoft.rest;
 
-import gov.nih.cit.itasng.domain.DemoResult;
 import io.swagger.annotations.Api;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
@@ -13,9 +11,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.houseofsoft.domain.DemoResult;
 import org.springframework.stereotype.Component;
 
 @Path("demo")
@@ -29,21 +29,25 @@ public class DemoResource {
   /**
    * Retrieves a demo record
    *
-   * @param i an integer
+   * @param code an integer
    */
   @GET
   //  @ApiOperation(value = "Sample description", response = DemoResult.class)
   /*@ApiResponses(value = {@ApiResponse(code = 200, message = "Sample description"),
-      @ApiResponse(code = 404, message = "Resource not found")})*/ public DemoResult render(
-      @QueryParam("i") @DefaultValue("35") Integer i, @Context UriInfo uriInfo,
+      @ApiResponse(code = 404, message = "Resource not found")})*/
+  public DemoResult render(
+      @QueryParam("code") @DefaultValue("35") Integer code, @Context UriInfo uriInfo,
       @Context Request request) {
-    switch (i) {
+    switch (code) {
       case 400:
-        throw new BadRequestException("This is a bad request");
+        throw new FailedRequestException(Status.BAD_REQUEST, "This is a bad request", uriInfo,
+            "Details of a problem");
       case 401:
-        throw new NotAuthorizedException("This is not authorized");
+        throw new FailedRequestException(Status.UNAUTHORIZED, "This is not authorized", uriInfo);
       case 403:
         throw new ForbiddenException("This is forbidden");
+      case 500:
+        throw new RuntimeException("Unexpected error!");
     }
     return new DemoResult(1, "foo");
   }

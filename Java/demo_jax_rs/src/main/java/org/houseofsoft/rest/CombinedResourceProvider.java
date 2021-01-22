@@ -1,4 +1,4 @@
-package gov.nih.cit.itasng.rest;
+package org.houseofsoft.rest;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
