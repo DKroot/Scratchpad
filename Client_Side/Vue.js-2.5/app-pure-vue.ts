@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 
 //region Lazy-loading routing components
 const MessageComponent = () => import("./messageComponent-pure-vue");
+// import MessageComponent from "./messageComponent-pure-vue";
 //endregion
 
 Vue.use(VueRouter);
@@ -48,7 +49,7 @@ const appOptions = {
 
     onNavigate() {
       // noinspection JSIgnoredPromiseFromCall // it works fine
-      router.push({ path: "/message" });
+      router.push({path: "/message"});
     }
   }
 };

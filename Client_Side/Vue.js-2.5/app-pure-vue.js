@@ -3,6 +3,7 @@ define(["require", "exports", "vue", "vue-router"], function (require, exports, 
     Object.defineProperty(exports, "__esModule", { value: true });
     //region Lazy-loading routing components
     var MessageComponent = function () { return new Promise(function (resolve_1, reject_1) { require(["./messageComponent-pure-vue"], resolve_1, reject_1); }); };
+    // import MessageComponent from "./messageComponent-pure-vue";
     //endregion
     vue_1.default.use(vue_router_1.default);
     var routes = [

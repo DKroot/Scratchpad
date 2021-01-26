@@ -25,7 +25,7 @@
       // `Map`
       "ES2015.Collection",
       // `Promise`
-      "ES2015.Promise",
+//      "ES2015.Promise",
       // `Array.prototype.includes()`
       "ES2016.Array.Include",
       // `Object.values()`
