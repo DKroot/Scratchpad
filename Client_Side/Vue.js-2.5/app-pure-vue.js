@@ -1,40 +1,46 @@
-define(["require", "exports", "vue", "vue-router", "./messageComponent-pure-vue"], function (require, exports, vue_1, vue_router_1, messageComponent_pure_vue_1) {
+define(["require", "exports", "vue", "vue-router"], function (require, exports, vue_1, vue_router_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    //region Lazy-loading routing components
+    var MessageComponent = function () { return new Promise(function (resolve_1, reject_1) { require(["./messageComponent-pure-vue"], resolve_1, reject_1); }); };
     //endregion
     vue_1.default.use(vue_router_1.default);
-    const routes = [
+    var routes = [
         {
-            path: "/",
-            component: messageComponent_pure_vue_1.default
+            path: "/message",
+            component: MessageComponent
         }
     ];
-    const router = new vue_router_1.default({
-        routes
+    var router = new vue_router_1.default({
+        routes: routes
     });
-    const appOptions = {
-        router,
-        data() {
+    var appOptions = {
+        router: router,
+        data: function () {
             return {
                 user: null,
                 loading: false
             };
         },
         methods: {
-            onLoading() {
+            onLoading: function () {
                 // @ts-ignore
                 this.loading = true;
                 console.log("Loading...");
             },
-            onLoaded() {
+            onLoaded: function () {
                 // @ts-ignore
                 this.loading = false;
                 console.log("Loaded.");
             },
-            onLoadingError(error, serviceUrl) {
+            onLoadingError: function (error, serviceUrl) {
                 // @ts-ignore
                 this.loading = false;
                 console.log("Loading error for", serviceUrl, error.response);
+            },
+            onNavigate: function () {
+                // noinspection JSIgnoredPromiseFromCall // it works fine
+                router.push({ path: "/message" });
             }
         }
     };

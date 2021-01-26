@@ -1,28 +1,63 @@
 {
   "compilerOptions": {
-    //alphabetically ordered options
+    //region alphabetically ordered options
     // Allow default imports from modules with no default export. This does not affect code emit.
-//    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true,
+
+    // Base directory to resolve non-relative module names. This must be specified if `paths` is.
+    "baseUrl": "node_modules",
 
     // Enables experimental support for ES decorators.
     "experimentalDecorators": true,
 
-    // Enable experimental support for emitting certain types of metadata for declarations
-    "emitDecoratorMetadata": true,
+    // Compile-time declaration libraries: include only the ones actually needed
+    "lib": [
+      //region ES5 defaults
+      "DOM",
+      "ES5",
+      "ScriptHost",
+      //endregion
+
+      // `Object.assign()`
+      // `String.prototype.includes()`
+      // `String.prototype.startsWith()`, `String.prototype.endsWith()`
+      "ES2015.Core",
+      // `Map`
+      "ES2015.Collection",
+      // `Promise`
+      "ES2015.Promise",
+      // `Array.prototype.includes()`
+      "ES2016.Array.Include",
+      // `Object.values()`
+      "ES2017.Object",
+      // `String.prototype.padStart()`
+      "ES2017.String",
+    ],
 
     // Module code generation: "none", "commonjs", "amd", "system", "umd", "es6" or "es2015".
-    "module": "amd",
+    "module": "AMD",
 
     /* There are two possible module resolution strategies: Node and Classic. You can use the
     --moduleResolution flag to specify the module resolution strategy. If not specified,
     the default is Classic for --module AMD | System | ES2015 or Node otherwise. */
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
 
     // Raise error on expressions and declarations with an implied any type.
     "noImplicitAny": true,
 
     // TypeScript will issue an error when this is used without an explicit (or inferred) type.
     "noImplicitThis": true,
+
+    // Explicit mappings are required for modules differing in case only: Linux file system is case-sensitive
+    "paths": {
+      // Mappings are relative to `baseUrl`
+      "Vue": [
+        "vue"
+      ],
+      "Vue-router": [
+        "vue-router"
+      ]
+    },
 
     // Generates corresponding .map file(s).
     "sourceMap": true,
@@ -32,7 +67,8 @@
     "strictNullChecks": true,
 
     // ES2017 output supported via e.g. `core-js` polyfill
-    "target": "es2017"
+    "target": "ES5"
+    //endregion
   },
   "include": [
     "*.ts"

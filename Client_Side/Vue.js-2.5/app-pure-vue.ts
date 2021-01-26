@@ -2,15 +2,15 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import { AxiosError } from "axios";
 
-//region App components
-import MessageComponent from "./messageComponent-pure-vue";
+//region Lazy-loading routing components
+const MessageComponent = () => import("./messageComponent-pure-vue");
 //endregion
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/message",
     component: MessageComponent
   }
 ];
@@ -44,6 +44,11 @@ const appOptions = {
       // @ts-ignore
       this.loading = false;
       console.log("Loading error for", serviceUrl, error.response);
+    },
+
+    onNavigate() {
+      // noinspection JSIgnoredPromiseFromCall // it works fine
+      router.push({ path: "/message" });
     }
   }
 };

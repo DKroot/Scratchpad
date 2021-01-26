@@ -1,4 +1,13 @@
-// import * as Vue from "vue";
+// import template = require("text!message.html");
+const template = `
+<p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
+  <b>Lazy Loaded Message Component</b><br/>
+  User {{ user }}.<br/>
+  Received {{ userDataSize }} bytes from an async HTTP call.
+</p>
+`;
+
+
 import axios from "axios";
 import Vue from "vue";
 
@@ -9,12 +18,7 @@ const MessageComponent = Vue.extend({
       userDataSize: undefined
     };
   },
-  template: `
-    <p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
-      Message Component for user {{ user }}.<br>
-      Received {{ userDataSize }} bytes.
-    </p>
-  `,
+  template: template as any,
   methods: {
     load() {
       // noinspection DuplicatedCode
@@ -37,13 +41,11 @@ const MessageComponent = Vue.extend({
   },
   created() {
     // fetch the data when the view is created and the data is already being observed
-    // @ts-ignore
     this.load();
   },
   watch: {
     user(to) {
       if (to) {
-        // @ts-ignore
         this.load();
       }
     }
