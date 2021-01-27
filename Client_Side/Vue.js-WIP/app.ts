@@ -3,7 +3,10 @@ import { Component } from "vue-property-decorator";
 import VueRouter from "vue-router";
 import { AxiosError } from "axios";
 
-import MessageComponent from "./messageComponent";
+//region Lazy-loading routing components
+const MessageComponent = () => import("./messageComponent");
+// import MessageComponent from "./messageComponent";
+//endregion
 
 Vue.use(VueRouter);
 
