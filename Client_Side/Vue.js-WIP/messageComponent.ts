@@ -1,30 +1,27 @@
-import * as Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import axios, { AxiosError } from "axios";
-import { Route } from "vue-router";
+import Vue from "vue";
+
+import { Component, Prop } from "vue-property-decorator";
+import axios from "axios";
+
+import template = require("text!message.html");
+/*const template = `
+<p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
+  <b>Message Component</b><br/>
+  User {{ user }}.<br/>
+  Received {{ userDataSize }} bytes from an async HTTP call.
+</p>
+`;*/
 
 @Component({
-  template: `
-    <p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
-      Message Component for user {{ user }}.<br>
-      Data size = {{ userDataSize }}.
-    </p>
-  `
+  template: template as any
 })
-export default class MessageComponent  extends Vue {
+export default class MessageComponent extends Vue {
   @Prop()
   user: string;
 
   userDataSize: number | null = null;
 
-  // noinspection JSUnusedLocalSymbols
-  @Watch("user")
-  onUserChanged(val: string, oldVal: string) {
-    if (val) {
-      this.load();
-    }
-  }
-
+  // noinspection DuplicatedCode
   load() {
     if (this.user) {
       this.$emit("loading");

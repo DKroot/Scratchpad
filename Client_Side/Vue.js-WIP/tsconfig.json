@@ -1,33 +1,90 @@
 {
-  "compilerOptions": { //alphabetically ordered options
+  "compilerOptions": {
+    //region alphabetically ordered options
+    //    "allowJs": true,
+
     // Allow default imports from modules with no default export. This does not affect code emit.
     "allowSyntheticDefaultImports": true,
+
+    // Base directory to resolve non-relative module names. This must be specified if `paths` is.
+    "baseUrl": "node_modules",
 
     // Enables experimental support for ES decorators.
     "experimentalDecorators": true,
 
-    // Module code generation: "none", "commonjs", "amd", "system", "umd", "es6" or "es2015".
-    "module": "amd",
+    // Compile-time declaration libraries: include only the ones actually needed
+    "lib": [
+      //region ES5 defaults
+      "DOM",
+      "ES5",
+      "ScriptHost",
+      //endregion
 
-    /* There are two possible module resolution strategies: Node and Classic. You can use the
-    --moduleResolution flag to specify the module resolution strategy. If not specified,
-    the default is Classic for --module AMD | System | ES2015 or Node otherwise. */
-    "moduleResolution": "node",
+      // `Object.assign()`
+      // `String.prototype.includes()`
+      // `String.prototype.startsWith()`, `String.prototype.endsWith()`
+      "ES2015.Core",
+
+      // `Map`
+      "ES2015.Collection",
+
+      // `Array.prototype.includes()`
+      "ES2016.Array.Include",
+
+      // `Object.values()`
+      "ES2017.Object",
+
+      // `String.prototype.padStart()`
+      "ES2017.String"
+    ],
+
+    // Module code generation: "None", "CommonJS", "AMD", "System", "UMD", "ES6" or "ES2015"
+    "module": "AMD",
+
+    /*
+    There are two possible module resolution strategies: `Node` and `Classic`. If not specified,
+    the default is `Classic` for `AMD` or `System` or `ES2015` modules and `Node` otherwise.
+    */
+    "moduleResolution": "Node",
 
     // Raise error on expressions and declarations with an implied any type.
     "noImplicitAny": true,
 
-    // TypeScript will issue an error when this is used without an explicit (or inferred) type.
+    // TypeScript will issue an error when `this` is used without an explicit (or inferred) type.
     "noImplicitThis": true,
 
-    // Generates corresponding .map file(s).
+    // Used by `tsc` CLI and IDEA. Overridden by the project Gradle build.
+    "outDir": "out",
+
+    // Explicit mappings are required for modules differing in case only: Linux file system is case-sensitive
+    "paths": {
+      // Mappings are relative to `baseUrl`
+      "Vue": [
+        "vue"
+      ],
+      "Vue-router": [
+        "vue-router"
+      ]
+    },
+
+    // Generates corresponding `.map` file(s).
     "sourceMap": true,
 
-    /* In strict null checking mode, the null and undefined values are not in the domain of every
-    type and are only assignable to themselves and any */
+    // this enables stricter inference for Vue's data properties on `this`
+    // TBD breaks on `Prop()`-annotated Vue props
+    //"strict": true,
+
+    /*
+    In strict null checking mode, the null and undefined values are not in the domain of every
+    type and are only assignable to themselves and any.
+    */
     "strictNullChecks": true,
 
-    // ES2015 (ES6) output supported via e.g. core-js polyfills
-    "target": "es2015"
-  }
+    // `ES5` target aligns with `Vue.js` 2.x browser support
+    "target": "ES5"
+    //endregion
+  },
+  "include": [
+    "*.ts"
+  ]
 }

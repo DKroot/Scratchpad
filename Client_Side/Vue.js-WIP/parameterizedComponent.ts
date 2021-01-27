@@ -1,6 +1,6 @@
-import * as Vue from "vue";
+import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { Route } from "vue-router";
 
 // Register the router hooks
@@ -10,16 +10,18 @@ Component.registerHooks([
   "beforeRouteLeave"
 ]);
 
+const template = `
+<p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
+  Parameterized Component for user {{ user }}.<br/>
+  Data size = {{ userDataSize }}.<br/>
+  
+  Parameter:<br/>
+  * id = {{ $route.params.id }}
+</p>  
+`;
+
 @Component({
-  template: `
-    <p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
-      Parameterized Component for user {{ user }}.<br>
-      Data size = {{ userDataSize }}.<br>
-      
-      Parameter:<br>
-      * id = {{ $route.params.id }}
-    </p>
-  `
+  template: template as any
 })
 export default class ParameterizedComponent extends Vue {
   @Prop()

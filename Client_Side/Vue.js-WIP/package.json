@@ -1,16 +1,28 @@
 {
   "name": "vue-scratchpad",
-  "version": "1.0.0",
+  "scripts": {
+    "tsc": "tsc"
+  },
   "dependencies": {
     "axios": "~0.21.1",
     "requirejs": "~2.3.6",
+    "text": "github:requirejs/text",
+    "ts-polyfill": "~3.7.5",
     "vue": "~2.6.12",
     "vue-class-component": "~7.2.6",
-    "vue-property-decorator": "~9.1.2",
-    "vue-router": "~3.5.1"
+    "vue-property-decorator": "~8.4.2",
+    "vue-router": "~3.1.6"
   },
+  "@comment devDependencies": [
+    "Compilation of `require('text!component.html')` requires the `html.d.ts` ambient declaration"
+  ],
   "devDependencies": {
+    "@types/requirejs": "~2.1.32",
+    "@typescript-eslint/eslint-plugin": "~4.13.0",
+    "@typescript-eslint/parser": "~4.14.0",
+    "eslint": "~7.0.0",
     "node-static": "~0.7.11",
+    "ts-node": "~9.1.1",
     "typescript": "~3.8.3"
   }
 }

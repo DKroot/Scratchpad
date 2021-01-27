@@ -2,7 +2,7 @@
 <project version="4">
   <component name="TypeScriptCompiler">
     <option name="hasOutDirectory" value="true" />
-    <option name="showAllErrors" value="true" />
+    <option name="recompileOnChanges" value="true" />
     <option name="useConfig" value="true" />
   </component>
 </project>

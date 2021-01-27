@@ -1,18 +1,17 @@
 <!DOCTYPE html>
+<!--suppress JSUnresolvedVariable -->
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
   <title>Vue.js Scratchpad</title>
-
-  <script src="node_modules/requirejs/require.js"></script>
+  <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
 
 <h1>Vue.js Scratchpad</h1>
 
 <div v-show="true" id="app" style="display: none">
-  <input v-model="user" autofocus="true" placeholder="Enter any user name">
-  <!--<button @click.prevent="onRenderComponent">Render</button>-->
+  <a href="#" @click.prevent="onNavigate">Load</a>
+  <input v-model="user" placeholder="Enter a name">
 
   <p v-show="loading">Loading...</p>
   <router-view v-show="!loading" :user="user"
@@ -20,23 +19,46 @@
                @loading-error="onLoadingError"></router-view>
 </div>
 
+<!-- A polyfill is typically included before other app scripts -->
+<script src="node_modules/ts-polyfill/dist/ts-polyfill.min.js"
+        type="application/ecmascript"></script>
+
 <script>
-  requirejs.config({
-    // By default load required library modules from lib/
-    baseUrl: 'lib',
+  // noinspection ES6ConvertVarToLetConst: using `var` per RequireJS docs
+  var require = {
+    /*
+    Required.
+    Compiled app modules are resolved using he default mapping from this directory.
+    Third-party libraries are resolved using explicit path mappings relative to this directory.
+    */
+    baseUrl: 'out',
 
     paths: {
-      'messageComponent': '../messageComponent',
+      //region Vue.js and Vue Router
 
-      /*
-       By default modules would be loaded from {module}.js files (filename = module).
-       Specify {module} (or '{module}'): '{filename}' mapping if filename != module.
-       Specify path fallbacks ([filenames]) for minimized / normal version consumption pattern.
-       */
-      'reflect-metadata': 'Reflect'
+      // See https://stackoverflow.com/questions/59958983/cant-make-vue-js-typescript-requirejs-stack-work-after-vue-js-2-5-upgrade
+      Vue: "../node_modules/vue/dist/vue",
+      vue: "vue-loader",
+      "Vue-router": "../node_modules/vue-router/dist/vue-router.min",
+      "vue-router": "vue-router-loader",
+      //endregion
+
+      //region Other libraries (in alphabetical order)
+      // All third-party libraries must be included here. Use path fallbacks for minimized libs.
+
+      // All third-party libraries must be included here. Use path fall-backs for minimized libs.
+      axios: "../node_modules/axios/dist/axios.min",
+      text: "../node_modules/text/text",
+
+      "vue-class-component": ["../node_modules/vue-class-component/dist/vue-class-component.min",
+        "../node_modules/vue-class-component/dist/vue-class-component"],
+      "vue-property-decorator":
+          "../node_modules/vue-property-decorator/lib/vue-property-decorator.umd"
+      //endregion
     }
-  });
-  require(["app.js"]);
+  };
 </script>
+<script data-main="app" src="node_modules/requirejs/require.js"
+        type="application/ecmascript"></script>
 </body>
 </html>

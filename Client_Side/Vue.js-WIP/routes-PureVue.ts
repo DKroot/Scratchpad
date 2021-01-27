@@ -1,10 +1,9 @@
-import MessageComponent from "./messageComponent";
-
-import * as Vue from "vue";
-import { ComponentOptions } from "vue";
-import * as VueRouter from "vue-router";
+import Vue, { ComponentOptions } from "vue";
+import VueRouter from "vue-router";
 import { AxiosError } from "axios";
+
 import ComponentWithParams from "./parameterizedComponent";
+import MessageComponent from "./messageComponent";
 
 Vue.use(VueRouter);
 

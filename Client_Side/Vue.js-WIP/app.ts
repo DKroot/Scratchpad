@@ -1,9 +1,9 @@
-import MessageComponent from "./messageComponent";
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import VueRouter from "vue-router";
+import { AxiosError } from "axios";
 
-import * as Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import * as VueRouter from "vue-router";
-import axios, { AxiosError } from "axios";
+import MessageComponent from "./messageComponent";
 
 Vue.use(VueRouter);
 
@@ -11,7 +11,7 @@ Vue.use(VueRouter);
   router: new VueRouter({
     routes: [
       {
-        path: "/",
+        path: "/message",
         component: MessageComponent
       }
     ]
@@ -34,6 +34,11 @@ class App extends Vue {
   onLoadingError(error: AxiosError, serviceUrl: string) {
     this.loading = false;
     console.log("Loading error for", serviceUrl, error.response);
+  }
+
+  onNavigate() {
+    // noinspection JSIgnoredPromiseFromCall: optional
+    this.$router.push({path: "/message"});
   }
 }
 
