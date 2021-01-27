@@ -2,7 +2,6 @@ import Vue from "vue";
 
 import { Component, Prop } from "vue-property-decorator";
 import axios from "axios";
-
 import template = require("text!message.html");
 /*const template = `
 <p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
@@ -23,19 +22,17 @@ export default class MessageComponent extends Vue {
 
   // noinspection DuplicatedCode
   load() {
-    if (this.user) {
-      this.$emit("loading");
-      const serviceUrl = ".";
-      axios.get(serviceUrl)
-          .then(response => {
-            this.$emit("success");
-            this.userDataSize = response.data.length;
-            console.log("Received data for", serviceUrl);
-          })
-          .catch(error => {
-            this.$emit("loading-error", error, serviceUrl);
-          });
-    }
+    this.$emit("loading");
+    const serviceUrl = ".";
+    axios.get(serviceUrl)
+        .then(response => {
+          this.$emit("success");
+          this.userDataSize = response.data.length;
+          console.log("Received data for", serviceUrl);
+        })
+        .catch(error => {
+          this.$emit("loading-error", error, serviceUrl);
+        });
   }
 
   created() {

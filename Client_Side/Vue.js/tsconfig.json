@@ -28,6 +28,10 @@
       // `Map`
       "ES2015.Collection",
 
+      // `Promise`: required for dynamic imports
+      "ES2015.Iterable", // required for Promise
+      "ES2015.Promise",
+
       // `Array.prototype.includes()`
       "ES2016.Array.Include",
 

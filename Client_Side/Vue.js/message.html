@@ -1,6 +1,6 @@
 <!--suppress JSUnresolvedVariable -->
-<p v-if='user && userDataSize' style='border: dashed; padding: 10px'>
+<p v-if='userDataSize' style='border: dashed; padding: 10px'>
   <b>Lazy Loaded Message Component</b><br/>
-  User {{ user }}.<br/>
+  User: {{ user ? user : 'not entered' }}.<br/>
   Received {{ userDataSize }} bytes from an async HTTP call.
 </p>

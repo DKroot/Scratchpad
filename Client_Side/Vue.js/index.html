@@ -11,7 +11,7 @@
 
 <div v-show="true" id="app" style="display: none">
   <a href="#" @click.prevent="onNavigate">Load</a>
-  <input v-model="user" placeholder="Enter a name">
+  <input v-model="user" placeholder="(Optional) Enter a name">
 
   <p v-show="loading">Loading...</p>
   <router-view v-show="!loading" :user="user"
