@@ -2,7 +2,7 @@
   "name": "vue-scratchpad",
   "version": "1.0.0",
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "requirejs": "~2.3.6",
     "requirejs-vue": "~1.1.5",
     "vue": "~2.6.11",
