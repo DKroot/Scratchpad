@@ -64,47 +64,22 @@ if (($# > 0)); then
   echo "Head (all arguments except last): \${*%%\$tail} = ${*%%$tail}"
 fi
 
-function f() {
-  echo "Inside the function"
-  echo "Number of parameters: \$# = $#"
-  echo "\$0 = $0"
-  echo "\$1 = $1"
-  echo "\$2 = $2"
-  echo "\$3 = $3"
-  echo "\$4 = $4"
-  cat <<'HEREDOC'
-Argument array: "%s\n" "$@"
------
-HEREDOC
-  printf "%s\n" "$@"
-  echo '-----'
-  IFS=';'
-  echo "All arguments (double-quoted): IFS=';' \$* = $*"
-}
-
-echo
-echo "Passing all arguments to a direct function call"
-f "$@"
-
-echo
-echo "Passing hardcoded arguments with spaces to a direct function call"
-f param1 "param 2 with a space" param3 --param="value 4 with a space"
-pause
-
 echo -e "\n### Options Processing ###"
 vflag=off
 f=
-while getopts vf: opt; do
+while getopts vf:- opt; do
   case "$opt" in
-  v)
-    vflag=on
-    ;;
-  f)
-    f="$OPTARG"
-    ;;
-  \?) # unknown flag
-    echo "Valid parameters: $0 [-v] [-f filename] [something ...]"
-    exit 1
+    -) # Long option: an app CLI parameter
+      ;;
+    v)
+      vflag=on
+      ;;
+    f)
+      f="$OPTARG"
+      ;;
+    \?) # unknown flag
+      echo "Valid parameters: $0 [-v] [-f filename] [something ...]"
+      exit 1
     ;;
   esac
 done
@@ -113,32 +88,6 @@ shift $((OPTIND - 1))
 echo "\$vflag = $vflag"
 echo "\$f = $f"
 echo "Other parameters: \$* = $*"
-
-var="foo"
-echo -e "\n### Variables and sub-processes ###"
-echo "Variable change is not visible from a sub-shell introduced by piping"
-while IFS= read -r line; do
-  echo "$line"
-  var="bar"
-done <"$0"
-echo "var=$var"
-
-var="foo"
-echo "Variable change is OK here (without piping)"
-while IFS=: read -r user enc_passwd uid gid full_name home shell; do
-  echo "User record: $user $enc_passwd $uid $gid $full_name $home $shell"
-  var="bar"
-done </etc/passwd
-echo "var=$var"
-
-var="foo"
-echo "Variable change is OK to use here via Process Substitution"
-while IFS=: read -r user uid home; do
-  echo "User record: $user $uid $home"
-  var="bar"
-done < <(cat /etc/passwd | cut -d ':' -f 1,3,6)
-echo "var=$var"
-
 pause
 
 echo -e "\n## Environment ##"

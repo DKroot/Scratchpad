@@ -44,3 +44,29 @@ bash -c 'echo "bash -c subshell"; exported_fun'
 
 echo -e "\n## GNU Parallel subshell function call ##"
 parallel --halt soon,fail=1 --line-buffer --tagstring '|job#{#} s#{%}|' ::: exported_fun
+
+var="foo"
+echo -e "\n### Variables and sub-processes ###"
+echo "Variable change is not visible from a sub-shell introduced by piping"
+while IFS= read -r line; do
+  echo "$line"
+  var="bar"
+done <"$0"
+echo "var=$var"
+
+var="foo"
+echo "Variable change is OK here (without piping)"
+while IFS=: read -r user enc_passwd uid gid full_name home shell; do
+  echo "User record: $user $enc_passwd $uid $gid $full_name $home $shell"
+  var="bar"
+done </etc/passwd
+echo "var=$var"
+
+var="foo"
+echo "Variable change is OK to use here via Process Substitution"
+while IFS=: read -r user uid home; do
+  echo "User record: $user $uid $home"
+  var="bar"
+done < <(cat /etc/passwd | cut -d ':' -f 1,3,6)
+echo "var=$var"
+pause

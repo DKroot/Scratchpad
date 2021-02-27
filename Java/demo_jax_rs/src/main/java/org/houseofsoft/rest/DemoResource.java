@@ -37,7 +37,7 @@ public class DemoResource {
   @ApiOperation(value = "Retrieves a demo record")
   //  @ApiOperation(value = "Sample description", response = DemoResult.class) //
   // Describe responses other than 200 (optional)
-  @ApiResponses(value = {
+  @ApiResponses({
       @ApiResponse(code = 400, message = "Bad request", response =
           FailedRequestResponseWithDetails.class),
       @ApiResponse(code = 401, message = "Not authorized", response =

@@ -8,6 +8,24 @@ set -o pipefail
 echo -e "\n## Running under ${USER}@${HOSTNAME} in ${PWD} ##\n"
 echo "Shell options: $-"
 
+function f() {
+  echo "Inside the function"
+  echo "Number of parameters: \$# = $#"
+  echo "\$0 = $0"
+  echo "\$1 = $1"
+  echo "\$2 = $2"
+  echo "\$3 = $3"
+  echo "\$4 = $4"
+  cat <<'HEREDOC'
+Argument array: "%s\n" "$@"
+-----
+HEREDOC
+  printf "%s\n" "$@"
+  echo '-----'
+  IFS=';'
+  echo "All arguments (double-quoted): IFS=';' \$* = $*"
+}
+
 returning_fun() {
   echo -e "\nInside returning_fun()"
   echo "Shell options: $-"
@@ -39,6 +57,15 @@ erroring_fun() {
   # This should error out and stop the script
   foo
 }
+
+echo
+echo "Passing all arguments to a direct function call"
+f "$@"
+
+echo
+echo "Passing hardcoded arguments with spaces to a direct function call"
+f param1 "param 2 with a space" param3 --param="value 4 with a space"
+pause
 
 var="foo"
 
