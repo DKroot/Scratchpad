@@ -1,7 +1,12 @@
-//Arrays.stream("nlm_idconverter".split("_")).map(e -> e.toString()).collect(Collectors.toList())
+static String getAcronymFromSnakeCase(String s) {
+  s ? s.split(/_/)*.getAt(0).join() : ''
+}
 
-"nlm_idconverter".split(/_/).collect { it ? it[0] : "" }.join()
+def s = 'nlm_idconverter'
+println "Acronym for `${s}` = `${getAcronymFromSnakeCase(s)}`"
 
-//"".split("_").collect { it[0] }.join()
+s = 'word'
+println "Acronym for `${s}` = `${getAcronymFromSnakeCase(s)}`"
 
-//"".split("_").collect { it ? it[0] : "" }
+s = ''
+println "Acronym for `${s}` = `${getAcronymFromSnakeCase(s)}`"
