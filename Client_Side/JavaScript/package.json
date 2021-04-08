@@ -1,0 +1,13 @@
+{
+  "name": "javascript-scratchpad",
+  "description": "A scratchpad",
+  "repository": "https://github.com/DKroot/Scratchpad",
+  "license": "CC-PDDC",
+  "version": "1.0.0",
+  "dependencies": {
+    "configurable-date-input-polyfill": "~2.8.2"
+  },
+  "devDependencies": {
+    "node-static": "^0.7.11"
+  }
+}

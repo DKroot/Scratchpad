@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Date Inputs</title>
+
+  <script>
+    function viewValues() {
+      const form = document.forms["mainForm"]
+      let message = "Form values:\n";
+      for (const input of form) {
+        message += (input.name + '=' + input.value + "\n")
+      }
+      alert(message)
+    }
+  </script>
+</head>
+<body>
+<form name="mainForm" action="#">
+  From: <input type="date" name="fromDate"> To: <input type="date" name="toDate">
+  <p></p>
+  <input type="text" name="text" value="text value">
+  <p></p>
+
+  <input type="submit" name="go" value="View values" onclick="viewValues(); return false">
+</form>
+
+<script src="node_modules/configurable-date-input-polyfill/configurable-date-input-polyfill.dist.js"></script>
+
+</body>
+</html>
