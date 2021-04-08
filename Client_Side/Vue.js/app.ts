@@ -1,11 +1,20 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+
 import VueRouter from "vue-router";
 import { AxiosError } from "axios";
 
-//region Lazy-loading routing components
+//region Lazy-loading components
+// @ts-ignore
+const DatePick = () => import("vue-date-pick");
+// TBD Requires an ambient module definition, which is hard to write
+// import DatePick from "vue-date-pick";
 const MessageComponent = () => import("./messageComponent");
 // import MessageComponent from "./messageComponent";
+//endregion
+
+//region Global reusable components
+Vue.component('date', DatePick);
 //endregion
 
 Vue.use(VueRouter);
@@ -21,8 +30,16 @@ Vue.use(VueRouter);
   })
 })
 class App extends Vue {
+  //region Reactive data fields
+  /* Reactive fields must not be left `undefined`.
+   See https://github.com/vuejs/vue-class-component#undefined-will-not-be-reactive.*/
   user: string | null = null;
+  fromDate: string | null = null;
+  toDate: string | null = null;
+
   loading = false;
+
+  //endregion
 
   onLoading() {
     this.loading = true;

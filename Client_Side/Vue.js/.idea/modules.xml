@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/VueScratchpad.iml" filepath="$PROJECT_DIR$/VueScratchpad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vue Scratchpad.iml" filepath="$PROJECT_DIR$/Vue Scratchpad.iml" />
     </modules>
   </component>
 </project>

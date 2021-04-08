@@ -4,22 +4,32 @@
 <head>
   <title>Vue.js Scratchpad</title>
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" type="text/css" href="node_modules/vue-date-pick/dist/vueDatePick.css">
 </head>
 <body>
 
 <h1>Vue.js Scratchpad</h1>
 
 <div v-show="true" id="app" style="display: none">
-  <a href="#" @click.prevent="onNavigate">Load</a>
-  <input v-model="user" placeholder="(Optional) Enter a name">
+  <p>
+    From: <date v-model="fromDate" format="MM/DD/YYYY" :start-week-on-sunday="true"></date>
+    To: <date v-model="toDate" format="MM/DD/YYYY" :start-week-on-sunday="true"></date>
+  </p>
+
+  <p>
+    <a href="#" @click.prevent="onNavigate">Load</a>
+    <input v-model="user" placeholder="(Optional) Enter a name">
+  </p>
 
   <p v-show="loading">Loading...</p>
   <router-view v-show="!loading" :user="user"
                @loading="onLoading" @success="onLoaded"
                @loading-error="onLoadingError"></router-view>
+
+  <p>From date value: {{fromDate}}, To date value: {{toDate}}</p>
 </div>
 
-<!-- A polyfill is typically included before other app scripts -->
+<!-- Polyfills are typically included before other app scripts -->
 <script src="node_modules/ts-polyfill/dist/ts-polyfill.min.js"
         type="application/ecmascript"></script>
 
@@ -45,13 +55,13 @@
 
       //region Other libraries (in alphabetical order)
       // All third-party libraries must be included here. Use path fallbacks for minimized libs.
-
-      // All third-party libraries must be included here. Use path fall-backs for minimized libs.
       axios: "../node_modules/axios/dist/axios.min",
+      luxon: "../node_modules/luxon/build/amd/luxon",
       text: "../node_modules/text/text",
 
       "vue-class-component": ["../node_modules/vue-class-component/dist/vue-class-component.min",
         "../node_modules/vue-class-component/dist/vue-class-component"],
+      "vue-date-pick": "../node_modules/vue-date-pick/dist/vueDatePick",
       "vue-property-decorator":
           "../node_modules/vue-property-decorator/lib/vue-property-decorator.umd"
       //endregion

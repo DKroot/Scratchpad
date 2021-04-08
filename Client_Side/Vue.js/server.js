@@ -2,7 +2,13 @@ const http = require("http");
 const nStatic = require("node-static");
 const PORT = 4292;
 
-const fileServer = new nStatic.Server('./');
-http.createServer(function (req, res) {
-  fileServer.serve(req, res);
-}).listen(PORT);
+const fileServer = new nStatic.Server('./',
+    {
+      // set the Cache-Control header
+      cache: false
+    }
+);
+http.createServer((request, response) =>
+    request.addListener('end', () => {
+      fileServer.serve(request, response);
+    }).resume()).listen(PORT);
