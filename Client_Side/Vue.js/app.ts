@@ -4,17 +4,18 @@ import { Component } from "vue-property-decorator";
 import VueRouter from "vue-router";
 import { AxiosError } from "axios";
 
+/// <reference path="vue-date-pick.d.ts"/>
+import * as DatePick from "vue-date-pick";
+
 //region Lazy-loading components
-// @ts-ignore
-const DatePick = () => import("vue-date-pick");
-// TBD Requires an ambient module definition, which is hard to write
-// import DatePick from "vue-date-pick";
 const MessageComponent = () => import("./messageComponent");
-// import MessageComponent from "./messageComponent";
 //endregion
 
 //region Global reusable components
+console.debug('Registering DatePick component', DatePick);
 Vue.component('date', DatePick);
+// @ts-ignore
+// console.debug('Registered DatePick component', Vue.options.components);
 //endregion
 
 Vue.use(VueRouter);
