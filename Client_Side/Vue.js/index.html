@@ -5,6 +5,13 @@
   <title>Vue.js Scratchpad</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" type="text/css" href="node_modules/vue-date-pick/dist/vueDatePick.css">
+
+  <style>
+    .vdpPeriodControl > select {
+      /* Fix for a problem with month and year cursor positioning in Safari */
+      -webkit-appearance: menulist-button;
+    }
+  </style>
 </head>
 <body>
 
