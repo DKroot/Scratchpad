@@ -19,22 +19,29 @@
 
 <div v-show="true" id="app" style="display: none">
   <p>
-    From: <date-input v-model="fromDate"></date-input>
-    To: <date-input v-model="toDate"></date-input>
+    From
+    <date-input v-model="fromDate" id="StartDate" name="txtStartDate" tabindex="1"></date-input>
+    <br>
+    To (with selectable year range: 2021-2030)
+    <date-input
+        v-model="toDate" :selectable-year-range="{from: 2021, to: 2030}"
+        id="EndDate" name="txtStartDate" tabindex="2"></date-input>
   </p>
 
+  <p>"From" value: `{{ fromDate == null ? 'null' : fromDate }}`</p>
+  <p>"To" value: `{{ toDate == null ? 'null' : toDate }}`</p>
+
+  <hr>
+
   <p>
-    <a href="#" @click.prevent="onNavigate">Load</a>
-    <input v-model="user" placeholder="(Optional) Enter a name">
+    <a href="#" @click.prevent="onNavigate" tabindex="3">Load</a>
+    <input v-model="user" placeholder="(Optional) Enter a name" tabindex="4">
   </p>
 
   <p v-show="loading">Loading...</p>
   <router-view v-show="!loading" :user="user"
                @loading="onLoading" @success="onLoaded"
                @loading-error="onLoadingError"></router-view>
-
-  <p>"From" value: `{{fromDate == null ? 'null': fromDate}}`</p>
-  <p>"To" value: `{{toDate == null ? 'null': toDate}}`</p>
 </div>
 
 <!-- Polyfills are typically included before other app scripts -->
