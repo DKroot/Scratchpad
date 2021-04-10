@@ -33,7 +33,8 @@
                @loading="onLoading" @success="onLoaded"
                @loading-error="onLoadingError"></router-view>
 
-  <p>From date value: {{fromDate}}, To date value: {{toDate}}</p>
+  <p>"From" value: `{{fromDate == null ? 'null': fromDate}}`</p>
+  <p>"To" value: `{{toDate == null ? 'null': toDate}}`</p>
 </div>
 
 <!-- Polyfills are typically included before other app scripts -->

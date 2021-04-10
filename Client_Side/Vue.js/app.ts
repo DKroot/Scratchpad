@@ -30,7 +30,7 @@ class App extends Vue {
   /* Reactive fields must not be left `undefined`.
    See https://github.com/vuejs/vue-class-component#undefined-will-not-be-reactive.*/
   user: string | null = null;
-  fromDate: string = "01/01/2021";
+  fromDate: string | null = "01/01/2021";
   toDate: string | null = null;
 
   loading = false;
