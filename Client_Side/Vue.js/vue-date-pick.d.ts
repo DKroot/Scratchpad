@@ -1,6 +1,6 @@
 declare module "vue-date-pick" {
-  import Component from "vue";
-  const DatePickComponent: Component;
+  import Vue from "vue";
+  const DatePickComponent: Vue;
 
   export default DatePickComponent;
 }

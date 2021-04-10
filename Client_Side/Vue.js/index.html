@@ -19,8 +19,8 @@
 
 <div v-show="true" id="app" style="display: none">
   <p>
-    From: <date v-model="fromDate" format="MM/DD/YYYY" :start-week-on-sunday="true"></date>
-    To: <date v-model="toDate" format="MM/DD/YYYY" :start-week-on-sunday="true"></date>
+    From: <date-input v-model="fromDate"></date-input>
+    To: <date-input v-model="toDate"></date-input>
   </p>
 
   <p>

@@ -4,18 +4,13 @@ import { Component } from "vue-property-decorator";
 import VueRouter from "vue-router";
 import { AxiosError } from "axios";
 
-/// <reference path="vue-date-pick.d.ts"/>
-import * as DatePick from "vue-date-pick";
-
 //region Lazy-loading components
 const MessageComponent = () => import("./messageComponent");
+const DateInput = () => import("./dateInput");
 //endregion
 
 //region Global reusable components
-console.debug('Registering DatePick component', DatePick);
-Vue.component('date', DatePick);
-// @ts-ignore
-// console.debug('Registered DatePick component', Vue.options.components);
+Vue.component("date-input", DateInput);
 //endregion
 
 Vue.use(VueRouter);
@@ -35,7 +30,7 @@ class App extends Vue {
   /* Reactive fields must not be left `undefined`.
    See https://github.com/vuejs/vue-class-component#undefined-will-not-be-reactive.*/
   user: string | null = null;
-  fromDate: string | null = null;
+  fromDate: string = "01/01/2021";
   toDate: string | null = null;
 
   loading = false;
