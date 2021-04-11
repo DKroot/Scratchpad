@@ -22,13 +22,13 @@ import * as DatePick from "vue-date-pick";
     <date-pick :value="value" @input="$emit('input', $event)"
                format="MM/DD/YYYY" :start-week-on-sunday="true"
                v-bind="{selectableYearRange}"
-               :inputAttributes="{id, name, tabindex}"></date-pick>`,
+               :inputAttributes="{id, name, tabindex}"/>`,
   components: {
-    'date-pick': DatePick as any
+    "date-pick": DatePick as any
   }
 })
 export default class DateInput extends Vue {
-  // The property used by `v:model`
+  // The property used by `v-model`
   @Prop() value: string;
 
   //region Propagated <date-pick> props
@@ -37,13 +37,13 @@ export default class DateInput extends Vue {
   `v-bind=$props` (but all of them would have to be explicitly declared as props in anyway).
   */
 
-  @Prop(Object) selectableYearRange: object;
+  @Prop() selectableYearRange: object;
   //endregion
 
   //region Propagated <input> attributes
   @Prop() id: string;
   @Prop() name: string;
-  @Prop(Number) tabindex: number;
+  @Prop() tabindex: number;
   //endregion
 
   /*
