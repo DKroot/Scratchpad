@@ -11,4 +11,12 @@ SET TIMEZONE = 'US/Eastern';
 SELECT make_date(2019, 7, 5);
 
 SELECT isfinite(date '6-07-05');
+
+-- Interval conversion
+SELECT CAST('P1Y2M3D' AS INTERVAL);
+
+-- Negative interval conversion
+SELECT -CAST('P1Y2M3D' AS INTERVAL);
 -- Error
+-- SELECT CAST('-P1Y2M3D' AS INTERVAL);
+
