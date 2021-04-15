@@ -8,7 +8,7 @@ SET search_path = :schema;
 -- JetBrains IDEs: start execution from here
 SET TIMEZONE = 'US/Eastern';
 
-SELECT make_date(2019, 7, 5);
+SELECT DATE '2014-08-30';
 
 SELECT isfinite(DATE '6-07-05');
 
@@ -20,9 +20,13 @@ SELECT -cast('P1Y2M3D' AS INTERVAL);
 -- Error
 -- SELECT CAST('-P1Y2M3D' AS INTERVAL);
 
-SELECT cast('2021-04-01' AS DATE);
+SELECT DATE '2014-08-30';
 -- Error
---SELECT CAST('2021-04' AS DATE);
+-- SELECT DATE '2021-04';
+
+SELECT DATE '2014-08-30' - cast('P3Y' AS INTERVAL);
+SELECT DATE '2014-08-30' - cast('P3Y7M' AS INTERVAL);
+SELECT DATE '2014-08-30' - cast('P3Y8M10D' AS INTERVAL);
 
 SELECT extract(YEAR FROM DATE '2021-04-01');
 SELECT extract(YEAR FROM DATE '2021-04');
