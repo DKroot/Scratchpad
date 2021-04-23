@@ -1,3 +1,5 @@
+package org.houseofsoft.groovy.demos
+
 static String getAcronymFromSnakeCase(String s) {
   s ? s.split(/_/)*.getAt(0).join() : ''
 }
