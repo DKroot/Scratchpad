@@ -1,0 +1,4 @@
+moduleName=itasintng
+moduleVersion=1.0
+extensionClasses=org.houseofsoft.groovy.demos.StringExtensions
+staticExtensionClasses=
