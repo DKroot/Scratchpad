@@ -51,8 +51,9 @@ Sql.withInstance("jdbc:p6spy:jtds:sqlserver://${server}/${dbName};maxStatements=
   def i = 0
 
   use ItasRepository, {
-    db.simple(indvSsnId, pp) { String s ->
-      println s
+    db.simple(indvSsnId, pp) {
+      //noinspection GroovyAssignabilityCheck
+      println it
     }
 
     db.getWrkHrs(indvSsnId, pp) { ResultSet rs ->

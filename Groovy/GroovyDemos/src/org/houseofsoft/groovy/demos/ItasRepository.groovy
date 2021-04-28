@@ -7,8 +7,8 @@ import java.sql.ResultSet
 
 class ItasRepository {
   static void simple(Sql self, String indvSsnId, PayPeriod payPeri, Closure closure) {
-    println 'getWrkHrs2(Sql, String, PayPeriod, Closure)'
-    closure(indvSsnId)
+    println 'simple(Sql, String, PayPeriod, Closure)'
+    closure(payPeri)
   }
 
   static void getWrkHrs(Sql self, String indvSsnId, PayPeriod payPeri, Closure closure) {
