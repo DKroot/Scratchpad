@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 def nowLocalDateTime = LocalDateTime.now()
 println "Local time: ${nowLocalDateTime}"
 println "Formatted: ${nowLocalDateTime.format('MM/dd/yy HH:mm')}"
+println "Day of a week: ${nowLocalDateTime.dayOfWeek} (#${nowLocalDateTime.dayOfWeek.value})"
 
 def nowDateTime = new Date()
 println "Time: ${nowDateTime}"
