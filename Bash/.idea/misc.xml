@@ -8,10 +8,4 @@
   <component name="ProjectRootManager">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
-  <component name="Struts Navigator">
-    <option name="strutsConfigFile" />
-    <option name="strutsTilesFile" />
-    <option name="strutsValidatorFiles" />
-    <option name="enable" value="false" />
-  </component>
 </project>
