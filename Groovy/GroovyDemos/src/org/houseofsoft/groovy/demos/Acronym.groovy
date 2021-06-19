@@ -1,14 +1,13 @@
 package org.houseofsoft.groovy.demos
 
-static String getAcronymFromSnakeCase(String s) {
-  s ? s.split(/_/)*.getAt(0).join() : ''
+static String snakeCaseToAcronym(String s) {
+  (s ? s.split(/_/)*.getAt(0).join() : '')
 }
 
-def s = 'nlm_idconverter'
-println "Acronym for `${s}` = `${getAcronymFromSnakeCase(s)}`"
+def printAcronymFor(String s) {
+  println "Acronym for `${s}` = `${snakeCaseToAcronym(s)}`"
+}
 
-s = 'word'
-println "Acronym for `${s}` = `${getAcronymFromSnakeCase(s)}`"
-
-s = ''
-println "Acronym for `${s}` = `${getAcronymFromSnakeCase(s)}`"
+printAcronymFor 'nlm_idconverter'
+printAcronymFor 'word'
+printAcronymFor ''
