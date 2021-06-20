@@ -1,3 +1,4 @@
+#!/usr/bin/env groovy
 package org.houseofsoft.groovy.demos
 
 printClass String.class
