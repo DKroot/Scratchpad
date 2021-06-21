@@ -1,9 +1,10 @@
 #!/usr/bin/env groovy
 package org.houseofsoft.groovy.demos
 
+import picocli.CommandLine
 @Grab('info.picocli:picocli-groovy:4.6.1')
 
-import picocli.CommandLine
+import picocli.CommandLine.Parameters
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Help
@@ -29,21 +30,23 @@ import picocli.groovy.PicocliScript2
     'MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512,',
     '  or any other MessageDigest algorithm.'])
 // @formatter:on
-@Field String algorithm
+@Field String algorithm = null
 
+// Positional CLI parameter
+@Parameters(defaultValue = 'config.ini', paramLabel='config_file', description='The optional config file')
+@Field String configFilePath = null
+
+//noinspection GroovyUnusedAssignment // field is required to attach `@Option`
 @Option(names = ["-h", "--help"], usageHelp = true, description = 'Show this help message and exit.')
 @Field boolean helpRequested
-
-// Positional paremeters
-//@Parameters(arity="1", paramLabel="FILE", description="The file(s) whose checksum to calculate.")
-//@Field files
-
-println "algorithm=${algorithm}"
 
 //region Render header
 CommandLine cmdLine = [this]
 print cmdLine.helpSectionMap['header'].render(cmdLine.helpFactory.create(cmdLine.commandSpec, Help.defaultColorScheme(
     Help.Ansi.AUTO)))
 //endregion
+
+println "algorithm=${algorithm}"
+println "configFilePath=${configFilePath}"
 
 println "Done"
