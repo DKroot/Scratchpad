@@ -27,3 +27,21 @@ WHERE NOT exists(SELECT 1
                  FROM
                    tmp_demo_merge tdm
                      JOIN data ON tdm.tour_id = data.tour_id);
+
+-- MERGE
+WITH data AS (
+  SELECT 1 AS group_id, 2001 AS year, 10001 AS tour_id, 'San Francisco' AS city
+) MERGE INTO tmp_demo_merge tdm
+USING (
+  SELECT *
+  FROM data
+) sq
+ON (tdm. = sq.)
+WHEN MATCHED THEN
+  UPDATE
+  SET tdm. = sq., tdm. = sq.
+WHEN NOT MATCHED THEN
+  INSERT
+    (, )
+  VALUES
+    (sq., sq.);
