@@ -22,4 +22,6 @@ SELECT 1 AS bit
 WHERE getdate() BETWEEN getdate() - 1 AND getdate() + 1;
 
 -- Literals
-SELECT cast('1969-07-09' AS DATE);
+DECLARE @foo DATE = '2021-08-01', @bar DATETIME = '2021-08-01', @baz DATETIME = '2021-08-01T21:15:42';
+SELECT @foo, @bar, @baz;
+GO

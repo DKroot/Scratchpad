@@ -1,3 +1,4 @@
+-- String aggregation prior to MS SQL 2017
   WITH sample_data AS (
     SELECT 1 AS group_id, 2001 AS year, 10001 AS tour_id, 'San Francisco' AS city
      UNION ALL

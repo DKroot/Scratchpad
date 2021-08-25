@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/SQLServer.iml" filepath="$PROJECT_DIR$/.idea/SQLServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SQL_Server_Scratchpad.iml" filepath="$PROJECT_DIR$/.idea/SQL_Server_Scratchpad.iml" />
     </modules>
   </component>
 </project>
