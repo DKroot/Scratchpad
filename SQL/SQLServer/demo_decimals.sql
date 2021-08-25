@@ -1,0 +1,5 @@
+SELECT try_parse('$288,323.1234 ' AS MONEY);
+-- 288323.1234
+
+SELECT try_parse('288323.1234' AS REAL);
+-- 288323.12
