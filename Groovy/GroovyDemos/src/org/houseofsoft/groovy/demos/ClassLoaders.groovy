@@ -3,10 +3,10 @@ package org.houseofsoft.groovy.demos
 
 class Helper {
   /**
-   * Prints a class loading hierarchy (parents on top) and classpath for any `URLClassLoader`-s
+   * Prints a class loading hierarchy (parents on top) + classpath for any `URLClassLoader`-s
    *
-   * @param classLoader e.g. `getClass().classLoader` from an instance context or `Foo.class` from a static context.
-   * Defaults to the context ClassLoader for this thread, which is typically set to the application class loader.
+   * @param classLoader e.g. `getClass().classLoader` or `Foo.class.classLoader` from a static context.
+   * Defaults to the context class loader for this thread, which is typically set to the application class loader.
    * @return number of levels in the class loader hierarchy
    */
   static int printClassLoadersAndClasspath(ClassLoader classLoader = Thread.currentThread().contextClassLoader) {
