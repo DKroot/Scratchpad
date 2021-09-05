@@ -1,4 +1,7 @@
-package org.houseofsoft.groovy.demos
+package org.houseofsoft.groovy.demos.helpers
+
+import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 
 import java.sql.Timestamp
 import java.time.DayOfWeek
@@ -42,6 +45,7 @@ class TransmissionFileExtensions {
    * Extracts day of the week's code from a Timestamp
    * @return 1 = Sunday, 2 = Monday, to 7 = Saturday
    */
+  @CompileStatic(TypeCheckingMode.SKIP) // required to use extension method(s)
   static String getWeekDayCode(Timestamp self) {
     // `DayOfWeek` enum: 7 = Sunday, 1 = Monday, to 6 = Saturday (ISO-8601)
     def dayOfWeek = self.toLocalDate().dayOfWeek

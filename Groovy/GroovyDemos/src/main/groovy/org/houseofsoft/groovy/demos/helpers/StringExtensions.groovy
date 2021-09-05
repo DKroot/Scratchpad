@@ -1,6 +1,5 @@
-package org.houseofsoft.groovy.demos
+package org.houseofsoft.groovy.demos.helpers
 
-//@SuppressWarnings('unused') // Installed as a global extension module
 class StringExtensions {
   /**
    * Returns string prefix or null

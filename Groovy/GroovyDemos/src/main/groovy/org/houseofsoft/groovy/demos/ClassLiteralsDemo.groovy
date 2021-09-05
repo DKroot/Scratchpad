@@ -8,7 +8,6 @@ printClass String
 Integer i = 5
 printClass i.getClass()
 
-static void printClass(Class c) {
+void printClass(Class c) {
   println c
 }
-

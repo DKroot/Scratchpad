@@ -1,7 +1,6 @@
-#!/usr/bin/env groovy
-package org.houseofsoft.groovy.demos
+package org.houseofsoft.groovy.demos.helpers
 
-class Helper {
+class SystemHelper {
   /**
    * Prints a class loading hierarchy (parents on top) + classpath for any `URLClassLoader`-s
    *
@@ -28,26 +27,3 @@ class Helper {
   }
 }
 
-void method() {
-  println "class=`${getClass()}`"
-  println "Class Loader `${getClass().classLoader}`"
-  Helper.printClassLoadersAndClasspath getClass().classLoader
-
-  println "\nThread classLoader=`${Thread.currentThread().contextClassLoader}`"
-  Helper.printClassLoadersAndClasspath()
-}
-
-static void staticMethod() {
-  println "class=`${ClassLoaders.class}`"
-  println "Class Loader `${ClassLoaders.class.classLoader}`"
-  Helper.printClassLoadersAndClasspath ClassLoaders.class.classLoader
-
-  println "\nThread classLoader=`${Thread.currentThread().contextClassLoader}`"
-  Helper.printClassLoadersAndClasspath()
-}
-
-println '\n== Instance context ==\n'
-method()
-
-println '\n== Static context ==\n'
-staticMethod()

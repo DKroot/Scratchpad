@@ -1,14 +1,13 @@
 #!/usr/bin/env groovy
 package org.houseofsoft.groovy.demos
 
-import picocli.CommandLine
-@Grab('info.picocli:picocli-groovy:4.6.1')
+import CommandLine
 
-import picocli.CommandLine.Parameters
-import picocli.CommandLine.Command
-import picocli.CommandLine.Option
-import picocli.CommandLine.Help
-import groovy.transform.Field
+import Parameters
+import Command
+import Option
+import Help
+import Field
 import picocli.groovy.PicocliScript2
 
 @Command(header = [//
