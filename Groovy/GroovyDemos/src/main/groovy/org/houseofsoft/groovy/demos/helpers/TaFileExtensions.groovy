@@ -6,7 +6,10 @@ import groovy.transform.TypeCheckingMode
 import java.sql.Timestamp
 import java.time.DayOfWeek
 
-class TransmissionFileExtensions {
+class TaFileExtensions {
+  private TaFileExtensions() {
+  }
+
   /**
    * Formats an integer: zero-padded
    */

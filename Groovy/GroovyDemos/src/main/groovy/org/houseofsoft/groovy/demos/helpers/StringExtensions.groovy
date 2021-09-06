@@ -1,6 +1,9 @@
 package org.houseofsoft.groovy.demos.helpers
 
 class StringExtensions {
+  private StringExtensions() {
+  }
+
   /**
    * Returns string prefix or null
    */

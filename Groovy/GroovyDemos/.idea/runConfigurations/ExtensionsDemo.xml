@@ -1,11 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Extensions" type="GroovyScriptRunConfiguration" factoryName="Groovy">
-    <module name="GroovyDemos" />
-    <setting name="path" value="file://$PROJECT_DIR$/src/org/houseofsoft/groovy/demos/Extensions.groovy" />
+  <configuration default="false" name="ExtensionsDemo" type="GroovyScriptRunConfiguration" factoryName="Groovy">
+    <module name="GroovyDemos.main" />
+    <setting name="path" value="file://$PROJECT_DIR$/src/main/groovy/org/houseofsoft/groovy/demos/ExtensionsDemo.groovy" />
     <setting name="vmparams" value="" />
     <setting name="params" value="" />
     <setting name="workDir" value="file://$PROJECT_DIR$" />
     <setting name="debug" value="false" />
+    <setting name="addClasspath" value="true" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

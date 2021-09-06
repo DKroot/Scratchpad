@@ -3,16 +3,21 @@ package org.houseofsoft.groovy.demos
 
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
+
 import org.houseofsoft.groovy.demos.helpers.StringExtensions
-import org.houseofsoft.groovy.demos.helpers.TransmissionFileExtensions
+import org.houseofsoft.groovy.demos.helpers.TaFileExtensions
 
-@CompileStatic(TypeCheckingMode.SKIP) // required to use categories
-def main() {
-  use(StringExtensions) {
-    println "Foo Bar".left(3)
-    println "Foo Bar".leftBefore(' ')
+class Main {
+  @CompileStatic(TypeCheckingMode.SKIP) // required to use extension method(s)
+  static void demo() {
+    StringExtensions.left("Foo Bar", 3)
 
-    use(TransmissionFileExtensions) {
+    use(StringExtensions) {
+      println "Foo Bar".left(3)
+      println "Foo Bar".leftBefore(' ')
+    }
+
+    use(TaFileExtensions) {
       println 42.formatForTransmission(5)
       println 42.1d.formatForTransmission(5, 2)
 
@@ -22,4 +27,4 @@ def main() {
   }
 }
 
-main()
+Main.demo()
