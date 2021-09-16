@@ -15,3 +15,6 @@ VALUES (1, 'foo', 'bar')
 ON CONFLICT DO NOTHING;
 
 \copy tmp_demo_export TO 'demo_export.csv' ( FORMAT CSV, HEADER ON )
+
+COPY tmp_demo_export TO STDOUT ( FORMAT CSV, HEADER ON )
+\g 'demo_export.csv'

@@ -12,7 +12,6 @@ HEREDOC
 fi
 
 set -e
-#set -ex
 set -o pipefail
 
 echo -e "\n## Running under ${USER}@${HOSTNAME} in ${PWD} ##\n"
@@ -41,3 +40,15 @@ echo -e "\nArguments, sorted in the reverse alphabetical order:"
 for arg in "${sorted_args[@]}"; do
   echo "$arg"
 done
+
+
+
+
+
+
+
+
+
+
+
+
