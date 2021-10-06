@@ -29,8 +29,8 @@ bash -c "set -e &&
     #foo
   done"
 
-# WARNING. The error doesn't propagate in interpolated string
-echo -e \n "### A value from sub-shell='$(foo)' ###"
+# WARNING. The error doesn't propagate from an interpolated string
+echo -e "\n### A value from a sub-shell='$(foo)' ###"
 
 # STOP here. The error propagates correctly here
 #var=$(foo)
@@ -89,11 +89,22 @@ while IFS= read -r line; do
 done <& "${COPROC[0]}"
 wait "$_co_pid"
 
-echo -e "\n## Abbreviated conditions don't fail the script ##"
-[[ "${foo}" == "bar" ]] && echo "This should not be executed"
+echo -e "\n## Abbreviated conditions ##"
+# Does not fail the script
+[[ ${foo} ]] && echo "This should not be executed"
 
+# Does not fail the script
 [[ -f /Applications/Thunderbird.app/Contents/MacOS/thunderbird-bin ]] && \
   alias tb=/Applications/Thunderbird.app/Contents/MacOS/thunderbird-bin
+
+echo -e "foo\nbar\nbaz" | while IFS= read -r line; do
+  echo "Read: $line"
+  # Terminates the script after the while finishes if it's the last command in the loop
+  [[ ${foo} ]] && echo "This should not be executed"
+  #echo "Continuing..."
+done
+echo "</Abbreviated conditions>"
+pause
 
 echo -e "\n## Executing external scripts ##"
 echo "Executing a script with exit code 0"
