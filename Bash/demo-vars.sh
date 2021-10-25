@@ -64,30 +64,10 @@ if (($# > 0)); then
   echo "Head (all arguments except last): \${*%%\$tail} = ${*%%$tail}"
 fi
 
-echo -e "\n### Options Processing ###"
-vflag=off
-f=
-while getopts vf:- opt; do
-  case "$opt" in
-    -) # Long option: an app CLI parameter
-      ;;
-    v)
-      vflag=on
-      ;;
-    f)
-      f="$OPTARG"
-      ;;
-    \?) # unknown flag
-      echo "Valid parameters: $0 [-v] [-f filename] [something ...]"
-      exit 1
-    ;;
-  esac
-done
-shift $((OPTIND - 1))
-
-echo "\$vflag = $vflag"
-echo "\$f = $f"
-echo "Other parameters: \$* = $*"
+echo -e "\n### Passing arguments to commands ###"
+readonly FOO_OPT=(-s 'my baz')
+bash -c 'echo Argument 1=\`$1\`, 2=\`$2\`, 3=\`$3\`, 4=\`$4\`, 5=\`$5\`. Number of args=$#.' \
+  - foo "${FOO_OPT[@]}" "${BAR_OPT[@]}"
 pause
 
 echo -e "\n## Environment ##"

@@ -8,7 +8,7 @@ plugins {
     */
     id 'org.springframework.boot' version '2.3.2.RELEASE'
 
-    // Automatically import the spring-boot-dependencies BOM
+    // Enables using the `spring-boot-dependencies` BOM and Spring Boot Starters inheriting versions from the BOM
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 
     /*
@@ -16,17 +16,19 @@ plugins {
     The `javadoc` task will be configured to read the `delombok`-ed sources instead of the actual sources.
     Recommended to use by Lombok.
     */
-    id 'io.freefair.lombok' version '5.1.0'
+    id 'io.freefair.lombok' version '5.3.3.3'
     //endregion
 }
 
 repositories {
-    // Use the local Maven cache e.g. from other projects
-    mavenLocal()
+    /*
+    Gradle docs advise against using `mavenLocal()`.
+    See https://docs.gradle.org/6.5.1/userguide/declaring_repositories.html#sec:case-for-maven-local
+    */
+    //    mavenLocal()
 
+    // The Maven central repository
     mavenCentral()
-
-    jcenter()
 
     maven {
         name = 'Spring Releases'
