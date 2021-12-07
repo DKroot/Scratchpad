@@ -2,10 +2,22 @@
 set -e
 set -o pipefail
 
+# Get a script directory, same as by $(dirname $0)
+readonly SCRIPT_DIR=${0%/*}
+#readonly ABSOLUTE_SCRIPT_DIR=$(cd "${SCRIPT_DIR}" && pwd)
+#
+#readonly WORK_DIR=${1:-${ABSOLUTE_SCRIPT_DIR}/build} # $1 with the default
+#if [[ ! -d "${WORK_DIR}" ]]; then
+#  mkdir "${WORK_DIR}"
+#  chmod g+w "${WORK_DIR}"
+#fi
+#cd "${WORK_DIR}"
+
 # `${USER:-${USERNAME:-${LOGNAME}}}` might be not available inside Docker containers
 echo -e "\n# demo-grep.sh: running under $(whoami)@${HOSTNAME} in ${PWD} #\n"
 
-readonly MSG="2021-11-22 | 07:58:53.238 | ERROR | 0.1-4226-exec-5 | o.g.jersey.server.ServerRuntime$Responder.writeResponse() : An I/O error has occurred while writing a response message entity to the container output stream.
+# shellcheck disable=SC2016 # false positive
+readonly MSG='2021-11-22 | 07:58:53.238 | ERROR | 0.1-4226-exec-5 | o.g.jersey.server.ServerRuntime$Responder.writeResponse() : An I/O error has occurred while writing a response message entity to the container output stream.
 
 org.glassfish.jersey.server.internal.process.MappableException: org.apache.catalina.connector.ClientAbortException: java.io.IOException: Connection reset by peer
 	at org.glassfish.jersey.server.internal.MappableExceptionWrapperInterceptor.aroundWriteTo(MappableExceptionWrapperInterceptor.java:67)
@@ -28,17 +40,22 @@ java.lang.RuntimeException: java.lang.IllegalArgumentException: Unexpected role:
 Caused by: java.lang.IllegalArgumentException: Unexpected role: EMP
 	at itas.model.dashboard.Dashboard.<init>(Dashboard.java:66)
 	... 112 common frames omitted
-"
+'
 
-echo 'Searching for known multi-line errors'
-echo '-----'
-# This match includes the trailing blank line
-echo "$MSG" | pcregrep --multiline '(?s)\| ERROR \|.*Caused by: java\.io\.IOException: Connection reset by peer.*?^\n'
-echo '-----'
+echo 'Input text'
+echo '----------'
+echo "$MSG"
+echo '----------'
+
+echo -e '\nSearching for known multi-line errors'
+echo '----------'
+# `^\n` includes the matching blank line, `^$` just anchors on the blank line, but excludes it
+echo "$MSG" | pcregrep --multiline '(?s)\| ERROR \|.*java\.io\.IOException: Connection reset by peer.*?^\n'
+echo '----------'
 
 echo -e '\nSearching for unknown multi-line errors'
-echo '-----'
-# `--invert-match --multiline` with `^\n` or `^$` excludes the line following the RegExp match
-echo "$MSG" | pcregrep --invert-match --multiline '(?s)\| ERROR \|.*Caused by: java\.io\.IOException: Connection reset by peer.*?^$'
-echo '-----'
+echo '----------'
+# `--invert-match --multiline` with `^\n` or `^$` excludes the extra next line following the positive match itself
+echo "$MSG" | pcregrep --invert-match --multiline "--file=$SCRIPT_DIR/demo-pcregrep-known-errors.txt" || :
+echo '----------'
 

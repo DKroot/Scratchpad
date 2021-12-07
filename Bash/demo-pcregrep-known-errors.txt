@@ -1,0 +1,2 @@
+(?s)\| ERROR \|.*java\.io\.IOException: Connection reset by peer.*?^$
+(?s)\| ERROR \|.*java\.lang\.IllegalArgumentException: Unexpected role: EMP.*?^$
