@@ -17,7 +17,15 @@ readonly SCRIPT_DIR=${0%/*}
 echo -e "\n# demo-grep.sh: running under $(whoami)@${HOSTNAME} in ${PWD} #\n"
 
 # shellcheck disable=SC2016 # false positive
-readonly MSG='2021-11-22 | 07:58:53.238 | ERROR | 0.1-4226-exec-5 | o.g.jersey.server.ServerRuntime$Responder.writeResponse() : An I/O error has occurred while writing a response message entity to the container output stream.
+readonly MSG='2021-11-22 | 12:58:37.051 | ERROR | 0.1-4226-exec-3 | g.n.c.i.rest.lao.ApproveTeleworkResource.validateAndProcess() : java.lang.Exception: Payroll  Error -- Payroll Update Failed, please contact IT Service Desk.
+2021-11-22 | 12:59:07.058 | ERROR | 0.1-4226-exec-8 | g.n.c.i.rest.lao.ApproveTeleworkResource.validateAndProcess() : java.lang.Exception: Payroll  Error -- Payroll Update Failed, please contact IT Service Desk.
+2021-11-22 | 13:14:11.649 | ERROR | .1-4226-exec-16 | itas.old.ITASCommonDB.CDBExecStatement() : Error executing the following statement: dbo.prc_L_ReportParamSel  '003362930', 'CON'
+2021-11-22 | 13:14:11.649 | ERROR | .1-4226-exec-16 | itas.old.ITASCommonDB.CDBExecStatement() :
+
+	at com.ddtek.jdbc.sqlserverbase.ddco.a(Unknown Source)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+
+2021-11-22 | 07:58:53.238 | ERROR | 0.1-4226-exec-5 | o.g.jersey.server.ServerRuntime$Responder.writeResponse() : An I/O error has occurred while writing a response message entity to the container output stream.
 
 org.glassfish.jersey.server.internal.process.MappableException: org.apache.catalina.connector.ClientAbortException: java.io.IOException: Connection reset by peer
 	at org.glassfish.jersey.server.internal.MappableExceptionWrapperInterceptor.aroundWriteTo(MappableExceptionWrapperInterceptor.java:67)
@@ -50,7 +58,7 @@ echo '----------'
 echo -e '\nSearching for known multi-line errors'
 echo '----------'
 # `^\n` includes the matching blank line, `^$` just anchors on the blank line, but excludes it
-echo "$MSG" | pcregrep --multiline '(?s)\| ERROR \|.*java\.io\.IOException: Connection reset by peer.*?^\n'
+echo "$MSG" | pcregrep --multiline "--file=$SCRIPT_DIR/demo-pcregrep-known-errors.txt"
 echo '----------'
 
 echo -e '\nSearching for unknown multi-line errors'
