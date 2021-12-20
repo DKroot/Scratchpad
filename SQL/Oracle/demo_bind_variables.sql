@@ -3,123 +3,110 @@
 -- Binding NULLs
 DECLARE
   q CONSTANT VARCHAR2(32767) := q'[
-    SELECT 'OK' AS s
+    SELECT 'OK' AS sq
     FROM dual
     WHERE :p1 IS NULL
-  ]'; 
-  cur SYS_REFCURSOR;
-  
+  ]';
   result VARCHAR2(128);
+  cur SYS_REFCURSOR;
 BEGIN
-  debug('Binding NULLs');
+  dbms_output.put_line('Binding NULLs');
 
-  OPEN cur
-  FOR q
-  USING TO_CHAR(NULL);
-  
+  OPEN cur FOR q USING to_char(NULL);
+
   LOOP
-    FETCH cur
-    INTO result;
-    EXIT WHEN cur%NOTFOUND;        
+    FETCH cur INTO result;
+    EXIT WHEN cur%NOTFOUND;
 
-    DBMS_OUTPUT.PUT_LINE(result);
+    dbms_output.put_line(result);
   END LOOP;
   CLOSE cur;
 END;
 /
 
--- If the dynamic SQL statement represents an anonymous PL/SQL block or a CALL statement, each *unique* placeholder name 
--- must have a corresponding bind variable in the USING clause.
--- If you repeat a placeholder name, you need not repeat its corresponding bind variable.
--- All references to that placeholder name correspond to one bind variable in the USING clause.
--- http://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01108
+/*
+If the dynamic SQL statement represents an anonymous PL/SQL block or a CALL statement, each *unique* placeholder name
+must have a corresponding bind variable in the USING clause.
+If you repeat a placeholder name, you need not repeat its corresponding bind variable.
+All references to that placeholder name correspond to one bind variable in the USING clause.
+
+See http://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01108
+*/
 DECLARE
   plsql_block VARCHAR2(100);
 BEGIN
   plsql_block := 'BEGIN DBMS_OUTPUT.PUT_LINE(:x || :x || :y || :x); END;';
-  EXECUTE IMMEDIATE plsql_block USING 0+1, 1+1;  -- Uses 1, 1, 2, 1
+  EXECUTE IMMEDIATE plsql_block USING 0 + 1, 1 + 1; -- Uses 1, 1, 2, 1
 END;
 /
 
-CREATE OR REPLACE TYPE string_tab
-AS 
-TABLE OF VARCHAR2(32767);
-/
-
--- Variables in INs
-CREATE OR REPLACE TYPE string_tab
-AS
-TABLE OF VARCHAR2(32767);
+-- region Variables in INs
+CREATE OR REPLACE TYPE STRING_TAB AS TABLE OF VARCHAR2(32767);
 /
 
 DECLARE
-  paramList string_tab := string_tab('foo', 'bar');
-  result VARCHAR2(128);
+  param_list STRING_TAB := string_tab('foo', 'bar');
   cur SYS_REFCURSOR;
 BEGIN
-  FOR cur IN (
+  FOR cur IN (--
     WITH cte AS (
-      SELECT 'foo' as a
+      SELECT 'foo' AS a
       FROM dual
     )
     SELECT 'It worked' AS result
     FROM cte
-    WHERE a IN (SELECT * FROM TABLE(paramList))
-  ) LOOP
-    DBMS_OUTPUT.PUT_LINE(cur.result);
+    WHERE a IN (
+      SELECT *
+      FROM TABLE (param_list)
+    )--
+    ) LOOP
+    dbms_output.put_line(cur.result);
   END LOOP;
 END;
 /
+-- endregion
 
 -- Bind variables in dynamic SQL INs
 DECLARE
   param1 VARCHAR2(32767) := 'foo';
 
   --TYPE string_table IS TABLE OF varchar2(32767);
-  param2 string_tab := string_tab('foo', 'bar');
-
+  param2 STRING_TAB := string_tab('foo', 'bar');
   result VARCHAR2(128);
   cur SYS_REFCURSOR;
 BEGIN
-  OPEN cur
-  FOR q'[
+  OPEN cur FOR q'[
     SELECT '#1 worked'
     FROM DUAL
     WHERE :p1 IN ('foo', 'bar')
-  ]'
-  USING param1;
+  ]' USING param1;
 
   LOOP
-    FETCH cur
-    INTO result;
+    FETCH cur INTO result;
     EXIT WHEN cur%NOTFOUND;
 
-    DBMS_OUTPUT.PUT_LINE(result);
+    dbms_output.put_line(result);
   END LOOP;
   CLOSE cur;
 
-  OPEN cur
-  FOR q'[
+  OPEN cur FOR q'[
     SELECT '#2 worked'
     FROM DUAL
     WHERE 'bar' IN (SELECT * FROM TABLE(:p1))
-  ]'
-  USING param2;
+  ]' USING param2;
 
   LOOP
-    FETCH cur
-    INTO result;
+    FETCH cur INTO result;
     EXIT WHEN cur%NOTFOUND;
 
-    DBMS_OUTPUT.PUT_LINE(result);
+    dbms_output.put_line(result);
   END LOOP;
   CLOSE cur;
 END;
 /
 
 
--- ### Quoting with bind variables ###
-
+-- Quoting with bind variables
 DECLARE
   result VARCHAR2(128);
   cur SYS_REFCURSOR;
@@ -146,31 +133,25 @@ DECLARE
 BEGIN
   debug('Regular bind variable');
 
-  OPEN cur
-  FOR q
-  USING '%b%';
-  
-  LOOP
-    FETCH cur
-    INTO result;
-    EXIT WHEN cur%NOTFOUND;        
+  OPEN cur FOR q USING '%b%';
 
-    DBMS_OUTPUT.PUT_LINE(result);
+  LOOP
+    FETCH cur INTO result;
+    EXIT WHEN cur%NOTFOUND;
+
+    dbms_output.put_line(result);
   END LOOP;
   CLOSE cur;
-  
-  debug('Quotes in a bind value:');
-  
-  OPEN cur
-  FOR q
-  USING substring2;
-  
-  LOOP
-    FETCH cur
-    INTO result;
-    EXIT WHEN cur%NOTFOUND;        
 
-    DBMS_OUTPUT.PUT_LINE(result);
+  debug('Quotes in a bind value:');
+
+  OPEN cur FOR q USING substring2;
+
+  LOOP
+    FETCH cur INTO result;
+    EXIT WHEN cur%NOTFOUND;
+
+    dbms_output.put_line(result);
   END LOOP;
   CLOSE cur;
 END;
