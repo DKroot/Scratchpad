@@ -1,5 +1,14 @@
--- ### Repeated bind variables and Bind variable expressions ###
+-- WARNING: doesn't work in DataGrip/IDEA. See https://youtrack.jetbrains.com/issue/DBE-3134,
+DECLARE
+  cur SYS_REFCURSOR;
+BEGIN
+  OPEN cur FOR SELECT 'OK' AS s FROM dual;
 
+  dbms_sql.return_result(cur);
+END;
+/
+
+-- region Repeated bind variables and bind variable expressions
 -- Binding NULLs
 DECLARE
   q CONSTANT VARCHAR2(32767) := q'[
@@ -39,6 +48,7 @@ BEGIN
   EXECUTE IMMEDIATE plsql_block USING 0 + 1, 1 + 1; -- Uses 1, 1, 2, 1
 END;
 /
+-- endregion
 
 -- region Variables in INs
 CREATE OR REPLACE TYPE STRING_TAB AS TABLE OF VARCHAR2(32767);
@@ -104,7 +114,6 @@ BEGIN
   CLOSE cur;
 END;
 /
-
 
 -- Quoting with bind variables
 DECLARE
