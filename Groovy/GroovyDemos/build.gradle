@@ -1,5 +1,5 @@
-//file:noinspection GradlePackageUpdate // false positives on dynamic revisions
-//file:noinspection GrUnresolvedAccess // false positives
+//file:noinspection GroovyAssignabilityCheck // False positives in `group`/`description` assignments
+//file:noinspection GrUnresolvedAccess // False positives in `println()`
 
 plugins {
   id 'groovy'
@@ -29,14 +29,14 @@ dependencies {
 
   More info: https://melix.github.io/blog/2013/01/31/using_groovy_to_play_with.html
   */
-  implementation 'org.codehaus.groovy:groovy-sql:3.0.+:indy'
 
+  implementation 'org.codehaus.groovy:groovy-sql:3.0.+:indy'
   /* Does not work:
   implementation 'org.codehaus.groovy:groovy-sql:3.0.+:indy' {
     transitive = false
   }*/
 
-  implementation 'org.codehaus.groovy:groovy-datetime:3.0.8:indy'
+  implementation 'org.codehaus.groovy:groovy-datetime:3.0.+:indy'
   //endregion
 
   // picocli: CLI processing

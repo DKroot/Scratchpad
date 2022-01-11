@@ -28,7 +28,8 @@ import picocli.CommandLine
     //    footerHeading = '%nFor more details, see:%n',
     //    footer = ['line 1', 'line2']
     showDefaultValues = true)
-@ToString(includeNames=true)
+@ToString(includeNames = true)
+//@CompileStatic(TypeCheckingMode.SKIP) // required for a dynamic dispatch
 class AppOptions {
   //region Processing options: CLI arguments, ordered alphabetically
 
