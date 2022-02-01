@@ -1,3 +1,6 @@
+//file:noinspection GroovyAssignabilityCheck // false positives
+//file:noinspection GrUnresolvedAccess // False positives
+
 plugins {
   id 'java'
 
@@ -6,21 +9,16 @@ plugins {
   The `javadoc` task will be configured to read the `delombok`-ed sources instead of the actual sources.
   Recommended to use by Lombok.
   */
-  id 'io.freefair.lombok' version '5.3.3.3'
+  id 'io.freefair.lombok' version '6.3.+'
+  //endregion
 }
-
 // == Configuration ==
 
 description = 'Java Demos'
 defaultTasks('test')
 
-// Java compiler's source compatibility level
-//noinspection GroovyUnusedAssignment
-sourceCompatibility = '11'
-
-// Java compiler's target JVM compatibility level
-//noinspection GroovyUnusedAssignment
-targetCompatibility = '11'
+println "\n${description}"
+println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
 
 repositories {
   mavenCentral()
@@ -28,36 +26,55 @@ repositories {
 
 dependencies {
 
-  implementation(
-      // Ordered from high-level down to low-level
+  implementation(// Ordered from high-level down to low-level
 
       // CSV Parser and Printer
-      'org.apache.commons:commons-csv:1.0',
+      'org.apache.commons:commons-csv:1.9.+',
 
       // Generic utilities. Google Guava is preferred over Apache Commons Lang 3.
-      'com.google.guava:guava:18.0',
+      'com.google.guava:guava:31.0.+',
 
       // Handy JavaBeans helpers
-      'commons-beanutils:commons-beanutils:1.9.3',
+      'commons-beanutils:commons-beanutils:1.9.+',
 
       // Logging API: SLF4J
-      'org.slf4j:slf4j-api:1.7.25'
-  )
+      'org.slf4j:slf4j-api:1.7.+')
 
-  testImplementation(
-      // JUnit
-      'junit:junit:4.11'
-  )
+  testImplementation(// JUnit
+      'junit:junit:4.13.+')
 
-  runtimeOnly(
-      // Logging Implementation: LogBack. Depends on `org.slf4j:slf4j-api:1.7.25`.
-      'ch.qos.logback:logback-classic:1.2.3'
-  )
+  runtimeOnly(// Logging Implementation: LogBack. Depends on `org.slf4j:slf4j-api:1.7.25`.
+      'ch.qos.logback:logback-classic:1.2.+')
 }
+
+java {
+  /*
+  Setup all compile, test and javadoc tasks to use the defined toolchain which may be different than the one Gradle
+  itself uses. Gradle detects locally installed JVMs and chooses a JRE/JDK matching the requirements of the build
+  (in this case a JVM supporting Java 11). If no matching JVM is found, it will automatically download it
+  (`AdoptOpenJDK` by default).
+  */
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(11)
+    vendor = JvmVendorSpec.AMAZON // optional
+  }
+}
+
+/*
+Executable JAR is useless: `java -jar` ignores `-cp` required to add a JDBC driver into the classpath.
+Instead either an application distribution (via `application` plug-in) or a fat JAR has to be built.
+
+jar {
+  manifest {
+    attributes('Main-Class': 'org.houseofsoft.JdbcConnectionDemo')
+  }
+}
+*/
 
 test {
   testLogging {
     // set options for log level LIFECYCLE
+    //noinspection GrUnresolvedAccess
     events "started", "passed", "skipped", "failed"
     // make the standard output streams visible at console when running tests
     showStandardStreams = true

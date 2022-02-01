@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="JdbcConnectionDemo" type="Application" factoryName="Application" nameIsGenerated="true">
+    <classpathModifications>
+      <entry path="/usr/local/opt/DataDirect/JDBC_60/lib/sqlserver.jar" />
+    </classpathModifications>
+    <option name="MAIN_CLASS_NAME" value="org.houseofsoft.JdbcConnectionDemo" />
+    <module name="JavaDemos.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="org.houseofsoft.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="MakeProject" enabled="true" />
+    </method>
+  </configuration>
+</component>

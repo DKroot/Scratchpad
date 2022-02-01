@@ -25,8 +25,9 @@ public class CsvTransformer {
         TRANSFORMED_FILE_PATH)) {
       String currentJournal = null;
       List<ClassificationEntry> currentClassification = new ArrayList<>();
-      for (CSVRecord record : CSVFormat.EXCEL.withHeader().parse(in)) {
-        String newJournal = record.get("Journal Name (Title Case)");
+      var csvFormat = CSVFormat.EXCEL.builder().setHeader().build();
+      for (CSVRecord record : csvFormat.parse(in)) {
+        var newJournal = record.get("Journal Name (Title Case)");
         if (!newJournal.equals(currentJournal)) {
           if (currentJournal != null) {
             classify(currentJournal, currentClassification, out);
