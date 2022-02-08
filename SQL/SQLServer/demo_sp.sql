@@ -1,62 +1,70 @@
-IF OBJECT_ID ( 'tmp_plus1inout', 'P' ) IS NOT NULL
-  DROP PROCEDURE tmp_plus1inout;
-GO
 
-CREATE PROCEDURE tmp_plus1inout
-  @arg INT,
-  @res INT OUT
-AS
+CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
+  @arg INT, @res INT OUT
+) AS
 BEGIN
-  SELECT @res = @arg + 1;
-END;
+  SET @res = @arg + 1
+END
 GO
 
-DECLARE @res INT;
+DECLARE @res INT
 PRINT 'Executing...';
-EXEC tmp_plus1inout 42, @res OUT;
-PRINT CONCAT('The result = ', @res);
+EXEC tmp_plus1_in_out 42, @res OUT
+PRINT concat('The result = ', @res)
 GO
 
-IF OBJECT_ID ( 'tmp_demo', 'P' ) IS NOT NULL
-  DROP PROCEDURE tmp_demo;
+DROP PROCEDURE tmp_plus1_in_out
 GO
 
-CREATE PROCEDURE tmp_demo (@arg INT)
-AS
+CREATE OR ALTER PROCEDURE tmp_plus2_in_out(
+  @arg INT, @res INT OUT
+) AS
+  SET @res = @arg + 1
+  SET @res = @res + 1
+GO
+
+DROP PROCEDURE tmp_plus2_in_out
+GO
+
+CREATE OR ALTER PROCEDURE tmp_demo(
+  @arg INT
+) AS
 BEGIN
-  SELECT 'Demo' AS a_string, @arg + 1 AS an_int, CAST(1 AS BIT) AS a_boolean,
-    CAST('2007-05-08 12:35:29.123' AS DATETIME) AS a_date_time;
-END;
+  SELECT
+    'Demo' AS a_string, @arg + 1 AS an_int, cast(1 AS BIT) AS a_boolean,
+    cast('2007-05-08 12:35:29.123' AS DATETIME) AS a_date_time;
+END
 GO
 
 EXEC tmp_demo 42;
 GO
 
-IF OBJECT_ID ( 'tmp_demo_args', 'P' ) IS NOT NULL
-  DROP PROCEDURE tmp_demo_args;
+DROP PROCEDURE tmp_demo
 GO
 
-CREATE PROCEDURE tmp_demo_args
-  @aString VARCHAR(100) = 'Demo', -- Returns doubled argument
-  @anInt INT = 42, -- Returns argument + 1
-  @aBooleanBit BIT = 1, -- Returns NOT argument
-  @aBooleanInt INT = 1, -- Returns NOT argument
-  @aBooleanChar CHAR = 'Y', -- Returns argument
-  @aBooleanVarchar VARCHAR(100) = '1', -- Returns argument. VARCHAR(MAX) does not work here.
-  @aDateTime DATETIME = '2007-05-08 12:35:29.123' -- Returns argument
+CREATE OR ALTER PROCEDURE tmp_demo_args
+  @astring VARCHAR(100) = 'Demo', -- Returns doubled argument
+  @anint INT = 42, -- Returns argument + 1
+  @abooleanbit BIT = 1, -- Returns NOT argument
+  @abooleanint INT = 1, -- Returns NOT argument
+  @abooleanchar CHAR = 'Y', -- Returns argument
+  @abooleanvarchar VARCHAR(100) = '1', -- Returns argument. VARCHAR(MAX) does not work here.
+  @adatetime DATETIME = '2007-05-08 12:35:29.123' -- Returns argument
 AS
 BEGIN
-  SELECT 
-    @aString + ',' + @aString AS db_string,
-    @anInt + 1 AS db_int,
-    ~@aBooleanBit AS boolean_db_bit, -- 1 = true, 0 = false
-    @aBooleanInt - 1 AS boolean_db_int, -- <> 0 = true, 0 = false
-    @aBooleanChar AS boolean_db_char, -- 'Y'/'y' = true, else = false
-    @aBooleanVarchar AS boolean_db_varchar, -- '1' = true, else = false
-    @aDateTime AS db_date_time;
+  SELECT
+    @astring + ',' + @astring AS db_string, @anint + 1 AS db_int,
+    ~@abooleanbit AS boolean_db_bit, -- 1 = true, 0 = false
+    @abooleanint - 1 AS boolean_db_int, -- <> 0 = true, 0 = false
+    @abooleanchar AS boolean_db_char, -- 'Y'/'y' = true, else = false
+    @abooleanvarchar AS boolean_db_varchar, -- '1' = true, else = false
+    @adatetime AS db_date_time;
 --     DATEADD(d, -1, @aDateTime) AS db_date_time;
 END;
 GO
 
-EXEC tmp_demo_args;
+EXEC tmp_demo_args
+GO
+
+DROP PROCEDURE tmp_demo_args
 GO
