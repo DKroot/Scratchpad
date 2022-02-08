@@ -1,22 +1,22 @@
 :ON ERROR EXIT
 -- JetBrains IDEs: start execution from here
 
-WITH sample_data AS (
-  SELECT 1 AS tour_id, 1 AS group_id, 2001 AS year, 'San Francisco' AS city
+WITH sample_data(tour_id, group_id, year, city) AS (
+  SELECT 1, 1, 2001, 'San Francisco'
   UNION ALL
-  SELECT 2 AS tour_id, 1 AS group_id, 2009 AS year, 'Chicago' AS city
+  SELECT 2, 1, 2009, 'Chicago'
   UNION ALL
-  SELECT 3 AS tour_id, 1 AS group_id, 2009 AS year, 'New Orleans' AS city
+  SELECT 3, 1, 2009, 'New Orleans'
   UNION ALL
-  SELECT 4 AS tour_id, 2 AS group_id, 2006 AS year, 'Washington' AS city
+  SELECT 4, 2, 2006, 'Washington'
   UNION ALL
-  SELECT 5 AS tour_id, 2 AS group_id, 2007 AS year, 'New York' AS city
+  SELECT 5, 2, 2007, 'New York'
   UNION ALL
-  SELECT 6 AS tour_id, 3 AS group_id, 2008 AS year, 'Seattle' AS city
+  SELECT 6, 3, 2008, 'Seattle'
 )
 SELECT *
-INTO #demo_cursors -- new table created
-FROM sample_data
+INTO #demo_cursors
+FROM sample_data;
 GO
 
 /*
@@ -26,42 +26,42 @@ deallocated with the last variable referencing it.
 */
 DECLARE tmp_demo_cur1 CURSOR LOCAL STATIC FORWARD_ONLY READ_ONLY FOR --
   SELECT tour_id, group_id, year, city
-  FROM #demo_cursors
-DECLARE @tour_id INT, @group_id INT, @year INT, @city NVARCHAR(255)
-OPEN tmp_demo_cur1
-PRINT '## Resultset 1 ##'
+  FROM #demo_cursors;
+DECLARE @tour_id INT, @group_id INT, @year INT, @city NVARCHAR(255);
+OPEN tmp_demo_cur1;
+PRINT '## Resultset 1 ##';
 WHILE 1 = 1 BEGIN
-  FETCH NEXT FROM tmp_demo_cur1 INTO @tour_id, @group_id, @year, @city
+  FETCH NEXT FROM tmp_demo_cur1 INTO @tour_id, @group_id, @year, @city;
   IF @@fetch_status <> 0
-    BREAK
-  PRINT concat_ws(', ', @tour_id, @group_id, @year, @city)
+    BREAK;
+  PRINT concat_ws(', ', @tour_id, @group_id, @year, @city);
 END
-CLOSE tmp_demo_cur1
+CLOSE tmp_demo_cur1;
 
 DECLARE tmp_demo_cur2 CURSOR LOCAL STATIC FORWARD_ONLY READ_ONLY FOR --
   SELECT tour_id, group_id, year, city
-  FROM #demo_cursors
+  FROM #demo_cursors;
 -- DECLARE @tour_id INT, @group_id INT, @year INT, @city NVARCHAR(255)
-OPEN tmp_demo_cur2
-PRINT '## Resultset 2 ##'
+OPEN tmp_demo_cur2;
+PRINT '## Resultset 2 ##';
 WHILE 1 = 1 BEGIN
-  FETCH NEXT FROM tmp_demo_cur2 INTO @tour_id, @group_id, @year, @city
+  FETCH NEXT FROM tmp_demo_cur2 INTO @tour_id, @group_id, @year, @city;
   IF @@fetch_status <> 0
-    BREAK
-  PRINT concat_ws(', ', @tour_id, @group_id, @year, @city)
+    BREAK;
+  PRINT concat_ws(', ', @tour_id, @group_id, @year, @city);
 END
-CLOSE tmp_demo_cur2
+CLOSE tmp_demo_cur2;
 -- DEALLOCATE tmp_demo_cur2
 
 -- Reopening cursor
-OPEN tmp_demo_cur2 -- Fails if deallocated
-PRINT '## Resultset 3 ##'
+OPEN tmp_demo_cur2; -- Fails if deallocated
+PRINT '## Resultset 3 ##';
 WHILE 1 = 1 BEGIN
-  FETCH NEXT FROM tmp_demo_cur2 INTO @tour_id, @group_id, @year, @city
+  FETCH NEXT FROM tmp_demo_cur2 INTO @tour_id, @group_id, @year, @city;
   IF @@fetch_status <> 0
-    BREAK
-  PRINT concat_ws(', ', @tour_id, @group_id, @year, @city)
+    BREAK;
+  PRINT concat_ws(', ', @tour_id, @group_id, @year, @city);
 END
-CLOSE tmp_demo_cur2
-DEALLOCATE tmp_demo_cur2
+CLOSE tmp_demo_cur2;
+DEALLOCATE tmp_demo_cur2;
 GO

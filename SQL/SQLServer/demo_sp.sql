@@ -1,29 +1,28 @@
-
 CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
   @arg INT, @res INT OUT
 ) AS
 BEGIN
-  SET @res = @arg + 1
-END
+  SET @res = @arg + 1;
+END;
 GO
 
-DECLARE @res INT
-PRINT 'Executing...';
-EXEC tmp_plus1_in_out 42, @res OUT
-PRINT concat('The result = ', @res)
+DECLARE @res INT;
+PRINT 'Executing...';;
+EXEC tmp_plus1_in_out 42, @res OUT;
+PRINT concat('The result = ', @res);
 GO
 
-DROP PROCEDURE tmp_plus1_in_out
+DROP PROCEDURE tmp_plus1_in_out;
 GO
 
 CREATE OR ALTER PROCEDURE tmp_plus2_in_out(
   @arg INT, @res INT OUT
 ) AS
-  SET @res = @arg + 1
-  SET @res = @res + 1
+  SET @res = @arg + 1;
+  SET @res = @res + 1;
 GO
 
-DROP PROCEDURE tmp_plus2_in_out
+DROP PROCEDURE tmp_plus2_in_out;
 GO
 
 CREATE OR ALTER PROCEDURE tmp_demo(
@@ -39,7 +38,7 @@ GO
 EXEC tmp_demo 42;
 GO
 
-DROP PROCEDURE tmp_demo
+DROP PROCEDURE tmp_demo;
 GO
 
 CREATE OR ALTER PROCEDURE tmp_demo_args
@@ -63,8 +62,8 @@ BEGIN
 END;
 GO
 
-EXEC tmp_demo_args
+EXEC tmp_demo_args;
 GO
 
-DROP PROCEDURE tmp_demo_args
+DROP PROCEDURE tmp_demo_args;
 GO

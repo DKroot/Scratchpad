@@ -1,40 +1,38 @@
 -- 3 latest years
-WITH sample_data AS
-(
-  SELECT 1 AS group_id, 2001 AS year, 10001 as tour_id, 'San Francisco' AS city
+WITH sample_data(tour_id, group_id, year, city) AS (
+  SELECT 1, 1, 2001, 'San Francisco'
   UNION ALL
-  SELECT 1 AS group_id, 2009 AS year, 9010 as tour_id, 'Chicago' AS city
+  SELECT 2, 1, 2009, 'Chicago'
   UNION ALL
-  SELECT 1 AS group_id, 2009 AS year, 9002 as tour_id, 'New Orleans' AS city
+  SELECT 3, 1, 2009, 'New Orleans'
   UNION ALL
-  SELECT 2 AS group_id, 2006 AS year, 6001 as tour_id, 'Washington' AS city
+  SELECT 4, 2, 2006, 'Washington'
   UNION ALL
-  SELECT 2 AS group_id, 2007 AS year, 7001 as tour_id, 'New York' AS city
+  SELECT 5, 2, 2007, 'New York'
   UNION ALL
-  SELECT 3 AS group_id, 2008 AS year, 8001 as tour_id, 'Seattle' AS city
+  SELECT 6, 3, 2008, 'Seattle'
 )
-SELECT DISTINCT TOP(3) year
+SELECT DISTINCT TOP (3) year
 FROM sample_data
 ORDER BY year DESC;
 
 -- 2nd latest year
-WITH sample_data AS
-(
-  SELECT 1 AS group_id, 2001 AS year, 10001 as tour_id, 'San Francisco' AS city
+WITH sample_data(tour_id, group_id, year, city) AS (
+  SELECT 1, 1, 2001, 'San Francisco'
   UNION ALL
-  SELECT 1 AS group_id, 2009 AS year, 9010 as tour_id, 'Chicago' AS city
+  SELECT 2, 1, 2009, 'Chicago'
   UNION ALL
-  SELECT 1 AS group_id, 2009 AS year, 9002 as tour_id, 'New Orleans' AS city
+  SELECT 3, 1, 2009, 'New Orleans'
   UNION ALL
-  SELECT 2 AS group_id, 2006 AS year, 6001 as tour_id, 'Washington' AS city
+  SELECT 4, 2, 2006, 'Washington'
   UNION ALL
-  SELECT 2 AS group_id, 2007 AS year, 7001 as tour_id, 'New York' AS city
+  SELECT 5, 2, 2007, 'New York'
   UNION ALL
-  SELECT 3 AS group_id, 2008 AS year, 8001 as tour_id, 'Seattle' AS city
+  SELECT 6, 3, 2008, 'Seattle'
 )
-SELECT TOP(1) year
+SELECT TOP (1) year
 FROM (
-  SELECT DISTINCT TOP(2) year
+  SELECT DISTINCT TOP (2) year
   FROM sample_data
   ORDER BY year DESC
 ) top_2_years

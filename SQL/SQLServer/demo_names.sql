@@ -1,5 +1,5 @@
 -- Current default schema
-SELECT schema_name() AS default_schema
+SELECT schema_name() AS default_schema;
 
 /*
 -- If this DDL is not commented out, IDEA recognizes `temp_sample_data` below
@@ -9,7 +9,7 @@ INTO dbo.temp_sample_data
 
 -- Qualified reference
 SELECT *
-FROM dbo.temp_sample_data
+FROM dbo.temp_sample_data;
 
 /*
 Implicit name resolution
@@ -28,9 +28,9 @@ https://docs.microsoft.com/en-us/sql/relational-databases/security/authenticatio
 -- Unqualified name resolves to `dbo.temp_sample_data`
 -- IDEA: recognizes name *only when its DDL is available above*
 SELECT *
-FROM temp_sample_data
+FROM temp_sample_data;
 
-DROP TABLE dbo.temp_sample_data
+DROP TABLE dbo.temp_sample_data;
 
 /*
 `sys` schema objects must be qualified in modern MS SQL versions
@@ -38,4 +38,4 @@ DROP TABLE dbo.temp_sample_data
 -- Default schemas per user
 SELECT name AS user_name, default_schema_name
 FROM sys.database_principals
-WHERE type = 'S'
+WHERE type = 'S';

@@ -1,32 +1,29 @@
-/*
 -- Sample data
-WITH sample_data AS (
-  SELECT 1 AS tour_id, 1 AS group_id, 2001 AS year, 'San Francisco' AS city
+WITH sample_data(tour_id, group_id, year, city) AS (
+  SELECT 1, 1, 2001, 'San Francisco'
   UNION ALL
-  SELECT 2 AS tour_id, 1 AS group_id, 2009 AS year, 'Chicago' AS city
+  SELECT 2, 1, 2009, 'Chicago'
   UNION ALL
-  SELECT 3 AS tour_id, 1 AS group_id, 2009 AS year, 'New Orleans' AS city
+  SELECT 3, 1, 2009, 'New Orleans'
   UNION ALL
-  SELECT 4 AS tour_id, 2 AS group_id, 2006 AS year, 'Washington' AS city
+  SELECT 4, 2, 2006, 'Washington'
   UNION ALL
-  SELECT 5 AS tour_id, 2 AS group_id, 2007 AS year, 'New York' AS city
+  SELECT 5, 2, 2007, 'New York'
   UNION ALL
-  SELECT 6 AS tour_id, 3 AS group_id, 2008 AS year, 'Seattle' AS city
+  SELECT 6, 3, 2008, 'Seattle'
 )
 SELECT *
-INTO #demo_cursors -- new table created
 FROM sample_data
-*/
 
-DECLARE @foo VARCHAR(MAX), @bar VARCHAR(MAX)
+DECLARE @foo VARCHAR(MAX), @bar VARCHAR(MAX);
 
-SET @foo = 'foo'
-PRINT concat('@foo=', @foo)
+SET @foo = 'foo';
+PRINT concat('@foo=', @foo);
 
-SET @bar = 'bar'
-PRINT concat_ws('; ', concat('@foo=', @foo), concat('@bar=', @bar))
+SET @bar = 'bar';
+PRINT concat_ws('; ', concat('@foo=', @foo), concat('@bar=', @bar));
 
 -- Can't use multiple assignment in one line
 -- SET @foo = 'foo', @bar = 'bar'
-SELECT @foo = 'baz', @bar = 'qux'
-PRINT concat_ws('; ', concat('@foo=', @foo), concat('@bar=', @bar))
+SELECT @foo = 'baz', @bar = 'qux';
+PRINT concat_ws('; ', concat('@foo=', @foo), concat('@bar=', @bar));

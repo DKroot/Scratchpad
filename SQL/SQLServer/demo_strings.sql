@@ -24,8 +24,7 @@ GO
 WITH cte AS (
   SELECT *
   FROM (
-    VALUES
-      ('FOO'),
+    VALUES ('FOO'),
       ('foo'),
       ('BAR'),
       ('bar')
@@ -39,8 +38,7 @@ WHERE s COLLATE sql_latin1_general_cp1_cs_as LIKE '[A-Z][A-Z][A-Z]' COLLATE sql_
 WITH cte AS (
   SELECT *
   FROM (
-    VALUES
-      ('FOO'),
+    VALUES ('FOO'),
       ('foo'),
       ('BAR'),
       ('bar')
@@ -70,7 +68,8 @@ WITH cte AS (
 SELECT
   iif(cte.name LIKE '%(%)%',
       substring(cte.name, charindex('(', cte.name) + 1, charindex(')', cte.name) - charindex('(', cte.name) - 1), (
-        SELECT string_agg(left(value, 1), '') FROM string_split(cte.name, ' ')
+        SELECT string_agg(left(value, 1), '')
+        FROM string_split(cte.name, ' ')
       )) AS code
 FROM cte;
 
@@ -78,7 +77,8 @@ WITH cte AS (
   SELECT 'BHW Management Information System Solution' AS name
 )
 SELECT (
-  SELECT string_agg(left(value, 1), '') FROM string_split(cte.name, ' ')
+  SELECT string_agg(left(value, 1), '')
+  FROM string_split(cte.name, ' ')
 ) AS code
 FROM cte;
 --endregion
