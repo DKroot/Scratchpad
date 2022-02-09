@@ -41,7 +41,7 @@ GO
 DROP PROCEDURE tmp_demo;
 GO
 
-CREATE OR ALTER PROCEDURE tmp_demo_args
+CREATE OR ALTER PROCEDURE tmp_demo_args (
   @astring VARCHAR(100) = 'Demo', -- Returns doubled argument
   @anint INT = 42, -- Returns argument + 1
   @abooleanbit BIT = 1, -- Returns NOT argument
@@ -49,7 +49,7 @@ CREATE OR ALTER PROCEDURE tmp_demo_args
   @abooleanchar CHAR = 'Y', -- Returns argument
   @abooleanvarchar VARCHAR(100) = '1', -- Returns argument. VARCHAR(MAX) does not work here.
   @adatetime DATETIME = '2007-05-08 12:35:29.123' -- Returns argument
-AS
+) AS
 BEGIN
   SELECT
     @astring + ',' + @astring AS db_string, @anint + 1 AS db_int,
@@ -66,4 +66,54 @@ EXEC tmp_demo_args;
 GO
 
 DROP PROCEDURE tmp_demo_args;
+GO
+
+CREATE TYPE TMP_SAMPLE_DATA_TYPE AS TABLE (
+  tour_id INT,
+  group_id INT,
+  year INT,
+  city VARCHAR(MAX)
+);
+GO
+
+/*
+Table-valued parameters must be passed as input READONLY parameters to Transact-SQL routines. You cannot perform DML
+operations such as UPDATE, DELETE, or INSERT on a table-valued parameter in the body of a routine.
+
+You cannot use a table-valued parameter as target of a SELECT INTO or INSERT EXEC statement. A table-valued parameter
+can be in the FROM clause of SELECT INTO or in the INSERT EXEC string or stored procedure.
+*/
+CREATE OR ALTER PROCEDURE tmp_demo_table_args(
+  @foo TMP_SAMPLE_DATA_TYPE READONLY
+) AS
+BEGIN
+  SELECT *
+  FROM @foo;
+END;
+GO
+
+DECLARE @t TMP_SAMPLE_DATA_TYPE;
+
+WITH sample_data(tour_id, group_id, year, city) AS (
+  SELECT 1, 1, 2001, 'San Francisco'
+  UNION ALL
+  SELECT 2, 1, 2009, 'Chicago'
+  UNION ALL
+  SELECT 3, 1, 2009, 'New Orleans'
+  UNION ALL
+  SELECT 4, 2, 2006, 'Washington'
+  UNION ALL
+  SELECT 5, 2, 2007, 'New York'
+  UNION ALL
+  SELECT 6, 3, 2008, 'Seattle'
+)
+INSERT INTO @t(tour_id, group_id, year, city)
+SELECT tour_id, group_id, year, city
+FROM sample_data;
+
+EXEC tmp_demo_table_args @t
+GO
+
+DROP PROCEDURE tmp_demo_table_args;
+DROP TYPE TMP_SAMPLE_DATA_TYPE;
 GO

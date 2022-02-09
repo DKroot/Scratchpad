@@ -1,3 +1,6 @@
+:ON ERROR EXIT
+-- JetBrains IDEs: start execution from here
+
 -- Sample data
 WITH sample_data(tour_id, group_id, year, city) AS (
   SELECT 1, 1, 2001, 'San Francisco'
@@ -22,6 +25,8 @@ PRINT concat('@foo=', @foo);
 
 SET @bar = 'bar';
 PRINT concat_ws('; ', concat('@foo=', @foo), concat('@bar=', @bar));
+
+DECLARE @foo VARCHAR(MAX), @bar VARCHAR(MAX);
 
 -- Can't use multiple assignment in one line
 -- SET @foo = 'foo', @bar = 'bar'
