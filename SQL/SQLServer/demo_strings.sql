@@ -21,31 +21,25 @@ SELECT
 GO
 
 -- LIKE pattern ranges are always case-insensitive
-WITH cte AS (
-  SELECT *
-  FROM (
-    VALUES ('FOO'),
-      ('foo'),
-      ('BAR'),
-      ('bar')
-  ) AS t(s)
-)
 SELECT s AS acronym
-FROM cte
+FROM (
+  VALUES --
+    ('FOO'),
+    ('foo'),
+    ('BAR'),
+    ('bar')
+) AS t(s)
 WHERE s COLLATE sql_latin1_general_cp1_cs_as LIKE '[A-Z][A-Z][A-Z]' COLLATE sql_latin1_general_cp1_cs_as;
 
 -- Case-sensitive LIKE pattern
-WITH cte AS (
-  SELECT *
-  FROM (
-    VALUES ('FOO'),
-      ('foo'),
-      ('BAR'),
-      ('bar')
-  ) AS t(s)
-)
 SELECT s AS acronym
-FROM cte
+FROM (
+  VALUES --
+    ('FOO'),
+    ('foo'),
+    ('BAR'),
+    ('bar')
+) AS t(s)
 WHERE s COLLATE sql_latin1_general_cp1_cs_as LIKE '%[ABCDEFGHIJKLMNOPQRSTUVWXYZ]%';
 --endregion
 
@@ -55,30 +49,30 @@ SELECT concat_ws('.', NULL, NULL);
 SELECT concat_ws('.', NULL, '');
 -- ''
 
---region String aggregation: SQL Server 2017+
+--region String aggregation: custom functions for SQL Server 2017+
 SELECT string_agg(left(value, 1), '')
 FROM string_split('BHW Management Information System Solution', ' ');
 
 SELECT string_agg(left(value, 1), '')
 FROM string_split(translate('OPAIS/340B Pricing System', '/', ' '), ' ');
 
-WITH cte AS (
-  SELECT 'Electronic Handbooks (EHBs)' AS name
-)
 SELECT
   iif(cte.name LIKE '%(%)%',
       substring(cte.name, charindex('(', cte.name) + 1, charindex(')', cte.name) - charindex('(', cte.name) - 1), (
         SELECT string_agg(left(value, 1), '')
         FROM string_split(cte.name, ' ')
       )) AS code
-FROM cte;
+FROM (
+  VALUES --
+    ('Electronic Handbooks (EHBs)')
+) AS cte(name);
 
-WITH cte AS (
-  SELECT 'BHW Management Information System Solution' AS name
-)
 SELECT (
   SELECT string_agg(left(value, 1), '')
   FROM string_split(cte.name, ' ')
 ) AS code
-FROM cte;
+FROM (
+  VALUES --
+    ('BHW Management Information System Solution')
+) AS cte(name);
 --endregion

@@ -1,44 +1,42 @@
 -- Sample data
-WITH sample_data AS (
-  SELECT *
-  FROM (
-    VALUES --
-      (1, 1, 2001, 'San Francisco'),
-      (2, 1, 2009, 'Chicago'),
-      (3, 1, 2009, 'New Orleans'),
-      (4, 2, 2006, 'Washington'),
-      (5, 2, 2007, 'New York'),
-      (6, 3, 2008, 'Seattle')
-  ) AS t(tour_id, group_id, year, city)
-)
 SELECT *
 INTO #demo_merge -- new table created
-FROM sample_data;
+FROM (
+  VALUES --
+    (1, 1, 2001, 'San Francisco'),
+    (2, 1, 2009, 'Chicago'),
+    (3, 1, 2009, 'New Orleans'),
+    (4, 2, 2006, 'Washington'),
+    (5, 2, 2007, 'New York'),
+    (6, 3, 2008, 'Seattle')
+) AS sample_data(tour_id, group_id, year, city);
 
 -- INSERT if doesn't exist
-WITH data AS (
-  SELECT 7 AS tour_id, 4 AS group_id, 2021 AS year, 'San Francisco' AS city
+WITH sample_data(tour_id, group_id, year, city) AS (
+  SELECT 7, 4, 2021, 'San Francisco'
 )
 INSERT
 INTO #demo_merge(tour_id, group_id, year, city)
 SELECT tour_id, group_id, year, city
-FROM data
+FROM sample_data
 WHERE NOT exists(SELECT 1
                  FROM #demo_merge tdm
-                   JOIN data ON tdm.tour_id = data.tour_id);
+                   JOIN sample_data ON tdm.tour_id = sample_data.tour_id);
 
 -- MERGE
 MERGE
 INTO #demo_merge AS tdm
 USING (
-  SELECT 7 AS tour_id, 4 AS group_id, 2021 AS year, 'San Francisco' AS city
-) data
-ON (tdm.tour_id = data.tour_id)
+  VALUES --
+    (7, 4, 2021, 'San Francisco')
+) AS sample_data(tour_id, group_id, year, city)
+ON (tdm.tour_id = sample_data.tour_id)
 WHEN MATCHED THEN
   UPDATE
-  SET tdm.group_id = data.group_id, tdm.year = data.year, tdm.city = data.city
+  SET tdm.group_id = sample_data.group_id, tdm.year = sample_data.year, tdm.city = sample_data.city
 WHEN NOT MATCHED THEN
   INSERT (tour_id, group_id, year, city)
-  VALUES (data.tour_id, data.group_id, data.year, data.city);
+  VALUES (
+    sample_data.tour_id, sample_data.group_id, sample_data.year, sample_data.city);
 
-DROP TABLE #demo_merge;
+-- DROP TABLE #demo_merge;

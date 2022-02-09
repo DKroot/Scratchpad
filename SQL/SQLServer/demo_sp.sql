@@ -94,22 +94,17 @@ GO
 
 DECLARE @t TMP_SAMPLE_DATA_TYPE;
 
-WITH sample_data(tour_id, group_id, year, city) AS (
-  SELECT 1, 1, 2001, 'San Francisco'
-  UNION ALL
-  SELECT 2, 1, 2009, 'Chicago'
-  UNION ALL
-  SELECT 3, 1, 2009, 'New Orleans'
-  UNION ALL
-  SELECT 4, 2, 2006, 'Washington'
-  UNION ALL
-  SELECT 5, 2, 2007, 'New York'
-  UNION ALL
-  SELECT 6, 3, 2008, 'Seattle'
-)
 INSERT INTO @t(tour_id, group_id, year, city)
 SELECT tour_id, group_id, year, city
-FROM sample_data;
+FROM (
+  VALUES --
+    (1, 1, 2001, 'San Francisco'),
+    (2, 1, 2009, 'Chicago'),
+    (3, 1, 2009, 'New Orleans'),
+    (4, 2, 2006, 'Washington'),
+    (5, 2, 2007, 'New York'),
+    (6, 3, 2008, 'Seattle')
+) AS sample_data(tour_id, group_id, year, city);
 
 EXEC tmp_demo_table_args @t
 GO
