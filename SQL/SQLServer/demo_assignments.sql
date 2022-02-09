@@ -2,21 +2,16 @@
 -- JetBrains IDEs: start execution from here
 
 -- Sample data
-WITH sample_data(tour_id, group_id, year, city) AS (
-  SELECT 1, 1, 2001, 'San Francisco'
-  UNION ALL
-  SELECT 2, 1, 2009, 'Chicago'
-  UNION ALL
-  SELECT 3, 1, 2009, 'New Orleans'
-  UNION ALL
-  SELECT 4, 2, 2006, 'Washington'
-  UNION ALL
-  SELECT 5, 2, 2007, 'New York'
-  UNION ALL
-  SELECT 6, 3, 2008, 'Seattle'
-)
 SELECT *
-FROM sample_data
+FROM (
+  VALUES --
+    (1, 1, 2001, 'San Francisco'),
+    (2, 1, 2009, 'Chicago'),
+    (3, 1, 2009, 'New Orleans'),
+    (4, 2, 2006, 'Washington'),
+    (5, 2, 2007, 'New York'),
+    (6, 3, 2008, 'Seattle')
+) AS sample_data(tour_id, group_id, year, city);
 
 DECLARE @foo VARCHAR(MAX), @bar VARCHAR(MAX);
 
