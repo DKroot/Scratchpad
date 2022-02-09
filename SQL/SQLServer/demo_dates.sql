@@ -28,6 +28,9 @@ PRINT concat_ws(', ', @foo, @bar, @baz);
 PRINT concat_ws(' ', 'DATETIME - DATE =', datediff(DAY, @foo, @bar), 'day');
 GO
 
--- Format seconds
-PRINT '90 seconds=' + convert(varchar(10), dateadd(second, 90, 0), 108);
-PRINT '3600 seconds=' + convert(varchar(10), dateadd(second, 3600, 0), 108);
+-- Format seconds as hh:mm:ss
+PRINT '90 seconds = ' + convert(varchar(10), dateadd(second, 90, 0), 108) + ' hh:mm:ss';
+PRINT '3600 seconds = ' + convert(varchar(10), dateadd(second, 3600, 0), 108) + ' hh:mm:ss';
+PRINT '12 hours + 1 second = ' + convert(varchar(10), dateadd(second, 12*3600 + 1, 0), 108) + ' hh:mm:ss';
+-- Overflows on 24 hours
+PRINT '24 hours = ' + convert(varchar(10), dateadd(second, 24*3600, 0), 108) + ' hh:mm:ss';
