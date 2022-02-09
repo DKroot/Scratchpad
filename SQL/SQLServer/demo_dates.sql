@@ -1,27 +1,33 @@
 -- Now
-SELECT current_timestamp;
+PRINT current_timestamp;
 
 -- Now
-SELECT getdate();
+PRINT getdate();
 
 -- Truncate to current date
-SELECT cast(getdate() AS DATE);
+PRINT cast(getdate() AS DATE);
 
--- Yesterday date/time
-SELECT getdate() - 1;
-
--- Yesterday date
--- Operand type clash: date is incompatible with int
--- SELECT cast(getdate() AS DATE) - 1;
+-- Yesterday (date/time)
+PRINT getdate() - 1;
 
 -- Tomorrow
-SELECT getdate() + 1;
+PRINT getdate() + 1;
+
+-- Yesterday (date)
+PRINT cast(getdate() - 1 AS DATE);
+-- Can only subtract from DATETIME
+-- SELECT cast(getdate() AS DATE) - 1;
 
 -- BETWEEN
 SELECT 1 AS bit
 WHERE getdate() BETWEEN getdate() - 1 AND getdate() + 1;
 
--- Literals
-DECLARE @foo DATE = '2021-08-01', @bar DATETIME = '2021-08-01', @baz DATETIME = '2021-08-01T21:15:42';
-SELECT @foo, @bar, @baz;
+-- Literals and difference
+DECLARE @foo DATE = '2021-08-01', @bar DATETIME = '2021-08-02T21:00:42', @baz DATETIME = '2021-08-02T21:15:42';
+PRINT concat_ws(', ', @foo, @bar, @baz);
+PRINT concat_ws(' ', 'DATETIME - DATE =', datediff(DAY, @foo, @bar), 'day');
 GO
+
+-- Format seconds
+PRINT '90 seconds=' + convert(varchar(10), dateadd(second, 90, 0), 108);
+PRINT '3600 seconds=' + convert(varchar(10), dateadd(second, 3600, 0), 108);
