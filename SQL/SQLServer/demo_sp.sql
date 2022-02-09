@@ -2,7 +2,11 @@ CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
   @arg INT, @res INT OUT
 ) AS
 BEGIN
-  SET @res = @arg + 1;
+  IF @arg = 42 BEGIN
+    SET @res = @arg + 1;
+  END; ELSE BEGIN
+    SET @res = @arg - 1;
+  END;
 END;
 GO
 
@@ -41,7 +45,7 @@ GO
 DROP PROCEDURE tmp_demo;
 GO
 
-CREATE OR ALTER PROCEDURE tmp_demo_args (
+CREATE OR ALTER PROCEDURE tmp_demo_args(
   @astring VARCHAR(100) = 'Demo', -- Returns doubled argument
   @anint INT = 42, -- Returns argument + 1
   @abooleanbit BIT = 1, -- Returns NOT argument
@@ -94,7 +98,8 @@ GO
 
 DECLARE @t TMP_SAMPLE_DATA_TYPE;
 
-INSERT INTO @t(tour_id, group_id, year, city)
+INSERT
+INTO @t(tour_id, group_id, year, city)
 SELECT tour_id, group_id, year, city
 FROM (
   VALUES --
