@@ -2,11 +2,14 @@ CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
   @arg INT, @res INT OUT
 ) AS
 BEGIN
+  SET NOCOUNT ON;
+
   IF @arg = 42 BEGIN
     SET @res = @arg + 1;
   END; ELSE BEGIN
     SET @res = @arg - 1;
   END;
+  PRINT concat('tmp_plus1_in_out: ', @res);
 END;
 GO
 
@@ -14,7 +17,6 @@ DECLARE @res INT;
 PRINT 'Executing...';;
 EXEC tmp_plus1_in_out 42, @res OUT;
 PRINT concat('The result = ', @res);
-GO
 
 DROP PROCEDURE tmp_plus1_in_out;
 GO
@@ -55,7 +57,9 @@ CREATE OR ALTER PROCEDURE tmp_demo_args(
   @adatetime DATETIME = '2007-05-08 12:35:29.123' -- Returns argument
 ) AS
 BEGIN
+  -- tmp_demo_args
   SELECT
+    'tmp_demo_args' AS logger,
     @astring + ',' + @astring AS db_string, @anint + 1 AS db_int,
     ~@abooleanbit AS boolean_db_bit, -- 1 = true, 0 = false
     @abooleanint - 1 AS boolean_db_int, -- <> 0 = true, 0 = false
@@ -67,11 +71,11 @@ END;
 GO
 
 EXEC tmp_demo_args;
-GO
 
 DROP PROCEDURE tmp_demo_args;
 GO
 
+--region demo_table_args: execute from here
 CREATE TYPE TMP_SAMPLE_DATA_TYPE AS TABLE (
   tour_id INT,
   group_id INT,
@@ -91,8 +95,14 @@ CREATE OR ALTER PROCEDURE tmp_demo_table_args(
   @foo TMP_SAMPLE_DATA_TYPE READONLY
 ) AS
 BEGIN
+  SELECT 'All records' AS "See next =>";
   SELECT *
   FROM @foo;
+
+  SELECT 'Grouped by group_id' AS "See next =>";
+  SELECT group_id, max(tour_id) AS last_tour, max(year) AS last_year
+  FROM @foo
+  GROUP BY group_id;
 END;
 GO
 
@@ -117,3 +127,4 @@ GO
 DROP PROCEDURE tmp_demo_table_args;
 DROP TYPE TMP_SAMPLE_DATA_TYPE;
 GO
+--endregion

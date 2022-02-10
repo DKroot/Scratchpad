@@ -1,6 +1,6 @@
 --region Collations
 -- DB collation
-SELECT databasepropertyex(db_name(), 'collation');
+PRINT databasepropertyex(db_name(), 'collation');
 -- `SQL_Latin1_General_CP1_CI_AS`
 
 DECLARE @foo VARCHAR = 'FOO', @pay_plan CHAR(2), --
@@ -42,10 +42,15 @@ FROM (
 WHERE s COLLATE sql_latin1_general_cp1_cs_as LIKE '%[ABCDEFGHIJKLMNOPQRSTUVWXYZ]%';
 --endregion
 
-SELECT concat_ws('.', NULL, NULL);
+PRINT coalesce(NULL, '.');
+-- ''
+PRINT coalesce('', '.');
 -- ''
 
-SELECT concat_ws('.', NULL, '');
+PRINT concat_ws('.', NULL, NULL);
+-- ''
+
+PRINT concat_ws('.', NULL, '');
 -- ''
 
 --region String aggregation: custom functions for SQL Server 2017+
