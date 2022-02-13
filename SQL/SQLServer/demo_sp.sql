@@ -13,15 +13,28 @@ GO
 /*
 Doc comment
 */
-CREATE OR ALTER PROCEDURE tmp_error(
+CREATE OR ALTER PROCEDURE tmp_error_lineno(
   @arg INT, @res INT OUT
 ) AS
 BEGIN
-  -- The following directive fixes line number reporting for middle-of-file batches.
-  LINENO 21;
+  -- `LINENO` converts batch line # to the actual line # for middle-of-file batches
+  LINENO 21; -- keep it matching the actual line #
 
   -- This errors out. Line number gets reported in SSMS *correctly*.
   SET NOCOUNT FOO;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE tmp_error_catch(
+  @arg INT, @res INT OUT
+) AS
+BEGIN
+  -- `LINENO` converts batch line # to the actual line # for middle-of-file batches
+  LINENO 33; -- keep it matching the actual line #
+
+  -- This errors out. Line number gets reported in SSMS *correctly*.
+  SET NOCOUNT FOO;
+
 END;
 GO
 
