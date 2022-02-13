@@ -18,7 +18,11 @@ PRINT cast(getdate() - 1 AS DATE);
 -- Can only subtract from DATETIME
 -- SELECT cast(getdate() AS DATE) - 1;
 
--- BETWEEN
+-- Date/time in the last 24 hours?
+SELECT 1 AS bit
+WHERE getdate() > getdate() - 1;
+
+-- Date/time is in +/- 24 hours?
 SELECT 1 AS bit
 WHERE getdate() BETWEEN getdate() - 1 AND getdate() + 1;
 
