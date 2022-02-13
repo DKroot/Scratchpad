@@ -1,3 +1,33 @@
+/*
+Batch comment
+*/
+CREATE OR ALTER PROCEDURE tmp_error(
+  @arg INT, @res INT OUT
+) AS
+BEGIN
+  -- This errors out. Line number gets reported in SSMS *correctly* if the entire batch is selected for execution.
+  SET NOCOUNT FOO; 
+END;
+GO
+
+/*
+Doc comment
+*/
+CREATE OR ALTER PROCEDURE tmp_error(
+  @arg INT, @res INT OUT
+) AS
+BEGIN
+  -- The following directive fixes line number reporting for middle-of-file batches.
+  LINENO 21;
+
+  -- This errors out. Line number gets reported in SSMS *correctly*.
+  SET NOCOUNT FOO;
+END;
+GO
+
+/*
+Attached doc comment
+*/
 CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
   @arg INT, @res INT OUT
 ) AS
@@ -20,6 +50,10 @@ PRINT concat('The result = ', @res);
 
 DROP PROCEDURE tmp_plus1_in_out;
 GO
+
+/*
+Attached doc comment: blank line separation doesn't matter. The entire batch DDL is stored.
+*/
 
 CREATE OR ALTER PROCEDURE tmp_plus2_in_out(
   @arg INT, @res INT OUT
