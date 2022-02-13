@@ -16,17 +16,21 @@ END TRY BEGIN CATCH
 END CATCH;
 GO
 
-    BEGIN TRY
-      -- `LINENO` converts batch line # to the actual line # for middle-of-file batches
-      LINENO 21; -- keep it matching the actual line #
+-- Generate a divide-by-zero error.
+SELECT 1 / 0;
 
-      -- Generate a divide-by-zero error.
-      SELECT 1 / 0;
-    END TRY BEGIN CATCH
-      DECLARE @err_msg NVARCHAR(4000), @err_severity INT, @err_state INT;
-      SET @err_msg = 'At line #' + cast(error_line() AS VARCHAR(50)) + ': ' + error_message();
-      SET @err_severity = error_severity();
-      SET @err_state = error_state();
-      RAISERROR (@err_msg, @err_severity, @err_state);
-    END CATCH;
-    GO
+BEGIN TRY
+  -- `LINENO` converts batch line # to the actual line # for middle-of-file batches
+  lineno 21;
+  -- keep it matching the actual line #
+
+  -- Generate a divide-by-zero error.
+  SELECT 1 / 0;
+END TRY BEGIN CATCH
+  DECLARE @err_msg NVARCHAR(4000), @err_severity INT, @err_state INT;
+  SET @err_msg = 'At line #' + cast(error_line() AS VARCHAR(50)) + ': ' + error_message();
+  SET @err_severity = error_severity();
+  SET @err_state = error_state();
+  RAISERROR (@err_msg, @err_severity, @err_state);
+END CATCH;
+GO

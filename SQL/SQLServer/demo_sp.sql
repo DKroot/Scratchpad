@@ -1,41 +1,58 @@
 /*
 Batch comment
 */
-CREATE OR ALTER PROCEDURE tmp_error(
-  @arg INT, @res INT OUT
-) AS
+CREATE OR ALTER PROCEDURE tmp_error AS
 BEGIN
   -- This errors out. Line number gets reported in SSMS *correctly* if the entire batch is selected for execution.
-  SET NOCOUNT FOO; 
+  -- The line number is not reported in JetBrains IDEs.
+  SELECT 1 / 0;
 END;
+GO
+
+EXEC tmp_error;
 GO
 
 /*
 Doc comment
 */
-CREATE OR ALTER PROCEDURE tmp_error_lineno(
-  @arg INT, @res INT OUT
-) AS
+CREATE OR ALTER PROCEDURE tmp_error_lineno AS
 BEGIN
-  -- `LINENO` converts batch line # to the actual line # for middle-of-file batches
-  LINENO 21; -- keep it matching the actual line #
+  -- `LINENO` fixes line # reporting for middle-of-file batches. Keep it matching the actual file line #.
+  lineno 20;
 
   -- This errors out. Line number gets reported in SSMS *correctly*.
-  SET NOCOUNT FOO;
+  -- The line number is not reported in JetBrains IDEs.
+  SELECT 1 / 0;
 END;
 GO
 
-CREATE OR ALTER PROCEDURE tmp_error_catch(
-  @arg INT, @res INT OUT
-) AS
+EXEC tmp_error_lineno;
+GO
+
+/*
+Doc comment
+*/
+CREATE OR ALTER PROCEDURE tmp_error_catch AS
 BEGIN
-  -- `LINENO` converts batch line # to the actual line # for middle-of-file batches
-  LINENO 33; -- keep it matching the actual line #
+  -- `LINENO` fixes line # reporting for middle-of-file batches. Keep it matching the actual file line #.
+  lineno 38;
 
   -- This errors out. Line number gets reported in SSMS *correctly*.
-  SET NOCOUNT FOO;
-
+  -- The line number is not reported in JetBrains IDEs.
+  BEGIN TRY
+    -- Generate a divide-by-zero error.
+    SELECT 1 / 0;
+  END TRY BEGIN CATCH
+    DECLARE @err_msg NVARCHAR(4000), @err_severity INT, @err_state INT;
+    SET @err_msg = 'At line #' + cast(error_line() AS VARCHAR(50)) + ': ' + error_message();
+    SET @err_severity = error_severity();
+    SET @err_state = error_state();
+    RAISERROR (@err_msg, @err_severity, @err_state);
+  END CATCH;
 END;
+GO
+
+EXEC tmp_error_catch;
 GO
 
 /*
@@ -106,8 +123,7 @@ CREATE OR ALTER PROCEDURE tmp_demo_args(
 BEGIN
   -- tmp_demo_args
   SELECT
-    'tmp_demo_args' AS logger,
-    @astring + ',' + @astring AS db_string, @anint + 1 AS db_int,
+    'tmp_demo_args' AS logger, @astring + ',' + @astring AS db_string, @anint + 1 AS db_int,
     ~@abooleanbit AS boolean_db_bit, -- 1 = true, 0 = false
     @abooleanint - 1 AS boolean_db_int, -- <> 0 = true, 0 = false
     @abooleanchar AS boolean_db_char, -- 'Y'/'y' = true, else = false
