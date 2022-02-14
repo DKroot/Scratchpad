@@ -2,11 +2,11 @@
 Batch comment
 */
 CREATE OR ALTER PROCEDURE tmp_error AS
-BEGIN
+  PRINT 'tmp_error';
+
   -- This errors out. Line number gets reported in SSMS *correctly* if the entire batch is selected for execution.
   -- The line number is not reported in JetBrains IDEs.
   SELECT 1 / 0;
-END;
 GO
 
 EXEC tmp_error;
@@ -18,7 +18,7 @@ Doc comment
 CREATE OR ALTER PROCEDURE tmp_error_lineno AS
 BEGIN
   -- `LINENO` fixes line # reporting for middle-of-file batches. Keep it matching the actual file line #.
-  lineno 20;
+  lineno 21;
 
   -- This errors out. Line number gets reported in SSMS *correctly*.
   -- The line number is not reported in JetBrains IDEs.
@@ -33,9 +33,8 @@ GO
 Doc comment
 */
 CREATE OR ALTER PROCEDURE tmp_error_catch AS
-BEGIN
   -- `LINENO` fixes line # reporting for middle-of-file batches. Keep it matching the actual file line #.
-  lineno 38;
+  lineno 37;
 
   -- This errors out. Line number gets reported in SSMS *correctly*.
   -- The line number is not reported in JetBrains IDEs.
@@ -49,7 +48,6 @@ BEGIN
     SET @err_state = error_state();
     RAISERROR (@err_msg, @err_severity, @err_state);
   END CATCH;
-END;
 GO
 
 EXEC tmp_error_catch;

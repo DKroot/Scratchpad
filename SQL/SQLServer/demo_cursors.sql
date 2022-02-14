@@ -12,7 +12,6 @@ FROM (
     (5, 2, 2007, 'New York'),
     (6, 3, 2008, 'Seattle')
 ) AS sample_data(tour_id, group_id, year, city);
-GO
 
 /*
 LOCAL: the scope of the cursor is local to the batch, SP or trigger. The cursor is implicitly deallocated when the
@@ -58,5 +57,4 @@ WHILE 1 = 1 BEGIN
   PRINT concat_ws(', ', @tour_id, @group_id, @year, @city);
 END
 CLOSE tmp_demo_cur2;
-DEALLOCATE tmp_demo_cur2;
-GO
+-- DEALLOCATE tmp_demo_cur2;
