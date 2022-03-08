@@ -19,12 +19,16 @@ PRINT cast(getdate() - 1 AS DATE);
 -- SELECT cast(getdate() AS DATE) - 1;
 
 -- Date/time in the last 24 hours?
-SELECT 1 AS bit
+SELECT cast(1 AS BIT) AS last_day
 WHERE getdate() > getdate() - 1;
 
 -- Date/time is in +/- 24 hours?
-SELECT 1 AS bit
+SELECT cast(1 AS BIT) AS plus_minus_day
 WHERE getdate() BETWEEN getdate() - 1 AND getdate() + 1;
+
+-- noinspection SqlRedundantCodeInCoalesce
+SELECT cast(1 AS BIT) AS plus_minus_day
+WHERE getdate() BETWEEN getdate() - 1 AND coalesce(NULL, getdate() + 1);
 
 -- Literals and difference
 DECLARE @foo DATE = '2021-08-01', @bar DATETIME = '2021-08-02T21:00:42', @baz DATETIME = '2021-08-02T21:15:42';
