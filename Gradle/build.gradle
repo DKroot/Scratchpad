@@ -33,7 +33,7 @@ task myExec(type: Exec) {
   }
 }
 
-def runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
+String runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
     exec {
@@ -45,7 +45,7 @@ def runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
   }
 }
 
-def runAndCaptureStdOutStdErr(cmdLineArgs, suppressFailures = false) {
+Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs, suppressFailures = false) {
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
     new ByteArrayOutputStream().withStream { cmdStdErr ->
@@ -55,7 +55,7 @@ def runAndCaptureStdOutStdErr(cmdLineArgs, suppressFailures = false) {
         errorOutput new TeeOutputStream(System.err, cmdStdErr)
         ignoreExitValue suppressFailures
       }
-      [cmdStdOut.toString(), cmdStdErr.toString()]
+      new Tuple2<>(cmdStdOut.toString(), cmdStdErr.toString())
     }
   }
 }
@@ -109,16 +109,16 @@ task main(dependsOn: myExec) {
 
     println "\nExecuting a command with error suppression and teeing stdout and stderr via generic function"
     println '====='
-    def (cmdStdOut, cmdStdErr) = runAndCaptureStdOutStdErr(['ls', 'foo'], true)
+    def cmdStdOutAndStdErr = runAndCaptureStdOutStdErr(['ls', 'foo'], true)
     println '===== Captured stdout:'
-    print cmdStdOut
+    print cmdStdOutAndStdErr.first
     println '===== Captured stderr:'
-    print cmdStdErr
+    print cmdStdOutAndStdErr.second
     println '====='
 
     println "\nExecuting a command and teeing stdout via generic function"
     println '====='
-    cmdStdOut = runAndCaptureStdOut(['ls', '-l'])
+    def cmdStdOut = runAndCaptureStdOut(['ls', '-l'])
     println '===== Captured stdout:'
     print cmdStdOut
     println '====='
