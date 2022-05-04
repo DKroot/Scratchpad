@@ -33,6 +33,13 @@ task myExec(type: Exec) {
   }
 }
 
+/**
+ * Executes command, tees and captures stdout
+ *
+ * @param cmdLineArgs
+ * @param suppressFailures ignore failed commands
+ * @return captured stdout
+ */
 String runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
@@ -45,7 +52,13 @@ String runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
   }
 }
 
-Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs, suppressFailures = false) {
+/**
+ * Executes command, tees and captures stdout and stderr. Ignores failed commands.
+ *
+ * @param cmdLineArgs
+ * @return a tuple of captured stdout + captured stderr
+ */
+Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs) {
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
     new ByteArrayOutputStream().withStream { cmdStdErr ->
@@ -53,7 +66,7 @@ Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs, suppressFailures =
         commandLine cmdLineArgs
         standardOutput new TeeOutputStream(System.out, cmdStdOut)
         errorOutput new TeeOutputStream(System.err, cmdStdErr)
-        ignoreExitValue suppressFailures
+        ignoreExitValue true
       }
       new Tuple2<>(cmdStdOut.toString(), cmdStdErr.toString())
     }
@@ -109,14 +122,14 @@ task main(dependsOn: myExec) {
 
     println "\nExecuting a command with error suppression and teeing stdout and stderr via generic function"
     println '====='
-    def cmdStdOutAndStdErr = runAndCaptureStdOutStdErr(['ls', 'foo'], true)
+    def cmdOutput = runAndCaptureStdOutStdErr(['ls', 'foo'])
     println '===== Captured stdout:'
-    print cmdStdOutAndStdErr.first
+    print cmdOutput.first
     println '===== Captured stderr:'
-    print cmdStdOutAndStdErr.second
+    print cmdOutput.second
     println '====='
 
-    println "\nExecuting a command and teeing stdout via generic function"
+    println "\nExecuting a command andπ teeing stdout via generic function"
     println '====='
     def cmdStdOut = runAndCaptureStdOut(['ls', '-l'])
     println '===== Captured stdout:'
