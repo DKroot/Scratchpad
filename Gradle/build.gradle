@@ -1,7 +1,38 @@
-import org.apache.tools.ant.util.TeeOutputStream
+/*
+## Main tasks ##
+
+  main                        demo different Gradle features
+
+## Informational tasks ##
+
+  vars (v)                    shows environment variables and JVM System Properties
+
+  properties (prop)           shows project properties
+
+  dependencies (depe)         shows dependency trees for all configurations
+    Options:
+      --configuration {dependency-configuration-name}
+
+  buildEnvironment (bE)       shows dependency tree for plugins
+
+  tiTree {task}               shows the task dependencies as a tree
+
+  tiOrder {task1} ...         shows order of all would be executed tasks
+
+## Common options ##
+
+  --info                      show detailed progress. Recommended for `docker`.
+
+  --scan                      create a Gradle build scan diagnostics, published to the Gradle-hosted website
+*/
 
 plugins {
   id 'base'
+
+  id 'de.qualersoft.jmeter' version '2.2.+'
+
+  // Prints task metadata and dependency information
+  id 'org.barfuin.gradle.taskinfo' version '1.4.+'
 }
 
 println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
@@ -32,6 +63,8 @@ task myExec(type: Exec) {
     println '====='
   }
 }
+
+import org.apache.tools.ant.util.TeeOutputStream
 
 /**
  * Executes command, tees and captures stdout
@@ -169,33 +202,22 @@ task generateConfig() {
   }
 }
 
-task vars() {
+tasks.register('vars') {
   group 'Help'
-  description 'Prints environment variables and JVM System Properties'
+  description 'Prints environment, JVM System Properties and other project info.'
   doLast {
-    def systemProp = System.properties
-    // a Java Map of system properties
-
-    println("== Environment variables ==\n")
-    for (def var in systemEnv.sort()) {
-      println "${var.key}=${var.value}"
+    println '== Environment variables ==\n'
+    systemEnv.sort().each { key, value -> println "${key}=${value}"
     }
 
-    println("\n== JVM System Properties ==\n")
-    for (def var in systemProp.sort()) {
-      println "${var.key}=${var.value}"
+    println '\n== JVM System Properties ==\n'
+    System.properties.sort().each { key, value -> println "${key}=${value}"
     }
-  }
-}
 
-task dockerComposeDown() {
-  group 'Deployment'
-  description 'Stops a Docker Compose cluster and removes stopped containers'
-
-  doLast {
-    exec {
-      // Safe to use when the cluster is not up
-      commandLine 'docker-compose', 'down'
+    println '\n== Project Properties ==\n'
+    project.properties.sort().each { key, value ->
+      if (key != 'properties')
+        println "${key}=${value}"
     }
   }
 }
