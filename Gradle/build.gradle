@@ -41,6 +41,19 @@ def systemEnv = System.getenv()
 def sysPath = systemEnv.getOrDefault("PATH", systemEnv.Path)
 println "Using PATH=${sysPath}"
 
+// Ad-hoc (extra) project properties must be *created* via `[project.]ext.`
+ext.foo = 'foo prop initial value'
+// After that though they can be read and re-written directly on `[project.]`
+println "foo=${foo}"
+foo = 'foo prop'
+println "foo=${foo}"
+
+def bar = 'bar local var value'
+ext.bar = 'bar prop'
+// Local var shadows (takes precedence over) the project property
+println "bar=${bar}"
+println "project.bar=${project.bar}"
+
 // Print command line of all `Exec` tasks (but not direct `exec {}` calls
 allprojects {
   tasks.withType(Exec) {
@@ -51,15 +64,15 @@ allprojects {
 }
 
 task myExec(type: Exec) {
-  doFirst {
-    println "\nExecuting a command"
+  doFirst { // Prologue
+    println "\nmyExec: Executing a command"
     println '====='
   }
 
   //workingDir '../tomcat/bin'
   commandLine 'ls'
 
-  doLast {
+  doLast { // Epilogue
     println '====='
   }
 }
@@ -106,9 +119,9 @@ Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs) {
   }
 }
 
-task main(dependsOn: myExec) {
+task execCommands(dependsOn: myExec) {
   doLast {
-    println "\nExecuting a command and suppressing a failure"
+    println "\nexecCommands: Executing a command and suppressing a failure"
     println '====='
     def result = exec {
       commandLine 'ls', 'foo'
@@ -174,7 +187,6 @@ task main(dependsOn: myExec) {
 
 task generateConfig() {
   def configFileSource = 'config/example.service'
-  project.ext.custom_prop = 'project property value'
   def generatedConfigDir = "${buildDir}/generated"
 
   doLast {
@@ -205,7 +217,15 @@ task generateConfig() {
 tasks.register('vars') {
   group 'Help'
   description 'Prints environment, JVM System Properties and other project info.'
+
+  println ':vars in configuration phase.'
+  println "foo=${foo}"
+  println "bar=${bar}"
+
   doLast {
+    println "foo=${foo}"
+    println "bar=${bar}"
+
     println '== Environment variables ==\n'
     systemEnv.sort().each { key, value -> println "${key}=${value}"
     }
@@ -216,10 +236,21 @@ tasks.register('vars') {
 
     println '\n== Project Properties ==\n'
     project.properties.sort().each { key, value ->
-      if (key != 'properties')
-        println "${key}=${value}"
+      switch (key) {
+        case 'ext':
+          println '=== Extra Project Properties ==='
+          project.ext.properties.sort().each { k, v ->
+            println "${k}=${v}"
+          }
+          println '======'
+          break
+        case 'properties':
+          break
+        default:
+          println "${key}=${value}"
+      }
     }
   }
 }
 
-defaultTasks = ['main']
+defaultTasks = ['execCommands', 'generateConfig', 'vars']
