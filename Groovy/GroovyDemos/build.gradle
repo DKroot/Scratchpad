@@ -19,24 +19,10 @@ repositories {
 }
 
 dependencies {
-  //region Groovy 3.0.x
-  implementation 'org.codehaus.groovy:groovy:3.0.+:indy'
-
-  /*
-  Consuming Groovy modules mistakenly also adds non-INDY (`invokedynamic`) version of the Groovy core transitively.
-  However, a workaround is cumbersome (e.g. see https://github.com/gradle/gradle/issues/9318) and the code is compiled
-  and runs fine with `invokedynamic` as long as INDY JARs are present.
-
-  More info: https://melix.github.io/blog/2013/01/31/using_groovy_to_play_with.html
-  */
-
-  implementation 'org.codehaus.groovy:groovy-sql:3.0.+:indy'
-  /* Does not work:
-  implementation 'org.codehaus.groovy:groovy-sql:3.0.+:indy' {
-    transitive = false
-  }*/
-
-  implementation 'org.codehaus.groovy:groovy-datetime:3.0.+:indy'
+  //region Groovy // `-indy` JARs are not available as of 4.0.3 in Maven Central or Groovy artifactory release repos
+  implementation 'org.apache.groovy:groovy:4.0.+'
+  implementation 'org.apache.groovy:groovy-sql:4.0.+'
+  implementation 'org.apache.groovy:groovy-datetime:4.0.+'
   //endregion
 
   // picocli: CLI processing
