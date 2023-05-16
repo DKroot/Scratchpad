@@ -18,6 +18,7 @@ echo -e "\n## Arguments ##"
 echo "Number of arguments = $#"
 
 echo "Script = $0"
+echo "Script with all arguments = \`$0${*+ }$*\`"
 echo "Relative directory of this script: \${0%/*} = ${0%/*}"
 echo "Name of this script: \${0##*/} = ${0##*/}"
 
