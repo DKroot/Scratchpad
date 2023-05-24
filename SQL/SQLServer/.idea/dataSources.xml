@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="ITAS Dev DB @NITASUPD" uuid="dc2e7ec5-9b2a-4538-9945-13735fd9dd0a">
+      <driver-ref>sqlserver.jtds</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>net.sourceforge.jtds.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:jtds:sqlserver://citbasitassql2a.nih.gov/itasdev2</jdbc-url>
+      <driver-properties>
+        <property name="applicationName" value="ITASINT" />
+      </driver-properties>
+    </data-source>
+  </component>
+</project>
