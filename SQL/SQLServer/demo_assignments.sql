@@ -21,9 +21,13 @@ PRINT concat('@foo=', @foo);
 SET @bar = 'bar';
 PRINT concat_ws('; ', concat('@foo=', @foo), concat('@bar=', @bar));
 
-DECLARE @foo VARCHAR(MAX), @bar VARCHAR(MAX);
-
 -- Can't use multiple assignment in one line
 -- SET @foo = 'foo', @bar = 'bar'
 SELECT @foo = 'baz', @bar = 'qux';
 PRINT concat_ws('; ', concat('@foo=', @foo), concat('@bar=', @bar));
+
+IF @foo = 'ba'
+  PRINT @foo;
+ELSE BEGIN
+  PRINT 'ELSE';
+END;
