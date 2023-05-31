@@ -9,3 +9,13 @@ FROM (
   VALUES --
     (1, 0, 2, 'TRUE', 'FALSE', 'true', 'false')
 ) AS sample_data(one, zero, two, true_upper, false_upper, true_lower, false_lower);
+
+IF (SELECT 'foo') = 'foo'
+  PRINT 'true';
+ELSE
+  PRINT 'false';
+
+IF (SELECT 'foo' WHERE 1 = 0) IS NULL
+  PRINT 'true';
+ELSE
+  PRINT 'false';
