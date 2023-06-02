@@ -1,3 +1,8 @@
+DECLARE @foo CHAR(4) = 'F ';
+PRINT '@foo=`' + @foo + '`';
+PRINT 'CHAR() comparisons disregard trailing spaces? ' + iif(@foo = 'F', 'true', 'false');
+GO
+
 --region Collations
 DECLARE @foo VARCHAR(MAX) = 'QW', @db_coll NVARCHAR(MAX) = cast(databasepropertyex(db_name(), 'collation') AS NVARCHAR);
 
