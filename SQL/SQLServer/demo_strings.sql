@@ -1,16 +1,13 @@
 --region Collations
-DECLARE @foo VARCHAR = 'qw', @db_coll NVARCHAR(128) = cast(databasepropertyex(db_name(), 'collation') AS NVARCHAR);
+DECLARE @foo VARCHAR(MAX) = 'QW', @db_coll NVARCHAR(MAX) = cast(databasepropertyex(db_name(), 'collation') AS NVARCHAR);
 
 -- Literal comparison with DB default collation
 PRINT '1. Case-' + iif('QW' = 'qw', 'IN', '') + 'sensitive literal comparison';
 
--- TODO Why the case-sensitive comparison? See https://stackoverflow.com/q/76391818/534217.
 PRINT '2. Case-' + iif(@foo = 'qw', 'IN', '') + 'sensitive literal comparison with the DB default ' + @db_coll;
 
--- TODO Why the case-sensitive comparison? See https://stackoverflow.com/q/76391818/534217.
-PRINT '3. Case-' +
-      iif(@foo COLLATE sql_latin1_general_cp1_ci_as = 'qw' COLLATE sql_latin1_general_cp1_ci_as, 'IN', '') +
-      'sensitive literal comparison with the specified SQL_Latin1_General_CP1_CI_AS';
+PRINT '3. Case-' + iif(@foo = 'qw' COLLATE sql_latin1_general_cp1_cs_as, 'IN', '') +
+      'sensitive literal comparison with the specified sql_latin1_general_cp1_cs_as';
 GO
 
 DECLARE @pay_plan CHAR(2);
@@ -48,8 +45,10 @@ FROM (VALUES --
 WHERE s LIKE '[A-Z][A-Z][A-Z]' COLLATE sql_latin1_general_cp1_cs_as;
 --endregion
 
+-- noinspection SqlRedundantCodeInCoalesce
 PRINT coalesce(NULL, '.');
--- ''
+-- '.'
+
 PRINT coalesce('', '.');
 -- ''
 
