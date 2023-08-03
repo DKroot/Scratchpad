@@ -2,15 +2,6 @@
 <project version="4">
   <component name="PublishConfigData" serverName="ITASNG_Dev_1" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="ITASNG_Dev_1">
-        <serverdata>
-          <mappings>
-            <mapping deploy="Workspaces/Scratchpad/Java/JavaDemos" local="$PROJECT_DIR$" web="/" />
-            <mapping deploy="Workspaces/Scratchpad/Java/JavaDemos/src/main" local="$PROJECT_DIR$/src/main" />
-            <mapping deploy="Workspaces/Scratchpad/Java/JavaDemos/src/test" local="$PROJECT_DIR$/src/test" />
-          </mappings>
-        </serverdata>
-      </paths>
     </serverData>
   </component>
 </project>
