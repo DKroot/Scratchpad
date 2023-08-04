@@ -44,7 +44,7 @@
     <option name="DOWHILE_BRACE_FORCE" value="3" />
     <option name="WHILE_BRACE_FORCE" value="3" />
     <option name="FOR_BRACE_FORCE" value="3" />
-    <DB2CodeStyleSettings version="5">
+    <DB2CodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -84,7 +84,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </DB2CodeStyleSettings>
-    <DerbyCodeStyleSettings version="5">
+    <DerbyCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -124,7 +124,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </DerbyCodeStyleSettings>
-    <H2CodeStyleSettings version="5">
+    <H2CodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -164,47 +164,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </H2CodeStyleSettings>
-    <H2CodeStyleSettings version="5">
-      <option name="USE_GENERAL_STYLE" value="false" />
-      <option name="IDENTIFIER_CASE" value="1" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="CUSTOM_TYPE_CASE" value="3" />
-      <option name="ALIAS_CASE" value="4" />
-      <option name="BUILT_IN_CASE" value="0" />
-      <option name="QUERY_TRUE_INDENT" value="false" />
-      <option name="QUERY_ALIGN_ELEMENTS" value="false" />
-      <option name="QUERY_ALIGN_LINE_COMMENTS" value="false" />
-      <option name="INSERT_EL_COMMA" value="2" />
-      <option name="SET_EL_WRAP" value="0" />
-      <option name="SET_EL_COMMA" value="0" />
-      <option name="WITH_EL_WRAP" value="0" />
-      <option name="WITH_EL_COMMA" value="0" />
-      <option name="SELECT_EL_WRAP" value="3" />
-      <option name="SELECT_EL_COMMA" value="2" />
-      <option name="FROM_EL_WRAP" value="2" />
-      <option name="FROM_EL_COMMA" value="2" />
-      <option name="FROM_PLACE_ON" value="10" />
-      <option name="WHERE_EL_WRAP" value="3" />
-      <option name="WHERE_EL_BOUND" value="2" />
-      <option name="ORDER_EL_COMMA" value="2" />
-      <option name="TABLE_OPENING" value="1" />
-      <option name="TABLE_CONTENT" value="2" />
-      <option name="TABLE_CLOSING" value="3" />
-      <option name="TABLE_ALTER_INSTRUCTION_ALIGN" value="false" />
-      <option name="POST_OPT_WRAP_1" value="true" />
-      <option name="POST_OPT_ALIGN" value="false" />
-      <option name="ROUTINE_ARG_COMMA" value="2" />
-      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
-      <option name="IMP_DECLARE_EL_WRAP" value="1" />
-      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
-      <option name="CORTEGE_SPACE_BEFORE_L_PAREN" value="false" />
-      <option name="EXPR_CASE_WHEN_WRAP" value="false" />
-      <option name="EXPR_CASE_THEN_WRAP" value="true" />
-      <option name="INDEX_NAME_TEMPLATE" value="{table}_{columns}_{unique?uk:i}" />
-      <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
-      <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
-    </H2CodeStyleSettings>
-    <HSQLCodeStyleSettings version="5">
+    <HSQLCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -269,7 +229,7 @@
       <option name="JD_KEEP_EMPTY_EXCEPTION" value="false" />
       <option name="JD_KEEP_EMPTY_RETURN" value="false" />
     </JavaCodeStyleSettings>
-    <MSSQLCodeStyleSettings version="5">
+    <MSSQLCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -309,7 +269,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </MSSQLCodeStyleSettings>
-    <MySQLCodeStyleSettings version="5">
+    <MySQLCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -349,7 +309,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </MySQLCodeStyleSettings>
-    <OracleCodeStyleSettings version="5">
+    <OracleCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -389,7 +349,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </OracleCodeStyleSettings>
-    <PostgresCodeStyleSettings version="5">
+    <PostgresCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -429,7 +389,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </PostgresCodeStyleSettings>
-    <SQLiteCodeStyleSettings version="5">
+    <SQLiteCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
@@ -469,7 +429,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
       <option name="FOREIGN_KEY_NAME_TEMPLATE" value="{table}_{columns}_fk" />
     </SQLiteCodeStyleSettings>
-    <SqlCodeStyleSettings version="5">
+    <SqlCodeStyleSettings version="6">
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />
       <option name="CUSTOM_TYPE_CASE" value="3" />
@@ -520,7 +480,7 @@
       <option name="WRAP_INSIDE_ARGUMENT_DEFINITION" value="2" />
       <option name="NEW_LINE_AFTER_SELECT_ITEM" value="false" />
     </SqlCodeStyleSettings>
-    <SybaseCodeStyleSettings version="5">
+    <SybaseCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="IDENTIFIER_CASE" value="1" />
       <option name="TYPE_CASE" value="3" />

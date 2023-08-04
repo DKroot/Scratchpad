@@ -50,13 +50,16 @@ dependencies {
 java {
   /*
   Setup all compile, test and javadoc tasks to use the defined toolchain which may be different than the one Gradle
-  itself uses. Gradle detects locally installed JVMs and chooses a JRE/JDK matching the requirements of the build
-  (in this case a JVM supporting Java 11). If no matching JVM is found, it will automatically download it
-  (`AdoptOpenJDK` by default).
+  itself uses. Gradle detects locally installed JVMs and chooses a JRE/JDK matching the requirements. If no match is
+  found, it will automatically download it from a specified vendor.
   */
   toolchain {
-    languageVersion = JavaLanguageVersion.of(11)
-    vendor = JvmVendorSpec.AMAZON // optional
+    languageVersion = JavaLanguageVersion.of(17)
+    //vendor = JvmVendorSpec.AMAZON // optional, defaults to `AdoptOpenJDK`
+  }
+
+  consistentResolution {
+    useCompileClasspathVersions()
   }
 }
 
