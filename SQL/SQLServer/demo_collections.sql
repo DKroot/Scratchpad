@@ -1,4 +1,3 @@
-
 DECLARE @list TABLE (
   tour_id INT,
   group_id INT,
@@ -22,6 +21,17 @@ FROM (
 PRINT 'Collection'
 SELECT *
 FROM @list;
+
+SELECT count(tour_id) AS count_no_recs
+FROM @list
+WHERE city = 'Odesa';
+-- 0
+
+SELECT sum(tour_id) AS sum_no_recs
+FROM @list
+WHERE city = 'Odesa';
+-- NULL
+GO
 
 -- Generates tours per each group as a full join between 2 inline entities
 PRINT 'Reprocessing collection'
