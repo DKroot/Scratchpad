@@ -1,3 +1,5 @@
+:On Error exit
+
 /*
 Batch comment
 */
@@ -9,69 +11,91 @@ GO
 EXEC tmp_error;
 GO
 
-/*
-Doc comment
+CREATE OR ALTER PROCEDURE tmp_error_lineno AS --
+/**
+  Doc comment
 */
-CREATE OR ALTER PROCEDURE tmp_error_lineno AS
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+--@formatter:off
+LINENO 21
+--@formatter:on
+DECLARE @foo INT;
 BEGIN
-  -- `LINENO` fixes line # reporting for middle-of-file batches. Keep it matching the actual file line #.
-  lineno 21;
+  -- Generate a divide-by-zero error.
+  SET @foo =  1 / 0;
+  -- SSMS reports the line number correctly in the error
+  -- IDEA as of 2023.1 doesn't reports line number in the error
 
-  -- This errors out. Line number gets reported in SSMS *correctly*.
-  -- The line number is not reported in JetBrains IDEs.
-  SELECT 1 / 0;
+  PRINT @foo;
 END;
 GO
 
 EXEC tmp_error_lineno;
 GO
 
-/*
+DROP PROCEDURE IF EXISTS tmp_error_lineno;
+GO
+
+CREATE OR ALTER PROCEDURE tmp_error_catch AS --
+/**
 Doc comment
 */
-CREATE OR ALTER PROCEDURE tmp_error_catch AS
-  -- `LINENO` fixes line # reporting for middle-of-file batches. Keep it matching the actual file line #.
-  lineno 37; -- This errors out. Line number gets reported in SSMS *correctly*.
--- The line number is not reported in JetBrains IDEs.
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+--@formatter:off
+LINENO 45;
+--@formatter:on
+DECLARE @foo INT;
 BEGIN TRY
+  -- `SET NOCOUNT ON` can provide a significant performance boost
+  SET NOCOUNT ON;
+  -- Automatically rolls back the current transaction when a Transact-SQL statement raises a run-time error
+  SET XACT_ABORT ON;
+
   -- Generate a divide-by-zero error.
-  SELECT 1 / 0;
+  SET @foo = 1 / 0;
+
+  PRINT @foo;
 END TRY BEGIN CATCH
-  DECLARE @err_msg NVARCHAR(4000), @err_severity INT, @err_state INT;
-  SET @err_msg = 'At line #' + cast(error_line() AS VARCHAR(50)) + ': ' + error_message();
-  SET @err_severity = error_severity();
-  SET @err_state = error_state();
-  RAISERROR (@err_msg, @err_severity, @err_state);
+  DECLARE @err_msg NVARCHAR(4000) = concat('[line #', error_line(), '] ', error_message()), --
+    @err_code INT = 63372, -- Using an arbitrary error code >= 50000
+    @err_state INT = error_state();
+
+  -- IDEA as of 2023.1 reports the message only, no error state
+  -- RAISERROR does not honor SET XACT_ABORT
+  THROW @err_code, @err_msg, @err_state;
 END CATCH;
 GO
 
 EXEC tmp_error_catch;
 GO
 
-/*
-Attached doc comment
-*/
+DROP PROCEDURE IF EXISTS tmp_error_catch;
+GO
+
 CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
-  @arg INT, @res INT OUT
+  @arg INT = 21, @result INT OUT
 ) AS
+  /**
+  Attached doc comment
+  */
 BEGIN
   SET NOCOUNT ON;
 
-  IF @arg = 42
-    BEGIN
-      SET @res = @arg + 1;
-    END;
-  ELSE
-    BEGIN
-      SET @res = @arg - 1;
-    END;
-  PRINT concat('tmp_plus1_in_out: ', @res);
+  PRINT concat('tmp_plus1_in_out: @result = ', @result);
+  -- NULL
+
+  SET @result = iif(@arg = 42, @arg + 1, @arg - 1)
+  PRINT concat('tmp_plus1_in_out: @result = ', @result);
 END;
 GO
 
 DECLARE @res INT;
 PRINT 'Executing...';;
 EXEC tmp_plus1_in_out 42, @res OUT;
+PRINT concat('The result = ', @res);
+EXEC tmp_plus1_in_out @result = @res OUT;
 PRINT concat('The result = ', @res);
 
 DROP PROCEDURE IF EXISTS tmp_plus1_in_out;

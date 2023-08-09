@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<SqlWorkbenchSqlProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="SQLServer">
+  <Items>
+    <LogicalFolder Name="Connections" Type="2" Sorted="true">
+      <Items>
+        <ConnectionNode Name="citbasitassql2a.nih.gov:NITASUPD">
+          <Created>2023-08-09T16:07:09.2500785-04:00</Created>
+          <Type>SQL</Type>
+          <Server>citbasitassql2a.nih.gov</Server>
+          <UserName>NITASUPD</UserName>
+          <Authentication>SQL</Authentication>
+          <InitialDB />
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Queries" Type="0" Sorted="true">
+      <Items>
+        <FileNode Name="demo_assignments.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_assignments.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_booleans.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_booleans.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_collections.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_collections.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_cursors.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_cursors.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_dates.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_dates.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_decimals.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_decimals.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_merge.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_merge.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_names.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_names.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_nth_highest.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_nth_highest.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_patterns.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_patterns.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_sp.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:citbasitassql2a.nih.gov:False:NITASUPD</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>citbasitassql2a.nih.gov</AssociatedConnSrvName>
+          <AssociatedConnUserName>NITASUPD</AssociatedConnUserName>
+          <FullPath>demo_sp.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_string_agg_MS_SQL_2017-.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_string_agg_MS_SQL_2017-.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_strings.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_strings.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_strings_concat.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_strings_concat.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_try_catch.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_try_catch.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_updates.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_updates.sql</FullPath>
+        </FileNode>
+        <FileNode Name="demo_window_functions.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>demo_window_functions.sql</FullPath>
+        </FileNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Miscellaneous" Type="3" Sorted="true">
+      <Items />
+    </LogicalFolder>
+  </Items>
+</SqlWorkbenchSqlProject>
