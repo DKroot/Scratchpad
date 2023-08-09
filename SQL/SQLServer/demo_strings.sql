@@ -57,6 +57,11 @@ PRINT coalesce(NULL, '.');
 PRINT coalesce('', '.');
 -- ''
 
+--PRINT 'foo' + ':' + 42;
+-- Error
+
+PRINT concat('foo', '=', NULL, 42);
+
 PRINT concat_ws('.', NULL, NULL);
 -- ''
 
