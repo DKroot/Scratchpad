@@ -17,6 +17,7 @@ readonly SCRIPT_DIR=${0%/*}
 echo -e "\n# demo-grep.sh: running under $(whoami)@${HOSTNAME} in ${PWD} #\n"
 
 # shellcheck disable=SC2016 # false positive
+# shellcheck disable=SC1078 # false positive
 readonly MSG='2021-11-22 | 12:58:37.051 | ERROR | 0.1-4226-exec-3 | g.n.c.i.rest.lao.ApproveTeleworkResource.validateAndProcess() : java.lang.Exception: Payroll  Error -- Payroll Update Failed, please contact IT Service Desk.
 2021-11-22 | 12:59:07.058 | ERROR | 0.1-4226-exec-8 | g.n.c.i.rest.lao.ApproveTeleworkResource.validateAndProcess() : java.lang.Exception: Payroll  Error -- Payroll Update Failed, please contact IT Service Desk.
 2021-11-22 | 13:14:11.649 | ERROR | .1-4226-exec-16 | itas.old.ITASCommonDB.CDBExecStatement() : Error executing the following statement: dbo.prc_L_ReportParamSel  '003362930', 'CON'
