@@ -17,9 +17,9 @@ echo
 time (echo foo; printf "It took:" >&2)
 
 # Bash 5.1.16: success
-# Bash 5.2.15: syntax error near unexpected token `)'
-#var3=$(time (echo foo; echo bar))
-#echo -e "\nvar3=\`$var3\`"
+# Bash 5.2.15: syntax error near unexpected token `echo'
+var3=$(time (echo foo; echo bar))
+echo -e "\nvar3=\`$var3\`"
 
 time var4=$(echo foo; echo bar)
 echo -e "\nvar4=\`$var4\`"
