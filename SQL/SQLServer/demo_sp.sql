@@ -1,11 +1,23 @@
-:On Error exit
+:ON ERROR EXIT
 
 /*
 Batch comment
 */
-CREATE OR ALTER PROCEDURE tmp_error AS PRINT 'tmp_error'; -- This errors out. Line number gets reported in SSMS *correctly* if the entire batch is selected for execution.
--- The line number is not reported in JetBrains IDEs.
-SELECT 1 / 0;
+
+CREATE OR ALTER PROCEDURE tmp_error AS
+  /**
+    Doc comment
+  */
+BEGIN
+  PRINT 'tmp_error';
+
+  /*
+  This errors out.
+  * The line number gets reported in SSMS *correctly* if the entire batch is selected for execution.
+  * The line number is not reported in JetBrains IDEs.
+  */
+  SELECT 1 / 0;
+END;
 GO
 
 EXEC tmp_error;
@@ -23,7 +35,7 @@ LINENO 21
 DECLARE @foo INT;
 BEGIN
   -- Generate a divide-by-zero error.
-  SET @foo =  1 / 0;
+  SET @foo = 1 / 0;
   -- SSMS reports the line number correctly in the error
   -- IDEA as of 2023.1 doesn't reports line number in the error
 

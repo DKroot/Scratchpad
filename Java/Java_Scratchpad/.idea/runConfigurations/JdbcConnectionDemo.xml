@@ -1,10 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="JdbcConnectionDemo" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="ALTERNATIVE_JRE_PATH" value="17" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <classpathModifications>
       <entry path="/usr/local/opt/DataDirect/JDBC_60/lib/sqlserver.jar" />
     </classpathModifications>
     <option name="MAIN_CLASS_NAME" value="org.houseofsoft.JdbcConnectionDemo" />
-    <module name="JavaDemos.main" />
+    <module name="Java_Scratchpad.main" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="org.houseofsoft.*" />
