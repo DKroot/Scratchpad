@@ -1,8 +1,12 @@
 -- Numeric to BIT: true when <> 0
-SELECT cast(one AS BIT) AS "1", cast(zero AS BIT) AS "0", cast(two AS BIT) AS "2", cast(true_upper AS BIT) AS ['TRUE'],
-  cast(false_upper AS BIT) AS ['FALSE'], cast(true_lower AS BIT) AS ['true'], cast(true_lower AS BIT) AS ['false']
-FROM (VALUES (1, 0, 2, 'TRUE', 'FALSE', 'true', 'false')) AS --
-  sample_data(one, zero, two, true_upper, false_upper, true_lower, false_lower)
+SELECT cast(1 AS BIT) AS "1_true", cast(0 AS BIT) AS "0_false", cast(2 AS BIT) AS "2_true";
+
+-- Character to BIT: true when 'TRUE', false when 'false' (case-insensitive); error otherwise
+SELECT
+  cast('TRUE' AS BIT) AS ['TRUE'_true], cast('FALSE' AS BIT) AS ['FALSE'_false], --
+  cast('true' AS BIT) AS ['true'_true], cast('false' AS BIT) AS ['false'_false],
+  cast('True' AS BIT) AS ['True'_true];
+  -- cast('Y' AS BIT) -- ERROR
 
 IF (SELECT 'foo') = 'foo'
   BEGIN
