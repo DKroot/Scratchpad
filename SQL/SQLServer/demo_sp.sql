@@ -170,6 +170,59 @@ GO
 DROP PROCEDURE IF EXISTS tmp_demo_args;
 GO
 
+CREATE OR ALTER PROCEDURE dbo.tmp_demo_temp_table AS -- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+--@formatter:off
+LINENO 177;
+--@formatter:on
+/**
+Does something.
+*/
+-- Arbitrary error code >= 50000
+--@formatter:off
+DECLARE @CUSTOM_ERROR INT = 63372;
+--@formatter:on
+BEGIN TRY
+  -- `SET NOCOUNT ON` can provide a significant performance boost
+  SET NOCOUNT ON;
+  -- Automatically rolls back the current transaction when a Transact-SQL statement raises a run-time error
+  SET XACT_ABORT ON;
+
+  SELECT tours.tour_id, groups.group_id, tours.year, tours.city
+  INTO #tmp_demo_temp_table
+  FROM (VALUES --
+          (1),
+          (2),
+          (3)) AS groups(group_id),
+    (VALUES --
+       (1, 2001, 'San Francisco'),
+       (2, 2009, 'Chicago'),
+       (3, 2009, 'New Orleans'),
+       (4, 2006, 'Washington'),
+       (5, 2007, 'New York'),
+       (6, 2008, 'Seattle')) AS tours(tour_id, year, city);
+
+  SELECT *
+  FROM #tmp_demo_temp_table;
+END TRY BEGIN CATCH
+  DECLARE @err_msg NVARCHAR(4000) = concat('[line #', error_line(), '] ', error_message()), --
+    @err_state INT = error_state();
+
+  -- RAISERROR does not honor SET XACT_ABORT
+  --@formatter:off
+  THROW @CUSTOM_ERROR, @err_msg, @err_state;
+  --@formatter:on
+END CATCH;
+GO
+
+EXEC dbo.tmp_demo_temp_table;
+/*
+ERROR: the local temp table is gone.
+
+SELECT *
+FROM #tmp_demo_temp_table;*/
+GO
+
 --region demo_table_args: execute from here
 CREATE TYPE TMP_SAMPLE_DATA_TYPE AS TABLE (
   tour_id INT,
