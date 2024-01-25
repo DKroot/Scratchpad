@@ -54,14 +54,14 @@ CREATE OR ALTER PROCEDURE tmp_demo_errors AS --
 --@formatter:off
 -- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
 -- noinspection SqlResolve
-      LINENO 177;
-  /**
-  Does something.
-  */
-  -- Automatically roll back the current transaction when a Transact-SQL statement raises a run-time error
-  -- Improve performance
-  SET XACT_ABORT, NOCOUNT ON;
-  --@formatter:on
+LINENO 57;
+/**
+Does something.
+*/
+-- Automatically roll back the current transaction when a Transact-SQL statement raises a run-time error
+-- Improve performance
+SET XACT_ABORT, NOCOUNT ON;
+--@formatter:on
 BEGIN TRY
   SELECT 1 / 0;
 END TRY BEGIN CATCH
