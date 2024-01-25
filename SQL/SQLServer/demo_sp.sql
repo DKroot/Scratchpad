@@ -129,7 +129,7 @@ GO
 
 CREATE OR ALTER PROCEDURE tmp_demo(
   @arg INT
-  ) AS
+) AS
 BEGIN
   SELECT 'Demo' AS a_string, @arg + 1 AS an_int, cast(1 AS BIT) AS a_boolean,
     cast('2007-05-08 12:35:29.123' AS DATETIME) AS a_date_time;
@@ -170,47 +170,34 @@ GO
 DROP PROCEDURE IF EXISTS tmp_demo_args;
 GO
 
-CREATE OR ALTER PROCEDURE dbo.tmp_demo_temp_table AS -- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
+CREATE OR ALTER PROCEDURE dbo.tmp_demo_temp_table AS --
 --@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
 LINENO 177;
---@formatter:on
 /**
 Does something.
 */
--- Arbitrary error code >= 50000
---@formatter:off
-DECLARE @CUSTOM_ERROR INT = 63372;
+-- Automatically roll back the current transaction when a Transact-SQL statement raises a run-time error
+-- Improve performance
+SET XACT_ABORT, NOCOUNT ON;
 --@formatter:on
 BEGIN TRY
-  -- `SET NOCOUNT ON` can provide a significant performance boost
-  SET NOCOUNT ON;
-  -- Automatically rolls back the current transaction when a Transact-SQL statement raises a run-time error
-  SET XACT_ABORT ON;
-
-  SELECT tours.tour_id, groups.group_id, tours.year, tours.city
-  INTO #tmp_demo_temp_table
-  FROM (VALUES --
-          (1),
-          (2),
-          (3)) AS groups(group_id),
-    (VALUES --
-       (1, 2001, 'San Francisco'),
-       (2, 2009, 'Chicago'),
-       (3, 2009, 'New Orleans'),
-       (4, 2006, 'Washington'),
-       (5, 2007, 'New York'),
-       (6, 2008, 'Seattle')) AS tours(tour_id, year, city);
-
-  SELECT *
-  FROM #tmp_demo_temp_table;
+  SELECT 1 / 0;
 END TRY BEGIN CATCH
-  DECLARE @err_msg NVARCHAR(4000) = concat('[line #', error_line(), '] ', error_message()), --
-    @err_state INT = error_state();
+  IF @@trancount > 0
+    ROLLBACK TRANSACTION;
 
-  -- RAISERROR does not honor SET XACT_ABORT
-  --@formatter:off
-  THROW @CUSTOM_ERROR, @err_msg, @err_state;
+  DECLARE @err_msg NVARCHAR(4000) = error_message(), @err_state TINYINT = error_state(), @errno INT = error_number(),--
+    @proc SYSNAME = error_procedure(), @lineno INT = error_line(),
+    /* arbitrary error code >= 50000 */ @CUSTOM_ERROR INT = 63372;
+  IF @err_msg NOT LIKE '**%'
+    BEGIN
+      SET @err_msg =
+          concat('**ERROR #', @errno, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, '** ', @err_msg);
+    END;
+    --@formatter:off
+  ;THROW @CUSTOM_ERROR, @err_msg, @err_state;
   --@formatter:on
 END CATCH;
 GO
@@ -241,7 +228,7 @@ can be in the FROM clause of SELECT INTO or in the INSERT EXEC string or stored 
 */
 CREATE OR ALTER PROCEDURE tmp_demo_table_args(
   @foo TMP_SAMPLE_DATA_TYPE READONLY
-  ) AS
+) AS
 BEGIN
   SELECT 'All records' AS "See next =>";
   SELECT *
@@ -258,15 +245,17 @@ DECLARE @t TMP_SAMPLE_DATA_TYPE;
 
 INSERT INTO @t(tour_id, group_id, year, city)
 SELECT tour_id, group_id, year, city
-FROM (VALUES --
-        (1, 1, 2001, 'San Francisco'),
-        (2, 1, 2009, 'Chicago'),
-        (3, 1, 2009, 'New Orleans'),
-        (4, 2, 2006, 'Washington'),
-        (5, 2, 2007, 'New York'),
-        (6, 3, 2008, 'Seattle')) AS sample_data(tour_id, group_id, year, city);
+FROM (
+  VALUES --
+    (1, 1, 2001, 'San Francisco'),
+    (2, 1, 2009, 'Chicago'),
+    (3, 1, 2009, 'New Orleans'),
+    (4, 2, 2006, 'Washington'),
+    (5, 2, 2007, 'New York'),
+    (6, 3, 2008, 'Seattle')
+) AS sample_data(tour_id, group_id, year, city);
 
-EXEC tmp_demo_table_args @t
+EXEC tmp_demo_table_args @t;
 GO
 
 DROP PROCEDURE IF EXISTS tmp_demo_table_args;

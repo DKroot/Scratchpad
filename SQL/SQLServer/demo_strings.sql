@@ -52,21 +52,25 @@ WHERE s LIKE '[A-Z][A-Z][A-Z]' COLLATE sql_latin1_general_cp1_cs_as;
 
 -- noinspection SqlRedundantCodeInCoalesce
 PRINT coalesce(NULL, '.');
--- '.'
+-- `.`
 
 PRINT coalesce('', '.');
--- ''
+-- ``
+
+PRINT 'foo=' + NULL;
+-- ``
 
 --PRINT 'foo' + ':' + 42;
 -- Error
 
 PRINT concat('foo', '=', NULL, 42);
+-- `foo=42`
 
 PRINT concat_ws('.', NULL, NULL);
--- ''
+-- ``
 
 PRINT concat_ws('.', NULL, '');
--- ''
+-- ``
 
 --region String aggregation: custom functions for SQL Server 2017+
 SELECT string_agg(left(value, 1), '')
