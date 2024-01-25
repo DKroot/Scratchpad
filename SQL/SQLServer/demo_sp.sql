@@ -49,42 +49,43 @@ GO
 DROP PROCEDURE IF EXISTS tmp_error_lineno;
 GO
 
-CREATE OR ALTER PROCEDURE tmp_error_catch AS --
-/**
-Doc comment
-*/
+-- region tmp_demo_errors
+CREATE OR ALTER PROCEDURE tmp_demo_errors AS --
+--@formatter:off
 -- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
 -- noinspection SqlResolve
---@formatter:off
-LINENO 45;
---@formatter:on
-DECLARE @foo INT;
+      LINENO 177;
+  /**
+  Does something.
+  */
+  -- Automatically roll back the current transaction when a Transact-SQL statement raises a run-time error
+  -- Improve performance
+  SET XACT_ABORT, NOCOUNT ON;
+  --@formatter:on
 BEGIN TRY
-  -- `SET NOCOUNT ON` can provide a significant performance boost
-  SET NOCOUNT ON;
-  -- Automatically rolls back the current transaction when a Transact-SQL statement raises a run-time error
-  SET XACT_ABORT ON;
-
-  -- Generate a divide-by-zero error.
-  SET @foo = 1 / 0;
-
-  PRINT @foo;
+  SELECT 1 / 0;
 END TRY BEGIN CATCH
-  DECLARE @err_msg NVARCHAR(4000) = concat('[line #', error_line(), '] ', error_message()), --
-    @err_code INT = 63372, -- Using an arbitrary error code >= 50000
-    @err_state INT = error_state();
+  IF @@trancount > 0
+    ROLLBACK TRANSACTION;
 
-  -- IDEA as of 2023.1 reports the message only, no error state
-  -- RAISERROR does not honor SET XACT_ABORT
-  THROW @err_code, @err_msg, @err_state;
+  DECLARE @err_msg NVARCHAR(4000) = error_message(), @err_state TINYINT = error_state(), @errno INT = error_number(),--
+    @proc SYSNAME = error_procedure(), @lineno INT = error_line(),
+    /* arbitrary error code >= 50000 */ @CUSTOM_ERROR INT = 63372;
+  IF @err_msg NOT LIKE '**%'
+    SET @err_msg =
+        concat('** ERROR #', @errno, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, ' ** ', @err_msg);
+    --@formatter:off
+    ;THROW @CUSTOM_ERROR, @err_msg, @err_state;
+  --@formatter:on
 END CATCH;
 GO
 
-EXEC tmp_error_catch;
+EXEC tmp_demo_errors;
 GO
 
-DROP PROCEDURE IF EXISTS tmp_error_catch;
+DROP PROCEDURE IF EXISTS tmp_demo_errors;
 GO
+-- endregion
 
 CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
   @arg INT = 21, @result INT OUT
@@ -168,46 +169,6 @@ EXEC tmp_demo_args;
 GO
 
 DROP PROCEDURE IF EXISTS tmp_demo_args;
-GO
-
-CREATE OR ALTER PROCEDURE dbo.tmp_demo_temp_table AS --
---@formatter:off
--- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
-LINENO 177;
-/**
-Does something.
-*/
--- Automatically roll back the current transaction when a Transact-SQL statement raises a run-time error
--- Improve performance
-SET XACT_ABORT, NOCOUNT ON;
---@formatter:on
-BEGIN TRY
-  SELECT 1 / 0;
-END TRY BEGIN CATCH
-  IF @@trancount > 0
-    ROLLBACK TRANSACTION;
-
-  DECLARE @err_msg NVARCHAR(4000) = error_message(), @err_state TINYINT = error_state(), @errno INT = error_number(),--
-    @proc SYSNAME = error_procedure(), @lineno INT = error_line(),
-    /* arbitrary error code >= 50000 */ @CUSTOM_ERROR INT = 63372;
-  IF @err_msg NOT LIKE '**%'
-    BEGIN
-      SET @err_msg =
-          concat('**ERROR #', @errno, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, '** ', @err_msg);
-    END;
-    --@formatter:off
-  ;THROW @CUSTOM_ERROR, @err_msg, @err_state;
-  --@formatter:on
-END CATCH;
-GO
-
-EXEC dbo.tmp_demo_temp_table;
-/*
-ERROR: the local temp table is gone.
-
-SELECT *
-FROM #tmp_demo_temp_table;*/
 GO
 
 --region demo_table_args: execute from here
