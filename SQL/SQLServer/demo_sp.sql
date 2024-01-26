@@ -4,10 +4,8 @@
 Batch comment
 */
 
-CREATE OR ALTER PROCEDURE tmp_error AS
-  /**
-    Doc comment
-  */
+CREATE OR ALTER PROCEDURE tmp_error AS --
+  SET XACT_ABORT, NOCOUNT ON;
 BEGIN
   PRINT 'tmp_error';
 
@@ -24,16 +22,15 @@ EXEC tmp_error;
 GO
 
 CREATE OR ALTER PROCEDURE tmp_error_lineno AS --
-/**
-  Doc comment
-*/
 -- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
 -- noinspection SqlResolve
 --@formatter:off
-LINENO 21
+  LINENO 28;
 --@formatter:on
-DECLARE @foo INT;
+  SET XACT_ABORT, NOCOUNT ON;
 BEGIN
+  DECLARE @foo INT;
+
   -- Generate a divide-by-zero error.
   SET @foo = 1 / 0;
   -- SSMS reports the line number correctly in the error
@@ -54,14 +51,9 @@ CREATE OR ALTER PROCEDURE tmp_demo_errors AS --
 --@formatter:off
 -- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
 -- noinspection SqlResolve
-LINENO 57;
-/**
-Does something.
-*/
--- Automatically roll back the current transaction when a Transact-SQL statement raises a run-time error
--- Improve performance
-SET XACT_ABORT, NOCOUNT ON;
+  LINENO 54;
 --@formatter:on
+  SET XACT_ABORT, NOCOUNT ON;
 BEGIN TRY
   SELECT 1 / 0;
 END TRY BEGIN CATCH
@@ -89,27 +81,46 @@ GO
 
 CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
   @arg INT = 21, @result INT OUT
-) AS
-  /**
-  Attached doc comment
-  */
-BEGIN
-  SET NOCOUNT ON;
-
-  PRINT concat('tmp_plus1_in_out: @result = ', @result);
+) AS --
+--@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+  LINENO 88;
+--@formatter:on
+/**
+Does something.
+*/
+  SET XACT_ABORT, NOCOUNT ON;
+BEGIN TRY
+  PRINT concat('tmp_plus1_in_out start: @result = ', coalesce(cast(@result AS VARCHAR), 'NULL'));
   -- NULL
 
   SET @result = iif(@arg = 42, @arg + 1, @arg - 1)
-  PRINT concat('tmp_plus1_in_out: @result = ', @result);
-END;
+  PRINT concat('tmp_plus1_in_out end: @result = ', coalesce(cast(@result AS VARCHAR), 'NULL'));
+END TRY BEGIN CATCH
+  IF @@trancount > 0
+    ROLLBACK TRANSACTION;
+
+  DECLARE @err_msg NVARCHAR(4000) = error_message(), @err_state TINYINT = error_state(),--
+    @err_num INT = error_number(), @proc SYSNAME = error_procedure(), @lineno INT = error_line(),
+    /* arbitrary error code >= 50000 */ @custom_error_num INT = 63372;
+  IF @err_msg NOT LIKE '**%'
+    SET @err_msg =
+        concat('**ERROR #', @err_num, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, '** ', @err_msg);
+    --@formatter:off
+  ;THROW @custom_error_num, @err_msg, @err_state;
+  --@formatter:on
+END CATCH;
 GO
 
 DECLARE @res INT;
-PRINT 'Executing...';;
+PRINT 'Executing...';
+
 EXEC tmp_plus1_in_out 42, @res OUT;
-PRINT concat('The result = ', @res);
+PRINT concat('The result = ', coalesce(cast(@res AS VARCHAR), 'NULL'));
+
 EXEC tmp_plus1_in_out @result = @res OUT;
-PRINT concat('The result = ', @res);
+PRINT concat('The result = ', coalesce(cast(@res AS VARCHAR), 'NULL'));
 
 DROP PROCEDURE IF EXISTS tmp_plus1_in_out;
 GO
@@ -120,7 +131,14 @@ Attached doc comment: blank line separation doesn't matter. The entire batch DDL
 
 CREATE OR ALTER PROCEDURE tmp_plus2_in_out(
   @arg INT, @res INT OUT
-) AS
+) AS --
+--@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+  LINENO 120;
+--@formatter:on
+  SET XACT_ABORT, NOCOUNT ON;
+
   SET @res = @arg + 1;
   SET @res = @res + 1;
 GO
@@ -130,7 +148,13 @@ GO
 
 CREATE OR ALTER PROCEDURE tmp_demo(
   @arg INT
-) AS
+) AS --
+--@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+  LINENO 137;
+--@formatter:on
+  SET XACT_ABORT, NOCOUNT ON;
 BEGIN
   SELECT 'Demo' AS a_string, @arg + 1 AS an_int, cast(1 AS BIT) AS a_boolean,
     cast('2007-05-08 12:35:29.123' AS DATETIME) AS a_date_time;
@@ -152,7 +176,13 @@ CREATE OR ALTER PROCEDURE tmp_demo_args(
   @aBooleanChar CHAR = 'Y', -- Returns argument
   @aBooleanVarchar VARCHAR(100) = '1', -- Returns argument. VARCHAR(MAX) does not work here.
   @aDateTime DATETIME = '2007-05-08 12:35:29.123' -- Returns argument
-) AS
+) AS --
+--@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+  LINENO 165;
+--@formatter:on
+  SET XACT_ABORT, NOCOUNT ON;
 BEGIN
   SELECT
     'tmp_demo_args' AS logger, @aString + ',' + @aString AS db_string, @anInt + 1 AS db_int,
@@ -189,7 +219,13 @@ can be in the FROM clause of SELECT INTO or in the INSERT EXEC string or stored 
 */
 CREATE OR ALTER PROCEDURE tmp_demo_table_args(
   @foo TMP_SAMPLE_DATA_TYPE READONLY
-) AS
+) AS --
+--@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+  LINENO 208;
+--@formatter:on
+  SET XACT_ABORT, NOCOUNT ON;
 BEGIN
   SELECT 'All records' AS "See next =>";
   SELECT *

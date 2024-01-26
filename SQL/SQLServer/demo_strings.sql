@@ -57,6 +57,14 @@ PRINT coalesce(NULL, '.');
 PRINT coalesce('', '.');
 -- ``
 
+DECLARE @i INT = NULL;
+PRINT coalesce(cast(@i AS VARCHAR), 'NULL');
+
+--PRINT coalesce(@i, 'NULL');
+-- Error
+-- PRINT nullif(@i, 'NULL');
+-- Error
+
 PRINT 'foo=' + NULL;
 -- ``
 
