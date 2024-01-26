@@ -59,11 +59,14 @@ PRINT coalesce('', '.');
 
 DECLARE @i INT = NULL;
 PRINT coalesce(cast(@i AS VARCHAR), 'NULL');
-
+-- noinspection SqlCaseVsIf
+SELECT CASE WHEN @i IS NULL THEN 'NULL' ELSE cast(@i AS VARCHAR) END;
+-- noinspection SqlCaseVsIf
 --PRINT coalesce(@i, 'NULL');
 -- Error
 -- PRINT isnull(@i, 'NULL');
 -- Error
+--SELECT CASE WHEN @i IS NULL THEN 'NULL' ELSE @i END;
 
 PRINT 'foo=' + NULL;
 -- ``
