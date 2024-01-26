@@ -62,7 +62,7 @@ PRINT coalesce(cast(@i AS VARCHAR), 'NULL');
 
 --PRINT coalesce(@i, 'NULL');
 -- Error
--- PRINT nullif(@i, 'NULL');
+-- PRINT isnull(@i, 'NULL');
 -- Error
 
 PRINT 'foo=' + NULL;
