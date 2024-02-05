@@ -1,3 +1,10 @@
+-- region Splitting parts
+SELECT split_part('foo:bar baz qux quux', ' ', 2);
+SELECT substr('foo:bar baz qux quux', strpos('foo:bar baz qux quux', ' ') + 1);
+
+-- Remove prefix
+SELECT ltrim('foo:bar baz qux quux', 'foo:');
+-- endregion
 
 -- Escape sequences
 SELECT E'a\nb' AS foo;
@@ -107,12 +114,6 @@ SELECT 'Hello,'
        $$ newline concatenation!$$ AS message;
 -- Syntax error
 */
-
--- DataGrip: Enter the bind variable in single quotes when prompted
---@formatter:off
-SELECT :'prefix'
-  ' newline concatenation!' AS message;
---@formatter:on
 
 TRUNCATE TABLE tmp_demo_copy;
 
