@@ -19,7 +19,7 @@ FROM (
      ) AS sample_data(tour_id, group_id, year, city);
 
 PRINT 'Collection'
-SELECT *
+SELECT tour_id, group_id, year, city
 FROM @list;
 
 SELECT count(tour_id) AS count_no_recs
