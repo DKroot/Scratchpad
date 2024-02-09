@@ -4,6 +4,12 @@ PRINT current_timestamp;
 -- Now
 PRINT getdate();
 
+-- Date as an int
+SELECT cast(format(getdate(), 'yyyyMMdd') AS INT);
+
+-- Time as an int
+SELECT cast(format(getdate(), 'HHmmss') AS INT);
+
 -- Truncate to current date
 PRINT cast(getdate() AS DATE);
 
