@@ -29,14 +29,14 @@ INTO #demo_merge AS tdm
 USING (
   VALUES --
     (7, 4, 2021, 'San Francisco')
-) AS sample_data(tour_id, group_id, year, city)
-ON (tdm.tour_id = sample_data.tour_id)
+) AS sq(tour_id, group_id, year, city)
+ON (tdm.tour_id = sq.tour_id)
 WHEN MATCHED THEN
   UPDATE
-  SET tdm.group_id = sample_data.group_id, tdm.year = sample_data.year, tdm.city = sample_data.city
+  SET tdm.group_id = sq.group_id, tdm.year = sq.year, tdm.city = sq.city
 WHEN NOT MATCHED THEN
   INSERT (tour_id, group_id, year, city)
   VALUES (
-    sample_data.tour_id, sample_data.group_id, sample_data.year, sample_data.city);
+    sq.tour_id, sq.group_id, sq.year, sq.city);
 
 -- DROP TABLE #demo_merge;
