@@ -22,7 +22,7 @@ public class JdbcConnectionDemo {
     var password = System.getenv("SPRING_DATASOURCE_PASSWORD");
     Objects.requireNonNull(password, "SPRING_DATASOURCE_PASSWORD is not defined");
 
-    System.out.printf("Connecting as %s@%s%n", username, url);
+    System.out.printf("Connecting as %s to %s%n", username, url);
     try (var conn = DriverManager.getConnection(url, username, password)) {
       var metaData = conn.getMetaData();
       System.out.printf("Connected to %s%n", metaData.getDatabaseProductVersion());

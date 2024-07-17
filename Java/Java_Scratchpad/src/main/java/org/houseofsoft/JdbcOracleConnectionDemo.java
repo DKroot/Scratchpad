@@ -2,6 +2,8 @@ package org.houseofsoft;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class JdbcOracleConnectionDemo {
@@ -35,8 +37,17 @@ public class JdbcOracleConnectionDemo {
 
   @SuppressWarnings("DuplicatedCode")
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
-    System.out.printf("Using %s JDBC driver%n", DRIVER_CLASS_NAME);
-    var driverClass = Class.forName(DRIVER_CLASS_NAME);
+    System.out.println("## System Properties ##");
+    var properties = System.getProperties();
+    var propertyKeys = new ArrayList<>(properties.stringPropertyNames());
+    Collections.sort(propertyKeys);
+    propertyKeys.forEach(k -> System.out.println(k + "=" + properties.getProperty(k)));
+
+    System.out.printf("%n## Using %s JDBC driver ##%n", DRIVER_CLASS_NAME);
+    Class.forName(DRIVER_CLASS_NAME);
+
+//    var oracleSsl = System.getProperty("oracle.net.ssl_version");
+//    System.out.printf("oracle.net.ssl_version=%s%n", oracleSsl);
 
     var url = System.getenv("SPRING_DATASOURCE_URL");
     Objects.requireNonNull(url, "SPRING_DATASOURCE_URL is not defined");
@@ -47,7 +58,7 @@ public class JdbcOracleConnectionDemo {
     var password = System.getenv("SPRING_DATASOURCE_PASSWORD");
     Objects.requireNonNull(password, "SPRING_DATASOURCE_PASSWORD is not defined");
 
-    System.out.printf("Connecting as %s@%s%n", username, url);
+    System.out.printf("Connecting as %s to %s%n", username, url);
     try (var conn = DriverManager.getConnection(url, username, password)) {
       var metaData = conn.getMetaData();
       System.out.printf("Connected to %s%n", metaData.getDatabaseProductVersion());
