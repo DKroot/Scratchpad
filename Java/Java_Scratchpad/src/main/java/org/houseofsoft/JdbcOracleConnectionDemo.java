@@ -63,18 +63,24 @@ public class JdbcOracleConnectionDemo {
 
     System.out.printf("Connecting as %s to %s%n", username, url);
 
+    /*
+    //region Using OracleDataSource
     var connProps = new Properties();
-    connProps.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_ENCRYPTION_LEVEL, "REQUIRED");
-    connProps.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_ENCRYPTION_TYPES, "(AES128,AES192,AES256)");
+
+    //connProps.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_ENCRYPTION_LEVEL, "REQUIRED");
+    //connProps.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_ENCRYPTION_TYPES, "(AES128,AES192,AES256)");
 
     var ods = new oracle.jdbc.pool.OracleDataSource();
     ods.setUser(username);
-    ods.setConnectionProperties(connProps);
+    //ods.setConnectionProperties(connProps);
     ods.setPassword(password);
     ods.setURL(url);
+    //endregion
 
     try (var conn = ods.getConnection()) {
-    //try (var conn = DriverManager.getConnection(url, username, password)) {
+    */
+
+    try (var conn = DriverManager.getConnection(url, username, password)) {
       var metaData = conn.getMetaData();
       System.out.printf("Connected to %s%n", metaData.getDatabaseProductVersion());
 
