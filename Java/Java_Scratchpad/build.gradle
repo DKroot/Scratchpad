@@ -21,16 +21,15 @@ plugins {
 // == Configuration ==
 
 /*
-For JDBC-OCI the major.minor version of the client should match the version of the Oracle JDBC Driver.
-
-Format:
+Property format:
   * `{driver JAR}:{major}.{minor}`
 
 Examples:
-  * (Linux) `ojdbc11:23.4`
-  * (Mac) `ojdbc10:19.8`
+  * `ojdbc11:23.4`
+  * `ojdbc10:19.8`
+
+For JDBC-OCI the major.minor version of the installed Oracle client should match the version of the Oracle JDBC Driver.
 */
-//
 def oracleJdbcDriver = project.findProperty('oracleJdbcDriver') ?: 'ojdbc11:23.4'
 
 description = 'Java Demos'
