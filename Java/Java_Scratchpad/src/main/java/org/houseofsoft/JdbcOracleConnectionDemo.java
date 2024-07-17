@@ -1,10 +1,13 @@
 package org.houseofsoft;
 
+import oracle.jdbc.OracleConnection;
+
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Properties;
 
 public class JdbcOracleConnectionDemo {
 
@@ -39,15 +42,15 @@ public class JdbcOracleConnectionDemo {
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
     System.out.println("## System Properties ##");
     var properties = System.getProperties();
-    var propertyKeys = new ArrayList<>(properties.stringPropertyNames());
-    Collections.sort(propertyKeys);
-    propertyKeys.forEach(k -> System.out.println(k + "=" + properties.getProperty(k)));
+    var propertyNames = new ArrayList<>(properties.stringPropertyNames());
+    Collections.sort(propertyNames);
+    propertyNames.forEach(p -> System.out.println(p + "=" + properties.getProperty(p)));
 
     System.out.printf("%n## Using %s JDBC driver ##%n", DRIVER_CLASS_NAME);
     Class.forName(DRIVER_CLASS_NAME);
 
-//    var oracleSsl = System.getProperty("oracle.net.ssl_version");
-//    System.out.printf("oracle.net.ssl_version=%s%n", oracleSsl);
+    //    var oracleSsl = System.getProperty("oracle.net.ssl_version");
+    //    System.out.printf("oracle.net.ssl_version=%s%n", oracleSsl);
 
     var url = System.getenv("SPRING_DATASOURCE_URL");
     Objects.requireNonNull(url, "SPRING_DATASOURCE_URL is not defined");
@@ -59,7 +62,19 @@ public class JdbcOracleConnectionDemo {
     Objects.requireNonNull(password, "SPRING_DATASOURCE_PASSWORD is not defined");
 
     System.out.printf("Connecting as %s to %s%n", username, url);
-    try (var conn = DriverManager.getConnection(url, username, password)) {
+
+    var connProps = new Properties();
+    connProps.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_ENCRYPTION_LEVEL, "REQUIRED");
+    connProps.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_ENCRYPTION_TYPES, "(AES128,AES192,AES256)");
+
+    var ods = new oracle.jdbc.pool.OracleDataSource();
+    ods.setUser(username);
+    ods.setConnectionProperties(connProps);
+    ods.setPassword(password);
+    ods.setURL(url);
+
+    try (var conn = ods.getConnection()) {
+    //try (var conn = DriverManager.getConnection(url, username, password)) {
       var metaData = conn.getMetaData();
       System.out.printf("Connected to %s%n", metaData.getDatabaseProductVersion());
 
