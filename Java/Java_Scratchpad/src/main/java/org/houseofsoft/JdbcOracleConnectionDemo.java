@@ -1,13 +1,10 @@
 package org.houseofsoft;
 
-import oracle.jdbc.OracleConnection;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.Properties;
 
 public class JdbcOracleConnectionDemo {
 

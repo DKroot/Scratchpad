@@ -1,91 +1,13 @@
 :ON ERROR EXIT
 
-/*
-Batch comment
-*/
-
-CREATE OR ALTER PROCEDURE tmp_error AS --
-  SET XACT_ABORT, NOCOUNT ON;
-BEGIN
-  PRINT 'tmp_error';
-
-  /*
-  This errors out.
-  * The line number gets reported in SSMS *correctly* if the entire batch is selected for execution.
-  * The line number is not reported in JetBrains IDEs.
-  */
-  SELECT 1 / 0;
-END;
-GO
-
-EXEC tmp_error;
-GO
-
-CREATE OR ALTER PROCEDURE tmp_error_lineno AS --
--- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
---@formatter:off
-  LINENO 28;
---@formatter:on
-  SET XACT_ABORT, NOCOUNT ON;
-BEGIN
-  DECLARE @foo INT;
-
-  -- Generate a divide-by-zero error.
-  SET @foo = 1 / 0;
-  -- SSMS reports the line number correctly in the error
-  -- IDEA as of 2023.1 doesn't reports line number in the error
-
-  PRINT @foo;
-END;
-GO
-
-EXEC tmp_error_lineno;
-GO
-
-DROP PROCEDURE IF EXISTS tmp_error_lineno;
-GO
-
--- region tmp_demo_errors
-CREATE OR ALTER PROCEDURE tmp_demo_errors AS --
---@formatter:off
--- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
-  LINENO 54;
---@formatter:on
-  SET XACT_ABORT, NOCOUNT ON;
-BEGIN TRY
-  SELECT 1 / 0;
-END TRY BEGIN CATCH
-  IF @@trancount > 0
-    ROLLBACK TRANSACTION;
-
-  DECLARE @err_msg NVARCHAR(4000) = error_message(), @err_state TINYINT = error_state(), @errno INT = error_number(),--
-    @proc SYSNAME = error_procedure(), @lineno INT = error_line(),
-    /* arbitrary error code >= 50000 */ @CUSTOM_ERROR INT = 63372;
-  IF @err_msg NOT LIKE '**%'
-    SET @err_msg =
-        concat('** ERROR #', @errno, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, ' ** ', @err_msg);
-    --@formatter:off
-    ;THROW @CUSTOM_ERROR, @err_msg, @err_state;
-  --@formatter:on
-END CATCH;
-GO
-
-EXEC tmp_demo_errors;
-GO
-
-DROP PROCEDURE IF EXISTS tmp_demo_errors;
-GO
--- endregion
-
+--region tmp_plus1_in_out
 CREATE OR ALTER PROCEDURE tmp_plus1_in_out(
   @arg INT = 21, @result INT OUT
 ) AS --
 --@formatter:off
 -- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
 -- noinspection SqlResolve
-  LINENO 88;
+  LINENO 10;
 --@formatter:on
 /**
 Does something.
@@ -99,15 +21,15 @@ BEGIN TRY
   PRINT concat('tmp_plus1_in_out end: @result = ', coalesce(cast(@result AS VARCHAR), 'NULL'));
 END TRY BEGIN CATCH
   IF @@trancount > 0
-    ROLLBACK TRANSACTION;
+      ROLLBACK TRANSACTION;
 
   DECLARE @err_msg NVARCHAR(4000) = error_message(), @err_state TINYINT = error_state(),--
     @err_num INT = error_number(), @proc SYSNAME = error_procedure(), @lineno INT = error_line(),
     /* arbitrary error code >= 50000 */ @custom_error_num INT = 63372;
   IF @err_msg NOT LIKE '**%'
-    SET @err_msg =
-        concat('**ERROR #', @err_num, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, '** ', @err_msg);
-    --@formatter:off
+      SET @err_msg =
+          concat('**ERROR #', @err_num, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, '** ', @err_msg);
+      --@formatter:off
   ;THROW @custom_error_num, @err_msg, @err_state;
   --@formatter:on
 END CATCH;
@@ -124,7 +46,9 @@ PRINT concat('The result = ', coalesce(cast(@res AS VARCHAR), 'NULL'));
 
 DROP PROCEDURE IF EXISTS tmp_plus1_in_out;
 GO
+--endregion
 
+--region tmp_plus1_in_out
 /*
 Attached doc comment: blank line separation doesn't matter. The entire batch DDL is stored.
 */
@@ -132,11 +56,6 @@ Attached doc comment: blank line separation doesn't matter. The entire batch DDL
 CREATE OR ALTER PROCEDURE tmp_plus2_in_out(
   @arg INT, @res INT OUT
 ) AS --
---@formatter:off
--- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
-  LINENO 120;
---@formatter:on
   SET XACT_ABORT, NOCOUNT ON;
 
   SET @res = @arg + 1;
@@ -145,27 +64,37 @@ GO
 
 DROP PROCEDURE IF EXISTS tmp_plus2_in_out;
 GO
+--endregion
 
+--region tmp_demo
 CREATE OR ALTER PROCEDURE tmp_demo(
   @arg INT
 ) AS --
---@formatter:off
--- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
-  LINENO 137;
---@formatter:on
   SET XACT_ABORT, NOCOUNT ON;
 BEGIN
   SELECT 'Demo' AS a_string, @arg + 1 AS an_int, cast(1 AS BIT) AS a_boolean,
     cast('2007-05-08 12:35:29.123' AS DATETIME) AS a_date_time;
-END
+END;
 GO
 
-EXEC tmp_demo 42;
+DROP TABLE IF EXISTS #tmp_demo_results;
+GO
+
+CREATE TABLE #tmp_demo_results (
+  a_string VARCHAR(MAX),
+  an_int INT,
+  a_boolean BIT,
+  a_date_time DATETIME
+);
+
+INSERT INTO #tmp_demo_results EXEC tmp_demo 42;
+SELECT *
+FROM #tmp_demo_results;
 GO
 
 DROP PROCEDURE IF EXISTS tmp_demo;
 GO
+--endregion
 
 --@formatter:off
 CREATE OR ALTER PROCEDURE tmp_demo_args(
@@ -177,11 +106,6 @@ CREATE OR ALTER PROCEDURE tmp_demo_args(
   @aBooleanVarchar VARCHAR(100) = '1', -- Returns argument. VARCHAR(MAX) does not work here.
   @aDateTime DATETIME = '2007-05-08 12:35:29.123' -- Returns argument
 ) AS --
---@formatter:off
--- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
-  LINENO 165;
---@formatter:on
   SET XACT_ABORT, NOCOUNT ON;
 BEGIN
   SELECT
@@ -220,11 +144,6 @@ can be in the FROM clause of SELECT INTO or in the INSERT EXEC string or stored 
 CREATE OR ALTER PROCEDURE tmp_demo_table_args(
   @foo TMP_SAMPLE_DATA_TYPE READONLY
 ) AS --
---@formatter:off
--- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
--- noinspection SqlResolve
-  LINENO 208;
---@formatter:on
   SET XACT_ABORT, NOCOUNT ON;
 BEGIN
   SELECT 'All records' AS "See next =>";
@@ -259,3 +178,80 @@ DROP PROCEDURE IF EXISTS tmp_demo_table_args;
 DROP TYPE IF EXISTS TMP_SAMPLE_DATA_TYPE;
 GO
 --endregion
+
+CREATE OR ALTER PROCEDURE tmp_error AS --
+  SET XACT_ABORT, NOCOUNT ON;
+BEGIN
+  PRINT 'tmp_error';
+
+  /*
+  This errors out.
+  * The line number gets reported in SSMS *correctly* if the entire batch is selected for execution.
+  * The line number is not reported in JetBrains IDEs.
+  */
+  SELECT 1 / 0;
+END;
+GO
+
+EXEC tmp_error;
+GO
+
+--region tmp_error_lineno
+CREATE OR ALTER PROCEDURE tmp_error_lineno AS --
+--@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+  LINENO 192;
+--@formatter:on
+  SET XACT_ABORT, NOCOUNT ON;
+BEGIN
+  DECLARE @foo INT;
+
+  -- Generate a divide-by-zero error.
+  SET @foo = 1 / 0;
+  -- SSMS reports the line number correctly in the error
+  -- IDEA as of 2023.1 doesn't report line number in the error
+
+  PRINT @foo;
+END;
+GO
+
+EXEC tmp_error_lineno;
+GO
+
+DROP PROCEDURE IF EXISTS tmp_error_lineno;
+GO
+--endregion
+
+-- region tmp_demo_errors
+CREATE OR ALTER PROCEDURE tmp_demo_errors AS --
+--@formatter:off
+-- `LINENO` fixes line # error reporting for middle-of-file batches. Keep it matching the actual file line #.
+-- noinspection SqlResolve
+  LINENO 212;
+--@formatter:on
+  SET XACT_ABORT, NOCOUNT ON;
+BEGIN TRY
+  SELECT 1 / 0;
+END TRY BEGIN CATCH
+  IF @@trancount > 0
+      ROLLBACK TRANSACTION;
+
+  DECLARE @err_msg NVARCHAR(4000) = error_message(), @err_state TINYINT = error_state(), @errno INT = error_number(),--
+    @proc SYSNAME = error_procedure(), @lineno INT = error_line(),
+    /* arbitrary error code >= 50000 */ @custom_error INT = 63372;
+  IF @err_msg NOT LIKE '**%'
+      SET @err_msg =
+          concat('** ERROR #', @errno, ' at ', coalesce(@proc + '()', '<dynamic SQL>'), ':', @lineno, ' ** ', @err_msg);
+      --@formatter:off
+    ;THROW @CUSTOM_ERROR, @err_msg, @err_state;
+  --@formatter:on
+END CATCH;
+GO
+
+EXEC tmp_demo_errors;
+GO
+
+DROP PROCEDURE IF EXISTS tmp_demo_errors;
+GO
+-- endregion

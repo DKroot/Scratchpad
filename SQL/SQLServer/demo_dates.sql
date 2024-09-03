@@ -36,11 +36,8 @@ WHERE getdate() BETWEEN getdate() - 1 AND getdate() + 1;
 SELECT cast(1 AS BIT) AS plus_minus_day
 WHERE getdate() BETWEEN getdate() - 1 AND coalesce(NULL, getdate() + 1);
 
-/*
--- Problem: the BETWEEN result is NULL
-SELECT cast(1 AS BIT) AS plus_minus_day
-WHERE getdate() BETWEEN getdate() - 1 AND NULL;
-*/
+-- Is the date after '2024-01-01'
+SELECT CAST(iif(getdate() >= '2024-01-01', 1, 0) AS BIT) AS date_after_2024;
 
 -- Literals and difference
 DECLARE @foo DATE = '2021-08-01', @bar DATETIME = '2021-08-02T21:00:42', @baz DATETIME = '2021-08-02T21:15:42';
