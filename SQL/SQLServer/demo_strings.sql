@@ -61,6 +61,9 @@ FROM (
 WHERE s LIKE '[A-Z][A-Z][A-Z]' COLLATE sql_latin1_general_cp1_cs_as;
 --endregion
 
+PRINT concat('len(123)=', len('123'));
+PRINT concat('NULL is ', iif(len(NULL) > 0, 'not empty', 'empty'));
+
 -- noinspection SqlRedundantCodeInCoalesce
 PRINT coalesce(NULL, '.');
 -- `.`
