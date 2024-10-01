@@ -8,8 +8,19 @@ set -o pipefail
 echo -e "\n## Running under ${USER}@${HOSTNAME} in ${PWD} ##\n"
 echo "Shell options: $-"
 
+global_var=foo
+global_arr=(bar baz)
+
 function f() {
-  echo "Inside the function"
+  echo "Inside f()"
+
+  echo "Global var=$global_var"
+  echo "Global array var=${global_arr[*]}"
+
+  # Update global vars inside the function
+  global_var="bar"
+  global_arr[1]="qux"
+
   echo "Number of parameters: \$# = $#"
   echo "\$0 = $0"
   echo "\$1 = $1"
@@ -24,6 +35,7 @@ HEREDOC
   echo '-----'
   IFS=';'
   echo "All arguments (double-quoted): IFS=';' \$* = $*"
+  IFS=' '
 }
 
 returning_fun() {
