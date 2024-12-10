@@ -28,6 +28,7 @@
 
 plugins {
   id 'base'
+  id 'java'
 
   id 'de.qualersoft.jmeter' version '2.4.+'
 
@@ -54,6 +55,24 @@ ext.bar = 'bar prop'
 println "bar=${bar}"
 println "project.bar=${project.bar}"
 
+final def JAVA_VER = 17
+
+java {
+  /*
+  Set up all compile, test and javadoc tasks to use the defined toolchain which may be different than the one Gradle
+  itself uses. Gradle detects locally installed JVMs and chooses a JRE/JDK matching the requirements. If no match is
+  found, it will automatically download it from a specified vendor.
+  */
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(JAVA_VER)
+    vendor = JvmVendorSpec.AMAZON // optional, defaults to `AdoptOpenJDK`
+  }
+
+  consistentResolution {
+    useCompileClasspathVersions()
+  }
+}
+
 // Print command line of all `Exec` tasks (but not direct `exec {}` calls
 allprojects {
   tasks.withType(Exec).tap {
@@ -63,6 +82,18 @@ allprojects {
       }
     }
   }
+}
+
+import javax.inject.Inject
+
+interface ExecOps {
+  @Inject
+  ExecOperations getExecOps()
+}
+
+interface FsOps {
+  @Inject
+  FileSystemOperations getFsOps()
 }
 
 tasks.register('myExec', Exec) {
@@ -89,9 +120,10 @@ import org.apache.tools.ant.util.TeeOutputStream
  * @return captured stdout
  */
 String runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
+  def execOps = project.objects.newInstance(ExecOps).execOps
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
-    exec {
+    execOps.exec {
       commandLine cmdLineArgs
       standardOutput new TeeOutputStream(System.out, cmdStdOut)
       ignoreExitValue suppressFailures
@@ -107,10 +139,11 @@ String runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
  * @return a tuple of captured stdout + captured stderr
  */
 Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs) {
+  def execOps = project.objects.newInstance(ExecOps).execOps
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
     new ByteArrayOutputStream().withStream { cmdStdErr ->
-      exec {
+      execOps.exec {
         commandLine cmdLineArgs
         standardOutput new TeeOutputStream(System.out, cmdStdOut)
         errorOutput new TeeOutputStream(System.err, cmdStdErr)
@@ -123,10 +156,11 @@ Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs) {
 
 tasks.register('execCommands') {
   dependsOn myExec
+  def execOps = project.objects.newInstance(ExecOps).execOps
   doLast {
     println "\nexecCommands: Executing a command and suppressing a failure"
     println '====='
-    def result = exec {
+    def result = execOps.exec {
       commandLine 'ls', 'foo'
       ignoreExitValue true
     }
@@ -137,7 +171,7 @@ tasks.register('execCommands') {
     println '====='
     new ByteArrayOutputStream().withStream { cmdStdOut ->
       new ByteArrayOutputStream().withStream { cmdStdErr ->
-        exec {
+        execOps.exec {
           commandLine 'ls', '-l'
           standardOutput cmdStdOut
           errorOutput cmdStdErr
@@ -156,7 +190,7 @@ tasks.register('execCommands') {
     println "<main>: ${projectDir}> `${cmdLineArgs.join ' '}`"
     new ByteArrayOutputStream().withStream { cmdStdOut ->
       new ByteArrayOutputStream().withStream { cmdStdErr ->
-        exec {
+        execOps.exec {
           commandLine cmdLineArgs
           standardOutput new TeeOutputStream(System.out, cmdStdOut)
           errorOutput new TeeOutputStream(System.err, cmdStdErr)
@@ -215,6 +249,22 @@ tasks.register('generateConfig') {
     }
   }
 }
+
+/*tasks.register('setFilePermissions') {
+  def fsOps = project.objects.newInstance(FsOps).fsOps
+  doLast {
+    //def fsOps = project.getExtensions().getByType(FileSystemOperations)
+    def file = file('gradlew.bat')
+    fsOps.filePermissions {
+      files = file('gradlew.bat')
+      user {
+        read = true
+        execute = true
+      }
+      other.execute = false
+    }
+  }
+}*/
 
 tasks.register('vars') {
   group 'Help'
