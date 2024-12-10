@@ -29,10 +29,10 @@
 plugins {
   id 'base'
 
-  id 'de.qualersoft.jmeter' version '2.2.+'
+  id 'de.qualersoft.jmeter' version '2.4.+'
 
   // Prints task metadata and dependency information
-  id 'org.barfuin.gradle.taskinfo' version '1.4.+'
+  id 'org.barfuin.gradle.taskinfo' version '2.2.+'
 }
 
 println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
@@ -56,14 +56,16 @@ println "project.bar=${project.bar}"
 
 // Print command line of all `Exec` tasks (but not direct `exec {}` calls
 allprojects {
-  tasks.withType(Exec) {
-    doFirst {
-      println "${workingDir}> `${commandLine.join ' '}`"
+  tasks.withType(Exec).tap {
+    configureEach {
+      doFirst {
+        println "${workingDir}> `${commandLine.join ' '}`"
+      }
     }
   }
 }
 
-task myExec(type: Exec) {
+tasks.register('myExec', Exec) {
   doFirst { // Prologue
     println "\nmyExec: Executing a command"
     println '====='
@@ -119,7 +121,8 @@ Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs) {
   }
 }
 
-task execCommands(dependsOn: myExec) {
+tasks.register('execCommands') {
+  dependsOn myExec
   doLast {
     println "\nexecCommands: Executing a command and suppressing a failure"
     println '====='
@@ -184,8 +187,7 @@ task execCommands(dependsOn: myExec) {
   }
 }
 
-
-task generateConfig() {
+tasks.register('generateConfig') {
   def configFileSource = 'config/example.service'
   def generatedConfigDir = "${buildDir}/generated"
 
