@@ -69,26 +69,27 @@ PRINT coalesce(NULL, '.');
 -- `.`
 
 PRINT coalesce('', '.');
--- ``
+-- Empty line
 
 DECLARE @i INT = NULL;
-PRINT coalesce(cast(@i AS VARCHAR), 'NULL');
+PRINT 'cast() propagates NULLs:' + coalesce(cast(@i AS VARCHAR), 'N/A');
 -- noinspection SqlCaseVsIf
 SELECT CASE WHEN @i IS NULL THEN 'NULL' ELSE cast(@i AS VARCHAR) END;
 -- noinspection SqlCaseVsIf
 --PRINT coalesce(@i, 'NULL');
--- Error
+-- Error: can't coalesce() integers
 -- PRINT isnull(@i, 'NULL');
--- Error
---SELECT CASE WHEN @i IS NULL THEN 'NULL' ELSE @i END;
+-- Error: can't coalesce() integers
+-- SELECT CASE WHEN @i IS NULL THEN 'NULL' ELSE @i END;
+-- Error: inconsistent types
 
 PRINT 'foo=' + NULL;
--- ``
+-- Empty line
 
 --PRINT 'foo' + ':' + 42;
 -- Error
 
-PRINT concat('foo', '=', NULL, 42);
+PRINT concat('concat() skips NULLs safely', ':', NULL, 42);
 -- `foo=42`
 
 PRINT concat_ws('.', NULL, NULL);

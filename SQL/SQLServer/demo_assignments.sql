@@ -14,6 +14,15 @@ SELECT @city = 'New Orleans', @bar = 'qux';
 PRINT concat_ws('; ', concat('city=', @city), concat('@bar=', @bar));
 GO
 
+DECLARE @now DATETIME;
+
+SET @now = getdate();
+PRINT @now;
+
+SELECT @now = getdate();
+PRINT @now;
+GO
+
 -- region Multiple-row query
 DECLARE @city VARCHAR(MAX);
 

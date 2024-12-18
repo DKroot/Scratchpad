@@ -26,9 +26,21 @@ GO
 DECLARE @result VARCHAR(50);
 SET CONCAT_NULL_YIELDS_NULL ON;
 PRINT 'CONCAT_NULL_YIELDS_NULL=' + iif(((4096 & @@options) = 4096), 'on', 'off');
-PRINT concat('concat() result=', @result);
+PRINT concat('concat() with NULL=`', @result, '`');
 
 SET CONCAT_NULL_YIELDS_NULL OFF;
 PRINT 'CONCAT_NULL_YIELDS_NULL=' + iif(((4096 & @@options) = 4096), 'on', 'off');
-PRINT concat('concat() result=', @result);
+PRINT concat('concat() with NULL=`', @result, '`');
+GO
+
+DECLARE @int INT = 42;
+-- ERROR: concat() or a cast is required
+-- PRINT 'Concatenating with an int: ' + @int;
+PRINT concat('Concatenating with an int: ', @int);
+
+DECLARE @float FLOAT = 1.5;
+-- ERROR: concat() or a cast is required
+--PRINT 'Concatenating with a float: ' + @float;
+PRINT 'Concatenating with a float: ' + cast(@float AS VARCHAR);
+PRINT 'Concatenating with a float: ' + convert(VARCHAR(15), @float);
 GO

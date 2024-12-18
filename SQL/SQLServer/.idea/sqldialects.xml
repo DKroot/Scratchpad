@@ -2,9 +2,12 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/demo_assignments.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/demo_collections.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_dates.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/demo_err_handling.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_stored_procedures.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_strings.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/demo_strings_concat.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_user_params.sql" dialect="TSQL" />
     <file url="PROJECT" dialect="TSQL" />
   </component>
