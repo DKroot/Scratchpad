@@ -14,23 +14,26 @@ IF (SELECT 'foo') = 'foo'
     PRINT 'true'
   END
 ELSE
-  PRINT 'false'
+  PRINT 'false';
 
 IF (SELECT 'foo'
     WHERE 1 = 0) IS NULL
   PRINT 'true'
 ELSE
-  PRINT 'false'
+  PRINT 'false';
 
 IF (SELECT 'foo'
     WHERE 1 = 0) IS NULL
   PRINT 'true'
 ELSE
-  PRINT 'false'
+  PRINT 'false';
 
 IF exists (SELECT 1
            FROM (VALUES (1, 0, 2)) AS sample_data(one, zero, two)
            WHERE one <> 1)
   PRINT 'true'
 ELSE
-  PRINT 'false'
+  PRINT 'false';
+
+PRINT concat('2 !> 0: ', iif(2 !> 0, 'TRUE', 'FALSE'));
+PRINT concat('0 !> 0: ', iif(0 !> 0, 'TRUE', 'FALSE'));

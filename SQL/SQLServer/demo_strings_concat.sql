@@ -1,3 +1,11 @@
+PRINT concat('concat() skips NULLs safely', ':', NULL, 42);
+
+PRINT concat_ws(', ', NULL, 'item1', 'item2');
+-- `item1, item2`
+
+PRINT concat_ws(', ', '', 'item1', 'item2');
+-- `, item1, item2`
+
 DECLARE @s VARCHAR(100);
 PRINT 'CONCAT_NULL_YIELDS_NULL=' + iif(((4096 & @@options) = 4096), 'on', 'off');
 

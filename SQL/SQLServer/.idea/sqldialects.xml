@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/demo_aggregation.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_assignments.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_collections.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/demo_conditions.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_dates.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_err_handling.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/demo_stored_procedures.sql" dialect="TSQL" />

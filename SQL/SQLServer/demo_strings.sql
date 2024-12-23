@@ -89,15 +89,6 @@ PRINT 'foo=' + NULL;
 --PRINT 'foo' + ':' + 42;
 -- Error
 
-PRINT concat('concat() skips NULLs safely', ':', NULL, 42);
--- `foo=42`
-
-PRINT concat_ws('.', NULL, NULL);
--- ``
-
-PRINT concat_ws('.', NULL, '');
--- ``
-
 --region String aggregation: custom functions for SQL Server 2017+
 SELECT string_agg(left(value, 1), '')
 FROM string_split('BHW Management Information System Solution', ' ');

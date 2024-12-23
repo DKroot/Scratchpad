@@ -55,7 +55,7 @@ FROM (
 
 -- Generate a range of numbers
 WITH range AS (
-  SELECT 1 AS num
+  SELECT 1 AS num -- inclusive lower range boundary
   UNION ALL
   SELECT num + 1
   FROM range
