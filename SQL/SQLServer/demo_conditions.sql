@@ -1,3 +1,7 @@
+DECLARE @b BIT = iif(2 * 2 != 4, 1, 0);
+PRINT concat('@b=', @b);
+GO
+
 -- Numeric to BIT: true when <> 0
 SELECT cast(1 AS BIT) AS "1_true", cast(0 AS BIT) AS "0_false", cast(2 AS BIT) AS "2_true";
 

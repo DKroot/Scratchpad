@@ -49,6 +49,7 @@ PRINT concat('Concatenating with an int: ', @int);
 DECLARE @float FLOAT = 1.5;
 -- ERROR: concat() or a cast is required
 --PRINT 'Concatenating with a float: ' + @float;
+PRINT concat('Concatenating with a float: ', @float);
 PRINT 'Concatenating with a float: ' + cast(@float AS VARCHAR);
 PRINT 'Concatenating with a float: ' + convert(VARCHAR(15), @float);
 GO
