@@ -11,7 +11,7 @@ SYNOPSIS
 DESCRIPTION
   Demonstrates stdout and stderr output. They could get out of order with the default OS buffering.
   Runs a loop for the specified seconds_to_run (60 by default).
-  Times out (abnormally terminates) the run at 30 seconds.
+  Times out (abnormally terminates) the run if it reaches 30 seconds in any case.
 END
   exit 1
 fi
@@ -19,8 +19,8 @@ fi
 declare -i seconds_to_run=${1:-60}
 
 out() {
- echo stdout $*
- echo stderr $* >&2
+ echo stdout "$*"
+ echo stderr "$*" >&2
 }
 
 main() {
@@ -30,7 +30,7 @@ main() {
     ((++elapsed))
     out "#${elapsed} ${left} second(s) left..."
     if ((left == 30)); then
-      echo "Abnormal exit!"
+      echo "Timeout reached: terminating" >&2
       exit 42
     fi
     sleep 1
