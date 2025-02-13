@@ -40,15 +40,26 @@ WHERE getdate() BETWEEN getdate() - 1 AND coalesce(NULL, getdate() + 1);
 SELECT cast(iif(getdate() >= '2024-01-01', 1, 0) AS BIT) AS date_after_2024;
 GO
 
+DECLARE @dt DATETIME = '2021-08-10T21:00:42';
+PRINT format(@dt, 'yyyy-MM-dd HH:mm:ss');
+
+SET @dt = '2021-08-10T21:00:00'; -- Conversion failed: seconds are mandatory
+--SET @dt = '2021-08-10T21:00'; -- Conversion failed: seconds are mandatory
+
+PRINT format(@dt, 'yyyy-MM-dd HH:mm:ss');
+GO
+
 -- Literals and difference
-DECLARE @foo DATE = '2021-08-09', @bar DATETIME = '2021-08-10T21:00:42';
-PRINT @foo
-PRINT @bar
-PRINT concat_ws(', ', @foo, @bar);
-PRINT concat_ws(' ', 'DATETIME - DATE =', datediff(DAY, @foo, @bar), 'day');
-PRINT concat('The number of months since day 0 = ', datediff(MONTH, 0, @foo));
-PRINT concat('The first day of the month = ', dateadd(MONTH, datediff(MONTH, 0, @foo), 0));
-PRINT concat('The last day of the month = ', eomonth(@foo));
+DECLARE @d DATE = '2021-08-09', @dt DATETIME = '2021-08-10T21:00:42';
+PRINT @d
+PRINT @dt
+PRINT concat_ws(', ', @d, @dt);
+PRINT concat_ws(' ', 'DATETIME - DATE =', datediff(DAY, @d, @dt), 'day');
+PRINT concat('The number of months since day 0 = ', datediff(MONTH, 0, @d));
+PRINT concat('The first day of the month = ', dateadd(MONTH, datediff(MONTH, 0, @d), 0));
+PRINT concat('The last day of the month = ', eomonth(@d));
+PRINT concat('The date/time is between literals = ',
+             iif(@dt BETWEEN '2021-08-01T11:45' AND '2021-08-10T23:00', 'true', 'false'));
 GO
 
 -- Format seconds as hh:mm:ss
