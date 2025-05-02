@@ -1,0 +1,169 @@
+#
+# Documentation for Spring Boot properties: [Spring Boot 2.7.18 Common Application Properties reference]
+# (https://docs.spring.io/spring-boot/docs/2.7.18/reference/html/application-properties.html).
+#
+# This file inside the executable JAR defines application properties at Sprint Boot priority order 15. To override them,
+# use a file outside the JAR (priority 3), OS environment variables (priority 5), command line arguments (priority 11)
+# or other options: see the Sprint Boot docs.
+#
+# Spring Boot uses relaxed rules for binding properties to `@ConfigurationProperties` beans, so there does not need
+# to be an exact match between a property name below and a bean property name. Common examples where this is
+# useful include kebab case (e.g. `context-path` binds to `{bean}.contextPath`), and SCREAMING_SNAKE_CASE (e.g. `PORT`
+# binds to `{bean}.port`).
+#
+# Spring Bean-bound leaf configuration properties are resolved by IDEA after the project builds and should be available
+# for navigation via IDEA's `Declaration or Usages` directly from the property names below.
+#
+---
+spring:
+  ## Static Web Content ##
+  # By default, Spring Boot will serve static content from a directory called /static (or /public or
+  #/resources or /META-INF/resources) in the classpath
+
+  ### Spring MVC ###
+  # By default, resources are mapped on /** but you can tune that
+  #spring.mvc.static-path-pattern=/**
+
+  ### Static Resources ###
+
+  # Static resource locations (replace the default values with a list of directory locations).
+  #spring.resources.static-locations=classpath:/META-INF/resources/,classpath:/resources/,
+  #classpath:/static/,classpath:/public/
+
+  ## JAX-RS/Jersey ##
+
+  # Preferred JSON mapper to use for HTTP message conversion. Set to "gson" to force the use of Gson
+  # when both it and Jackson are on the classpath.
+  #spring.http.converters.preferred-json-mapper=jackson
+
+  jackson:
+    # `SimpleDateFormat` string or a fully-qualified date format class name. A time zone must be included for correct
+    # format conversions.
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSX
+    serialization:
+      fail-on-empty-beans: false # Disable FAIL_ON_EMPTY_BEANS to serialize exceptions in resources returning Lists
+      ### ObjectMapper Customizations ####
+
+      # The ObjectMapper instance created by default has the following customized properties:
+      # * MapperFeature.DEFAULT_VIEW_INCLUSION is disabled
+      # * DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES is disabled
+
+      # Feature that determines whether Date (and date/time) values (and Date-based things like
+      # Calendars) are to be serialized as numeric timestamps (true: default), or as strings (false:
+      # default if spring.jackson.date-format is specified).
+      # If textual representation is used, the actual format is spring.jackson.date-format.
+      #spring.jackson.serialization.write-dates-as-timestamps=true
+
+  ### Jersey ###
+  # Path that serves as the base URI for the application. Overrides the value of "@ApplicationPath"
+  # if specified.
+  #spring.jersey.application-path=/api
+
+  jmx:
+    enabled: true
+
+#  jpa:
+#    database: sql_server # Bypass auto-check on startup
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.SQLServer2012Dialect
+#        proc:
+          # Whether null parameter bindings should be passed to database procedure/function calls. Implicitly Hibernate
+          # will not pass the null, the intention being to allow any SP default argument values to be applied.
+          # This can be overridden per parameter via
+          # `org.hibernate.procedure.ParameterRegistration#enablePassingNulls(boolean)`.
+#          param_null_passing: true
+    # Disable OSIV (Open Session In View). See https://www.baeldung.com/spring-open-session-in-view.
+#    open-in-view: false
+    # Enable logging (printing to stdout) of SQL statements.
+    # Hibernate prints them with bind variable placeholders ("?").
+    # 2019-09-26, not necessary; logs already printing SQL information, including parameters. Leaving disabled:
+    # spring.jpa.show-sql=true
+
+  main:
+    banner-mode: log
+
+  # Spring Boot 2.6: The default strategy for matching request paths against registered Spring MVC handler mappings has
+  # changed from AntPathMatcher to PathPatternParser.
+  # With AntPathMatcher, authorizeRequests.mvcMatchers("hello").permitAll() would grant access to /hello. The more
+  # precise matching of PathPatternParser requires the use of authorizeRequests.mvcMatchers("/hello").permitAll()
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  lifecycle:
+    timeout-per-shutdown-phase: "180s" # For `server.shutdown=graceful`
+
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          # Maximum time the static resources should be cached, in seconds if no duration suffix is specified.
+          #max-age: "8h"
+
+          # Disable cache for local development: overrides `max-age`
+          no-cache: true
+
+server:
+  # `Whitelabel` (i.e. the default) error page configuration
+  error:
+    include-exception: true
+    include-stacktrace: always
+
+  # Configuration supporting AJP, matching:
+  #  <Connector port="***" relaxedPathChars="[]|" relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;"
+  #  maxThreads="200" minSpareThreads="10" connectionTimeout="20000" enableLookups="false"
+  #  maxHttpHeaderSize="32768" protocol="HTTP/1.1" useBodyEncodingForURI="true"
+  #  URIEncoding="UTF-8"
+  #  acceptCount="100" disableUploadTimeout="true" bindOnInit="false" />
+
+  max-http-header-size: 32768
+
+  tomcat:
+    mbeanregistry:
+      # use Tomcat’s MBeans
+      enabled: true
+
+    # Comma-separated list of additional unencoded characters that should be allowed in URI paths.
+    # Only < > [ \ ] ^ ` { | } are allowed.
+    relaxed-path-chars: '[,],|'
+
+    # Comma-separated list of additional unencoded characters that should be allowed in URI query strings.
+    # Only < > [ \ ] ^ ` { | } are allowed
+    relaxed-query-chars: '[,],|,{,},^,\,`,<,>'
+
+    threads:
+      max: 200
+      min-spare: 10
+
+    connection-timeout: 20000
+    # `enableLookups`: N/A
+    # `protocol`: N/A
+    # `useBodyEncodingForURI`: N/A
+
+    uri-encoding: 'UTF-8'
+    # TBD `acceptCount`: server.tomcat.max-connections ?
+    # `disableUploadTimeout`: N/A
+    # `bindOnInit`: N/A
+
+  servlet:
+    # REQUIRED Must match proxy context when deployed behind a reverse proxy, e.g. `context-path: "/itasng-dev"`
+    context-path: '/'
+
+  port: 4242
+
+  # Response compression in the HTTP connector.
+  # Note: Ignored for AJP, which doesn't support compression. Compression could be enabled for AJP on the `httpd` proxy.
+  compression:
+    enabled: true
+
+    # Minimum "Content-Length" value that is required for compression to be performed.
+    min-response-size: 1024
+
+    # MIME types to compress
+    #mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
+
+  # `graceful` stop processing uses a timeout which provides a grace period during which existing requests will be
+  # allowed to complete but no new requests will be permitted.
+  shutdown: graceful
+...

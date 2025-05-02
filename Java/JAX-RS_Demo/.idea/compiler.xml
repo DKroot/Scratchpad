@@ -6,22 +6,32 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.20/18bcea7d5df4d49227b4a0743a536208ce4825bb/lombok-1.18.20.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.7.18/899128018a7962b3e4be665910bae65dff08d1b0/spring-boot-configuration-processor-2.7.18.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.36/5a30490a6e14977d97d9c73c924c1f1b5311ea95/lombok-1.18.36.jar" />
         </processorPath>
-        <module name="JAX-RS_Demo.test" />
+        <module name="jax-rs-demo.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.3.2.RELEASE/15631495314ae7aabfc82266094ee5c173d86f71/spring-boot-configuration-processor-2.3.2.RELEASE.jar" />
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.20/18bcea7d5df4d49227b4a0743a536208ce4825bb/lombok-1.18.20.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.36/5a30490a6e14977d97d9c73c924c1f1b5311ea95/lombok-1.18.36.jar" />
         </processorPath>
-        <module name="JAX-RS_Demo.main" />
+        <module name="jax-rs-demo.test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11">
+      <module name="JAX-RS_Demo" target="17" />
+      <module name="JAX-RS_Demo.main" target="17" />
+      <module name="JAX-RS_Demo.test" target="17" />
       <module name="SpringBootDemo.main" target="12" />
       <module name="SpringBootDemo.test" target="12" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jax-rs-demo" options="-parameters -Xlint:-processing" />
+      <module name="jax-rs-demo.main" options="-parameters -Xlint:-processing" />
+      <module name="jax-rs-demo.test" options="-parameters -Xlint:-processing" />
+    </option>
   </component>
 </project>

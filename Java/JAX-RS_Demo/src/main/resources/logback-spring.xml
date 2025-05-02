@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- Enable Spring-specific formatting -->
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+  <!-- `base.xml` includes default CONSOLE and FILE log appenders -->
+  <!-- <include resource="org/springframework/boot/logging/logback/base.xml"/> -->
+
+  <!--
+    ITASNG custom log pattern designed for better human readability.
+    Includes logger and caller method names automatically.
+    See http://logback.qos.ch/manual/layouts.html for `logback` layout pattern docs.
+
+    Spring-specific formatting:
+      * `%clr` colors the output
+      * `%wEx` converts an exception into a more readable form
+      * ${PID} the current process ID
+    See https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-logging-color-coded-output
+
+    The default Spring Boot pattern (collapsed into a single line):
+    ```
+       %clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint}
+       %clr(${LOG_LEVEL_PATTERN:%5p})
+       %clr(${PID: }){magenta}
+       %clr(\-\-\-){faint}
+       %clr([%15.15t]){faint}
+       %clr(%-40.40logger{39}){cyan}
+       %clr(:){faint}
+       %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}
+    ```
+
+    Logback XML config specifics:
+      * Variable expressions with defaults (e.g. ${LOG_LEVEL_PATTERN:%5p}) are not supported
+      * `\` escapes should be doubled. Parentheses should be escaped.
+  -->
+  <!--suppress LongLine -->
+  <property name="HUMAN_FRIENDLY_FORMATTING"
+    value="%clr(%date{yyyy-MM-dd}){faint} %clr(|){faint} %clr(%date{HH:mm:ss.SSS}){faint} %clr(|){faint} %clr(%-5level) %clr(|){faint} %clr(%15.15thread){magenta} %clr(|){faint} %clr(%logger{42}.%method\\(\\)){cyan} %clr(:){faint} %msg%n%wEx"/>
+
+  <appender name="stdoutFormatted" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- TODO report: `withJansi="true"` is not working on Windows 10 -->
+
+    <encoder> <!-- type=`ch.qos.logback.classic.encoder.PatternLayoutEncoder` by default -->\
+      <pattern>${HUMAN_FRIENDLY_FORMATTING}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Logback logging levels (lower to higher): TRACE -> DEBUG -> INFO -> WARN -> ERROR -->
+
+  <appender name="stderrErrorsOnlyFormatted" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.err</target>
+
+    <!-- deny all events with a level below ERROR -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+
+    <encoder> <!-- type=`ch.qos.logback.classic.encoder.PatternLayoutEncoder` by default -->
+      <pattern>${HUMAN_FRIENDLY_FORMATTING}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Teeing ERRORs to both `stdout` to preserve context and `stderr` to facilitate extraction and monitoring -->
+  <root level="INFO">
+    <appender-ref ref="stdoutFormatted"/>
+    <appender-ref ref="stderrErrorsOnlyFormatted"/>
+  </root>
+
+  <springProfile name="!Prod"> <!-- `default` or `Dev` profile -->
+    <logger name="gov" level="DEBUG"/>
+    <logger name="cab" level="DEBUG"/>
+    <logger name="itas" level="DEBUG"/>
+  </springProfile>
+</configuration>

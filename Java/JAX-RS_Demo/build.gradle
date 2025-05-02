@@ -1,137 +1,232 @@
 plugins {
-    //region Server-side stack
-    id 'java'
+  id 'base'
 
-    /*
-    Adds Spring Boot tasks and configurations depending on other plug-ins.
-    The version of this plug-in determines Spring Boot dependency version.
-    */
-    id 'org.springframework.boot' version '2.3.2.RELEASE'
+  //region Server-side stack
+  id 'java'
 
-    // Enables using the `spring-boot-dependencies` BOM and Spring Boot Starters inheriting versions from the BOM
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+  /*
+  Adds Spring Boot tasks and configurations depending on other plug-ins.
+  The version of this plug-in determines versions of Spring Boot and its BOM (managed dependencies).
 
-    /*
-    Adds Lombok dependency to `annotationProcessor` and `compileOnly` configurations of each source set.
-    The `javadoc` task will be configured to read the `delombok`-ed sources instead of the actual sources.
-    Recommended to use by Lombok.
-    */
-    id 'io.freefair.lombok' version '5.3.3.3'
-    //endregion
+  NOTE: temporarily enable `spring-boot-properties-migrator` dependency below after all Sprint Boot upgrades.
+  */
+  /* ITASNG-1566, ST, 8/9/2024, updating '2.6.+' to '2.7.+'. */
+  id 'org.springframework.boot' version '2.7.+'
+
+  // Enables using the `spring-boot-dependencies` BOM and Spring Boot Starters inheriting versions from the BOM
+  id 'io.spring.dependency-management' version '1.1.+'
+
+  /*
+  Simplifies the use of Lombok and is recommended to use by Lombok.
+    * The `javadoc` task is configured to read the delombok-ed sources instead of the actual sources.
+
+  For each source set:
+    * Lombok is added to the `annotationProcessor` and `compileOnly` configurations.
+    * A `delombok` task is created.
+    * `lombok-mapstruct-binding` is added when 'org.mapstruct:mapstruct-processor' is found.
+    * The compile tasks will consider the lombok.config(s) in their up-to-date checks.
+  */
+  // No `.patch` version number components
+  // TBD Resolve the deprecation warning
+  id 'io.freefair.lombok' version '8.11'
+  //endregion
+
+  // Information on task metadata and dependencies
+  id 'org.barfuin.gradle.taskinfo' version '2.2.+'
 }
 
 repositories {
-    /*
-    Gradle docs advise against using `mavenLocal()`.
-    See https://docs.gradle.org/6.5.1/userguide/declaring_repositories.html#sec:case-for-maven-local
-    */
-    //    mavenLocal()
-
-    // The Maven central repository
-    mavenCentral()
-
-    maven {
-        name = 'Spring Releases'
-        url = 'https://repo.spring.io/libs-release'
-    }
+  // The Maven central repository
+  mavenCentral()
 }
 
+description = 'JAX-RS Demo'
+// Version to build: should use Sem Ver 2.0 convention (https://semver.org/), that is `MAJOR.MINOR.PATCH[-PRE.RELEASE]`
+if (!version || version == 'unspecified') {
+  // Default the version when not specified or blank in project properties
+  version = '1.1.0'
+}
+// build-info: `build.group`
 group = 'org.houseofsoft'
-version = '1.0.0'
-description = 'Demo JAX-RS'
 
-//sourceCompatibility = '12'
-//targetCompatibility = '12'
+logger.lifecycle "\n${description} v${version}\n"
 
-def systemEnv = System.getenv() // a Java Map of env. vars
-//def os = System.getProperty('os.name').toLowerCase()
+def systemEnv = System.getenv()
+def os = System.getProperty('os.name').toLowerCase()
 
-// TBD fix: Gradle is using `build/` output while the auto-imported IDE module uses `out/`
-//project.buildDir = 'build'
+//region Gradle info
+if (logger.isEnabled(LogLevel.LIFECYCLE)) {
+  print "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
+  if (logger.isEnabled(LogLevel.DEBUG) && os in ['linux', 'mac os x']) {
+    println " and the user:"
+    exec {
+      commandLine 'id'
+    }
+  } else {
+    println ''
+  }
 
-println description
-println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
-//def env = project.hasProperty("env") ? env : "Local"
+  // `System.properties['java.vendor.version']` may point to a JVM different from Gradle's
+  logger.lifecycle "Gradle JVM: ${System.properties['java.vendor']} ${System.properties['java.vm.version']} " +
+      "@ ${System.properties['java.home']}"
+}
+
+if (logger.isEnabled(LogLevel.INFO)) {
+  def buildCacheDir = systemEnv['GRADLE_USER_HOME'] ?: System.properties['user.home'] + '/.gradle'
+  logger.info "Build cache: ${buildCacheDir}"
+
+  def sysPath = systemEnv['PATH'] ?: systemEnv['Path']
+  logger.info "PATH=${sysPath}"
+}
+//endregion
 
 dependencies {
-    //region Spring Boot-managed dependencies
-    /*
-    Versions are specified by the Sprint Boot BOM, which is added by `io.spring.dependency-management`.
-    See the list of all managed dependencies here:
-    https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-dependency-versions.html
-    */
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+//region Spring Boot-managed dependencies
+  /*
+  Versions are specified by the Sprint Boot BOM, which is added by `io.spring.dependency-management`.
+  See the list of all managed dependencies here:
+  https://docs.spring.io/spring-boot/docs/2.7.18/reference/htmlsingle/#appendix.dependency-versions
+  */
 
-    // Core starter, including auto-configuration support, logging and YAML
-    implementation 'org.springframework.boot:spring-boot-starter'
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-    // Starter for building RESTful web apps using `JAX-RS` and `Jersey`. An alternative to `spring-boot-starter-web`.
-    implementation 'org.springframework.boot:spring-boot-starter-jersey'
+  // Core starter, including auto-configuration support, logging and YAML
+  implementation 'org.springframework.boot:spring-boot-starter'
 
-    /*
-    Starter to provide the web app servlet, serving static content using Spring MVC and Tomcat as the default
-    embedded container.
-    */
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+  // Starter for building RESTful web apps using `JAX-RS` and `Jersey`. An alternative to `spring-boot-starter-web`.
+  implementation 'org.springframework.boot:spring-boot-starter-jersey'
 
-    // Starter for using Spring Boot’s Actuator which provides features to help you monitor and manage your application
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  /*
+  Starter to provide the web app servlet, serving static content using Spring MVC and Tomcat as the default
+  embedded container.
+  */
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  //implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    //endregion
+  // Starter for using Spring Security
+  implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    //region Other dependencies of specific (fixed or dynamic) versions.
+  implementation 'org.slf4j:slf4j-api'
+  implementation 'org.slf4j:log4j-over-slf4j'
+  implementation 'org.apache.commons:commons-lang3'
 
-    // Google Guava: a common-purpose library
-    implementation 'com.google.guava:guava:29.+'
+  /*
+  Spring Boot Developer Tools will be automatically disabled when running a JAR or if the app is started from a
+  special classloader.
 
-    // FindBugs: provides null-check annotations
-    implementation 'com.google.code.findbugs:jsr305:3.+'
+  Note: Dev Tools will:
+      1. Disable the Spring caching options by default
+      2. Enable DEBUG logging for the web logging group
+      3. Automatically restart the app whenever files on the classpath change
+      4. Embed `LiveReload` server
+  */
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    implementation 'io.swagger:swagger-jersey2-jaxrs:1.6.+'
-    implementation 'io.springfox:springfox-swagger2:3.+'
+  /*
+  Prints diagnostics at startup, but also temporarily migrate properties at runtime for you.
+  */
+  //  runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
+  //endregion
 
-    // FIXME How do we access it?
-    implementation 'io.springfox:springfox-swagger-ui:3.+'
-    //endregion
+  //region Other dependencies: specific (fixed or dynamic) versions. If you omit a version, the latest will be used.
+
+  // Google Guava: a common-purpose library
+  // Dynamic version + flavor (e.g. `guava-33.3.1-jre.jar`) can be specified using a version range, but not `.+`.
+  implementation 'com.google.guava:guava:[33.3-jre,33.4-jre)'
+
+  // FindBugs: provides null-check annotations
+  implementation 'com.google.code.findbugs:jsr305:3.+'
+
+  implementation 'io.jsonwebtoken:jjwt-api:0.12.+'
+  runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.+'
+  runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.+'
+
+  //endregion
 }
 
-// Spring Boot configuration
-bootJar {
-    // For local development
-    excludeDevtools = false
+final def JAVA_VER = 17
 
-    // Default: ${rootProject.name}-${version}.jar
-    // See https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html for more info
-    archiveFileName = "${rootProject.name}.jar"
+java {
+  /*
+  Set up all compile, test and javadoc tasks to use the defined Java toolchain which may be different than the one
+  Gradle itself uses. Locally installed JVMs are detected and JRE/JDK matching the requirements below is chosen. If no
+  match is found, Gradle will automatically download and use the right JDK from a specified vendor.
+  */
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(JAVA_VER)
+    vendor = JvmVendorSpec.AMAZON // optional, defaults to `AdoptOpenJDK`
+  }
 
-// By default, the executable archive’s main class will be configured automatically by looking for
-// a class with a public static void main(String[]) method in directories on the task’s classpath.
-//    mainClassName = 'gov.nih.cit.itasng.Application'
+  consistentResolution {
+    useCompileClasspathVersions()
+  }
 }
+
+//region project Java toolchain info
+// access the default toolchain
+def toolchain = project.getExtensions().getByType(JavaPluginExtension.class).toolchain
+// acquire a provider that returns the launcher for the toolchain
+def service = project.getExtensions().getByType(JavaToolchainService.class)
+def javaLauncher = service.launcherFor(toolchain).get()
+def jvm = javaLauncher.metadata
+// `jvm.installationPath` is the project's Java Home
+logger.lifecycle "\nProject toolchain JVM: ${jvm.vendor} ${jvm.javaRuntimeVersion} @ ${jvm.installationPath}"
+//endregion
 
 // Spring Boot Actuator’s info endpoint automatically publishes information about a build
 springBoot {
-    buildInfo()
+  buildInfo()
 }
 
-task vars() {
-    group 'Help'
-    description 'Prints environment, JVM System Properties and other project info.'
-    doLast {
-        def systemProp = System.properties // a Java Map of system properties
+// The output directory for project's binary artifacts: `itasng.jar` and `itasng.sh` (formerly `project.libsDirectory`)
+def binDir = project.layout.buildDirectory.dir('libs').get()
 
-        println("== Environment variables ==\n")
-        systemEnv.sort().each { key, value ->
-            println "${key}=${value}"
-        }
+/*
+Build scans should be useful primarily for troubleshooting and build tuning.
+Create and publish a scan by running any build with `--scan`, e.g. `gradlew assemble --scan`.
+*/
+develocity {
+  buildScan {
+    termsOfUseUrl = 'https://gradle.com/help/legal-terms-of-use'
+    termsOfUseAgree = 'yes'
+    // publish Build Scans when explicitly requested (`--scan`)
+    publishing.onlyIf { false }
+    /*
+    By default, Build Scans are uploaded in the background after the build has finished. This allows the build to
+    finish sooner, but can be problematic in build environments (e.g. ephemeral CI agents) that terminate as soon as
+    the build is finished, as the upload may be terminated before it completes.
+    */
+    uploadInBackground = false
+  }
+}
 
-        println("\n== JVM System Properties ==\n")
-        systemProp.sort().each { key, value ->
-            println "${key}=${value}"
-        }
+tasks.register('printVersion') {
+  group 'Help'
+  description 'Prints application version.'
+  doLast {
+    println "APP_VERSION=${version}"
+  }
+}
 
-//        println("\n== Node executable ==\n")
-//        println nodeExecutable()
+tasks.register('printVars') {
+  group 'Help'
+  description 'Prints environment, Gradle JVM system properties, etc.'
+  doLast {
+    println '## Environment variables ##\n'
+    systemEnv.sort().each { key, value -> println "${key}=${value}"
     }
+
+    println '\n## Gradle JVM properties ##\n'
+    System.properties.sort().each { key, value -> println "${key}=${value}"
+    }
+
+    println '\n## Gradle variables ##\n'
+
+    def logLevel = gradle.startParameter.logLevel
+    println "Current logging level=${logLevel}"
+
+    println "Project build directory=${layout.buildDirectory.get()}"
+    println "Binary output directory=${binDir}"
+  }
 }
+
