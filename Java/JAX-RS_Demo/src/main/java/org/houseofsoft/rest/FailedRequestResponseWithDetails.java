@@ -2,7 +2,7 @@ package org.houseofsoft.rest;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.UriInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

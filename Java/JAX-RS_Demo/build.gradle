@@ -10,7 +10,7 @@ plugins {
 
   NOTE: temporarily enable `spring-boot-properties-migrator` dependency below after all Sprint Boot upgrades.
   */
-  id 'org.springframework.boot' version '2.7.+'
+  id 'org.springframework.boot' version '3.0.+'
 
   // Enables using the `spring-boot-dependencies` BOM and Spring Boot Starters inheriting versions from the BOM
   id 'io.spring.dependency-management' version '1.1.+'
@@ -125,7 +125,7 @@ dependencies {
   /*
   Prints diagnostics at startup, but also temporarily migrate properties at runtime for you.
   */
-  //  runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
+  runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
   //endregion
 
   //region Other dependencies: specific (fixed or dynamic) versions. If you omit a version, the latest will be used.

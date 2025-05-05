@@ -3,7 +3,7 @@ package org.houseofsoft.rest;
 import java.io.Serializable;
 import java.util.Date;
 import javax.annotation.Nullable;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.UriInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

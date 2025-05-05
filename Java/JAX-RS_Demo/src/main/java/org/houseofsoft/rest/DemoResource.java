@@ -8,12 +8,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Request;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.UriInfo;
 
 import static org.houseofsoft.rest.DemoResource.RESOURCE_PATH;
 

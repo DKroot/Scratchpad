@@ -124,7 +124,7 @@ server:
   #  URIEncoding="UTF-8"
   #  acceptCount="100" disableUploadTimeout="true" bindOnInit="false" />
 
-  max-http-header-size: 32768
+  max-http-request-header-size: 32768
 
   tomcat:
     mbeanregistry:

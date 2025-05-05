@@ -9,7 +9,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication // = @Configuration @EnableAutoConfiguration @ComponentScan
 @Data

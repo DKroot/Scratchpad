@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration> <!-- For Logback 1.5+ -->
   <!-- Enable Spring-specific formatting -->
   <include resource="org/springframework/boot/logging/logback/defaults.xml" />
 
@@ -35,7 +35,7 @@
   -->
   <!--suppress LongLine -->
   <property name="HUMAN_FRIENDLY_FORMATTING"
-    value="%clr(%date{yyyy-MM-dd}){faint} %clr(|){faint} %clr(%date{HH:mm:ss.SSS}){faint} %clr(|){faint} %clr(%-5level) %clr(|){faint} %clr(%15.15thread){magenta} %clr(|){faint} %clr(%logger{42}.%method\\(\\)){cyan} %clr(:){faint} %msg%n%wEx"/>
+    value="%clr(%date{yyyy-MM-dd}){faint} %clr(|){faint} %clr(%date{HH:mm:ss.SSS}){faint} %clr(|){faint} %clr(%-5level) %clr(|){faint} %clr(%15.15thread){magenta} %clr(|){faint} %clr(%logger{42}.%method\(\)){cyan} %clr(:){faint} %msg%n%wEx"/>
 
   <appender name="stdoutFormatted" class="ch.qos.logback.core.ConsoleAppender">
     <!-- TODO report: `withJansi="true"` is not working on Windows 10 -->
