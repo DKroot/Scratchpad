@@ -30,12 +30,15 @@ public class AppServerConfiguration {
   @Getter(lazy = true)
   private final String appServerHost = lookupHost();
 
+  @Value("${server.servlet.context-path}")
+  private String contextPath;
+
   @Value("${server.port}")
   private Integer serverPort;
   //endregion
 
-  @Value("${server.servlet.context-path}")
-  private String contextPath;
+  @Value("${spring.jersey.application-path}")
+  private String apiRoot;
 
   @Bean
   public WebServerFactoryCustomizer<TomcatServletWebServerFactory> servletContainer() {

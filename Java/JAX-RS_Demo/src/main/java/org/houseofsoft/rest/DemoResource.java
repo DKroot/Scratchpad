@@ -33,8 +33,8 @@ public class DemoResource implements InitializingBean {
   @Override
   public void afterPropertiesSet() {
     log.info("The Demo resource will be available at http://localhost:{}{}{}{}.",
-        appServerConfiguration.getServerPort(), appServerConfiguration.getContextPath(), JerseyConfig.API_ROOT,
-        RESOURCE_PATH);
+        appServerConfiguration.getServerPort(), appServerConfiguration.getContextPath(),
+        appServerConfiguration.getApiRoot(), RESOURCE_PATH);
   }
 
   /**

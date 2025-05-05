@@ -4,16 +4,13 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.ApplicationPath;
-
 import static org.glassfish.jersey.server.ServerProperties.WADL_FEATURE_DISABLE;
-import static org.houseofsoft.rest.JerseyConfig.API_ROOT;
 
 @Component
-@ApplicationPath(API_ROOT)
+//@ApplicationPath(API_ROOT)
 public class JerseyConfig extends ResourceConfig implements InitializingBean {
 
-  public static final String API_ROOT = "/api";
+  //  public static final String API_ROOT = "/api";
 
   @Override
   public void afterPropertiesSet() {
@@ -24,8 +21,7 @@ public class JerseyConfig extends ResourceConfig implements InitializingBean {
         //endregion
 
         //region Exception mappers
-        GenericExceptionMapper.class,
-        FailedRequestExceptionMapper.class
+        GenericExceptionMapper.class, FailedRequestExceptionMapper.class
         //endregion
     );
 

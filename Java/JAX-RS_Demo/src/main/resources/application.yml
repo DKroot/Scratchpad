@@ -56,10 +56,10 @@ spring:
 
   ### JAX-RS/Jersey ###
 
-  #jersey:
+  jersey:
     # Path that serves as the base URI for the application. Overrides the value of "@ApplicationPath"
     # if specified.
-    # application-path: '/api'
+    application-path: '/api'
 
     # Init parameters to pass to Jersey through the servlet or filter.
     # Disables WADL generation and prevents the JAXB-related warning: did not work here.
