@@ -10,7 +10,6 @@ plugins {
 
   NOTE: temporarily enable `spring-boot-properties-migrator` dependency below after all Sprint Boot upgrades.
   */
-  /* ITASNG-1566, ST, 8/9/2024, updating '2.6.+' to '2.7.+'. */
   id 'org.springframework.boot' version '2.7.+'
 
   // Enables using the `spring-boot-dependencies` BOM and Spring Boot Starters inheriting versions from the BOM
