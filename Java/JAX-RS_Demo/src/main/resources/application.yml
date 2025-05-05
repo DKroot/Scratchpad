@@ -147,10 +147,9 @@ server:
     # `bindOnInit`: N/A
 
   servlet:
-    # REQUIRED Must match proxy context when deployed behind a reverse proxy, e.g. `context-path: "/itasng-dev"`
-    context-path: '/'
+    context-path: ''
 
-  port: 4242
+  port: 4241
 
   # Response compression in the HTTP connector.
   # Note: Ignored for AJP, which doesn't support compression. Compression could be enabled for AJP on the `httpd` proxy.

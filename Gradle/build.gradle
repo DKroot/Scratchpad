@@ -44,16 +44,20 @@ println "Using PATH=${sysPath}"
 
 // Ad-hoc (extra) project properties must be *created* via `[project.]ext.`
 ext.foo = 'foo prop initial value'
-// After that though they can be read and re-written directly on `[project.]`
 println "foo=${foo}"
+
+// After that though they can be read and re-written directly on `[project.]`
 foo = 'foo prop'
 println "foo=${foo}"
 
-def bar = 'bar local var value'
-ext.bar = 'bar prop'
-// Local var shadows (takes precedence over) the project property
-println "bar=${bar}"
-println "project.bar=${project.bar}"
+if (foo) {
+  def bar = 'bar local var value'
+  ext.bar = 'bar prop'
+  // Local var shadows (takes precedence over) the project property
+  println "bar=${bar}"
+  println "project.bar=${project.bar}"
+}
+println "bar ouside of the local block=${bar}"
 
 final def JAVA_VER = 17
 

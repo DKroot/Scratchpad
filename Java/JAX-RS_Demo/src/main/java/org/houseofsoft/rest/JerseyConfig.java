@@ -1,17 +1,33 @@
 package org.houseofsoft.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.ApplicationPath;
 
+import static org.houseofsoft.rest.JerseyConfig.API_ROOT;
+
 @Component
-@ApplicationPath("/api")
-public class JerseyConfig extends ResourceConfig {
+@ApplicationPath(API_ROOT)
+public class JerseyConfig extends ResourceConfig implements InitializingBean {
 
   public static final String API_ROOT = "/api";
 
-  public JerseyConfig() {
-    registerClasses(GenericExceptionMapper.class, FailedRequestExceptionMapper.class);
+  @Override
+  public void afterPropertiesSet() {
+    registerClasses(//
+        //region JAX-RS filter providers
+        //BrowserCacheFilterFeature.class,
+        //LoggingFilter.class,
+        //endregion
+
+        //region Exception mappers
+        GenericExceptionMapper.class,
+        FailedRequestExceptionMapper.class
+        //endregion
+    );
+
+    packages(JerseyConfig.class.getPackage().getName());
   }
 }

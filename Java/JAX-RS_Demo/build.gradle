@@ -104,7 +104,7 @@ dependencies {
   //implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 
   // Starter for using Spring Security
-  implementation 'org.springframework.boot:spring-boot-starter-security'
+  //implementation 'org.springframework.boot:spring-boot-starter-security'
 
   implementation 'org.slf4j:slf4j-api'
   implementation 'org.slf4j:log4j-over-slf4j'
