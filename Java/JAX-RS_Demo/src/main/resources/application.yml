@@ -30,14 +30,14 @@ spring:
   #spring.resources.static-locations=classpath:/META-INF/resources/,classpath:/resources/,
   #classpath:/static/,classpath:/public/
 
-  ## JAX-RS/Jersey ##
+  ## JAX-RS/Jackson ##
 
   # Preferred JSON mapper to use for HTTP message conversion. Set to "gson" to force the use of Gson
   # when both it and Jackson are on the classpath.
   #spring.http.converters.preferred-json-mapper=jackson
 
   jackson:
-    # `SimpleDateFormat` string or a fully-qualified date format class name. A time zone must be included for correct
+    # `SimpleDateFormat` string or a fully qualified date format class name. A time zone must be included for correct
     # format conversions.
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSX
     serialization:
@@ -49,15 +49,22 @@ spring:
       # * DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES is disabled
 
       # Feature that determines whether Date (and date/time) values (and Date-based things like
-      # Calendars) are to be serialized as numeric timestamps (true: default), or as strings (false:
+      # Calendars) are to be serialized as numeric timestamps (true: default) or as strings (false:
       # default if spring.jackson.date-format is specified).
       # If textual representation is used, the actual format is spring.jackson.date-format.
       #spring.jackson.serialization.write-dates-as-timestamps=true
 
-  ### Jersey ###
-  # Path that serves as the base URI for the application. Overrides the value of "@ApplicationPath"
-  # if specified.
-  #spring.jersey.application-path=/api
+  ### JAX-RS/Jersey ###
+
+  #jersey:
+    # Path that serves as the base URI for the application. Overrides the value of "@ApplicationPath"
+    # if specified.
+    # application-path: '/api'
+
+    # Init parameters to pass to Jersey through the servlet or filter.
+    # Disables WADL generation and prevents the JAXB-related warning: did not work here.
+    #init:
+      #jersey.config.server.wadl.disableWadl: true
 
   jmx:
     enabled: true

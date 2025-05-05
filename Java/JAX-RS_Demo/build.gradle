@@ -120,7 +120,8 @@ dependencies {
       3. Automatically restart the app whenever files on the classpath change
       4. Embed `LiveReload` server
   */
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  //TBD Resolve the classpath INFO-level warning
+  //developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
   /*
   Prints diagnostics at startup, but also temporarily migrate properties at runtime for you.

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.ApplicationPath;
 
+import static org.glassfish.jersey.server.ServerProperties.WADL_FEATURE_DISABLE;
 import static org.houseofsoft.rest.JerseyConfig.API_ROOT;
 
 @Component
@@ -29,5 +30,6 @@ public class JerseyConfig extends ResourceConfig implements InitializingBean {
     );
 
     packages(JerseyConfig.class.getPackage().getName());
+    property(WADL_FEATURE_DISABLE, true);
   }
 }
