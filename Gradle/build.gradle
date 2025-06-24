@@ -77,6 +77,20 @@ if (project.ext.has('qux')) {
 def qux = project.ext.has('qux') ? project.ext.qux : 'default'
 println "qux=${qux}"
 
+/**
+ * Converts 'false', 'FALSE', 'False', null, '' to false, everything else to true.
+ */
+static boolean isTruthy(String s) {
+  return s && s.toLowerCase() != 'false'
+}
+
+def boolProp = project.ext.has('boolProp') && isTruthy(project.ext.boolProp as String)
+if (boolProp) {
+  println "Property boolProp is truthy."
+} else {
+  println "Property boolProp is falsy."
+}
+
 final def JAVA_VER = 17
 
 java {
