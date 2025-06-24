@@ -43,21 +43,39 @@ def sysPath = systemEnv.getOrDefault("PATH", systemEnv.Path)
 println "Using PATH=${sysPath}"
 
 // Ad-hoc (extra) project properties must be *created* via `[project.]ext.`
-ext.foo = 'foo prop initial value'
+project.ext.foo = 'foo extra initial value'
 println "foo=${foo}"
+
+/*
+ERROR: `Could not set unknown property 'bar'`
+project.bar = 'bar extra initial value'
+println "bar=${bar}"
+*/
 
 // After that though they can be read and re-written directly on `[project.]`
-foo = 'foo prop'
+foo = 'foo'
 println "foo=${foo}"
 
+def bar = 'bar local var'
+println "bar=${bar}"
+
 if (foo) {
-  def bar = 'bar local var value'
-  ext.bar = 'bar prop'
+  def baz = 'baz local var value'
+  ext.baz = 'baz extra'
   // Local var shadows (takes precedence over) the project property
-  println "bar=${bar}"
-  println "project.bar=${project.bar}"
+  println "baz=${baz}"
+  println "project.baz=${project.baz}"
 }
-println "bar ouside of the local block=${bar}"
+println "baz ouside of the local block=${baz}"
+
+if (project.ext.has('qux')) {
+  println "Property qux=${project.ext.qux}"
+} else {
+  println "Property qux is not defined."
+}
+
+def qux = project.ext.has('qux') ? project.ext.qux : 'default'
+println "qux=${qux}"
 
 final def JAVA_VER = 17
 
@@ -270,17 +288,55 @@ tasks.register('generateConfig') {
   }
 }*/
 
-tasks.register('vars') {
+println "ext.foo=${ext.foo}"
+println "ext.baz=${ext.baz}"
+
+/**
+ * Custom function
+ */
+void fun() {
+  println "fun()>"
+  println "foo=${foo}"
+  /*
+  ERROR: Could not get unknown property 'bar'
+
+  println "bar=${bar}"
+  */
+  println "baz=${baz}"
+}
+
+tasks.register('printVars') {
   group 'Help'
   description 'Prints environment, JVM System Properties and other project info.'
 
-  println ':vars in configuration phase.'
+  println 'task :printVars in configuration phase.'
   println "foo=${foo}"
   println "bar=${bar}"
+  println "baz=${baz}"
+
+  /*
+  Fail: extra properties extension does not exist.
+
+  println "ext.foo=${ext.foo}"
+  println "ext.bar=${ext.bar}"
+  */
 
   doLast {
     println "foo=${foo}"
     println "bar=${bar}"
+    println "baz=${baz}"
+
+    /*
+    Fail: extra properties extension does not exist.
+
+    println "ext.foo=${ext.foo}"
+    println "ext.baz=${ext.baz}"
+    */
+
+    println "project.ext.foo=${project.ext.foo}"
+    println "project.ext.baz=${project.ext.baz}"
+
+    fun()
 
     println '== Environment variables ==\n'
     systemEnv.sort().each { key, value -> println "${key}=${value}"
@@ -298,7 +354,7 @@ tasks.register('vars') {
           project.ext.properties.sort().each { k, v ->
             println "${k}=${v}"
           }
-          println '======'
+          println '=== </Extra Project Properties> ==='
           break
         case 'properties':
           break
@@ -309,4 +365,4 @@ tasks.register('vars') {
   }
 }
 
-defaultTasks = ['execCommands', 'generateConfig', 'vars']
+defaultTasks = ['execCommands', 'generateConfig', 'printVars']
