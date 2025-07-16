@@ -1,3 +1,5 @@
+SELECT 1.0 / 24;
+
 SELECT try_parse('$288,323.1234 ' AS MONEY);
 -- 288323.1234
 

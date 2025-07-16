@@ -15,9 +15,13 @@ PRINT cast(getdate() AS DATE);
 
 -- Yesterday (date/time)
 PRINT getdate() - 1;
+PRINT current_timestamp - 1;
 
 -- Tomorrow
 PRINT getdate() + 1;
+
+-- Minus 1 hour
+PRINT getdate() - (1.0 / 24);
 
 -- Yesterday (date)
 PRINT cast(getdate() - 1 AS DATE);
@@ -25,15 +29,15 @@ PRINT cast(getdate() - 1 AS DATE);
 -- SELECT cast(getdate() AS DATE) - 1;
 
 -- Date/time in the last 24 hours?
-SELECT cast(1 AS BIT) AS last_day
+SELECT cast(1 AS BIT) AS is_in_the_last_24_hours
 WHERE getdate() > getdate() - 1;
 
 -- Date/time is in +/- 24 hours?
-SELECT cast(1 AS BIT) AS plus_minus_day
+SELECT cast(1 AS BIT) AS is_within_plus_minus_24_hours
 WHERE getdate() BETWEEN getdate() - 1 AND getdate() + 1;
 
 -- noinspection SqlRedundantCodeInCoalesce
-SELECT cast(1 AS BIT) AS plus_minus_day
+SELECT cast(1 AS BIT) AS is_within_plus_minus_24_hours
 WHERE getdate() BETWEEN getdate() - 1 AND coalesce(NULL, getdate() + 1);
 
 -- Is the date after '2024-01-01'
@@ -43,7 +47,8 @@ GO
 DECLARE @dt DATETIME = '2021-08-10T21:00:42';
 PRINT format(@dt, 'yyyy-MM-dd HH:mm:ss');
 
-SET @dt = '2021-08-10T21:00:00'; -- Conversion failed: seconds are mandatory
+SET @dt = '2021-08-10T21:00:00';
+-- Conversion failed: seconds are mandatory
 --SET @dt = '2021-08-10T21:00'; -- Conversion failed: seconds are mandatory
 
 PRINT format(@dt, 'yyyy-MM-dd HH:mm:ss');
