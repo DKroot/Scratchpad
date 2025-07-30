@@ -10,11 +10,13 @@
 # to be an exact match between a property name below and a bean property name. Common examples where this is
 # useful include kebab case (e.g. `context-path` binds to `{bean}.contextPath`), and SCREAMING_SNAKE_CASE (e.g. `PORT`
 # binds to `{bean}.port`).
-#
-# Spring Bean-bound leaf configuration properties are resolved by IDEA after the project builds and should be available
-# for navigation via IDEA's `Declaration or Usages` directly from the property names below.
-#
 ---
+demo-app:
+  foo:
+    # YAML single-quoted flow scalar: line breaks and leading whitespace are stripped. Escapes are ignored.
+    message: 'Spring Bean-bound leaf configuration fields should be resolved by IDEA after the project builds and  
+    be navigable to via IDEA''s `Declaration or Usages` from the properties in `application.yml`.'
+
 spring:
   ## Static Web Content ##
   # By default, Spring Boot will serve static content from a directory called /static (or /public or

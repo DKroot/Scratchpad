@@ -1,12 +1,12 @@
 package org.houseofsoft.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import javax.annotation.Nonnull;
 import lombok.Data;
 
+import javax.annotation.Nonnull;
+import java.util.Date;
+
 @Data
-public class DemoResult implements Serializable {
+public class DemoResult {
 
   @Nonnull
   private final Integer dbInt;

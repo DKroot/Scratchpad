@@ -3,15 +3,18 @@ package org.houseofsoft;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.houseofsoft.rest.StartupProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import javax.annotation.Nonnull;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication // = @Configuration @EnableAutoConfiguration @ComponentScan
+@EnableConfigurationProperties(StartupProperties.class)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
@@ -25,7 +28,9 @@ public class Application extends SpringBootServletInitializer {
   public static void main(String[] args) {
     var app = new SpringApplication(Application.class);
 
-    // Start the web server and exit.
+    // ApplicationContextProvider is not initialized yet.
+
+    // Start the web server.
     app.run(args);
   }
 
@@ -36,6 +41,8 @@ public class Application extends SpringBootServletInitializer {
 
   @PostConstruct
   public void onStartup() {
+    // ApplicationContextProvider is not initialized yet.
+
     log.info("The application will be available at http://localhost:{}{}.", appServerConfiguration.getServerPort(),
         appServerConfiguration.getContextPath());
   }

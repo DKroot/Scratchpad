@@ -16,18 +16,22 @@ plugins {
   id 'io.spring.dependency-management' version '1.1.+'
 
   /*
+  Refactored plug-in use to the explicit Spring Boot-managed Lombok dependency.
+    * Pros: managing and upgrading dependency version with Spring Boot.
+    * Cons: minor plug-in functionality (see below) is no longer available.
+  */
+  /*
   Simplifies the use of Lombok and is recommended to use by Lombok.
     * The `javadoc` task is configured to read the delombok-ed sources instead of the actual sources.
 
   For each source set:
-    * Lombok is added to the `annotationProcessor` and `compileOnly` configurations.
+    * Lombok dependency is added to the `annotationProcessor` and `compileOnly` configurations.
     * A `delombok` task is created.
     * `lombok-mapstruct-binding` is added when 'org.mapstruct:mapstruct-processor' is found.
     * The compile tasks will consider the lombok.config(s) in their up-to-date checks.
   */
   // No `.patch` version number components
-  // TBD Resolve the deprecation warning
-  id 'io.freefair.lombok' version '8.11'
+  //id 'io.freefair.lombok' version '8.14' // Lombok 1.18.38
   //endregion
 
   // Information on task metadata and dependencies
@@ -80,52 +84,51 @@ if (logger.isEnabled(LogLevel.INFO)) {
 //endregion
 
 dependencies {
-//region Spring Boot-managed dependencies
+  //region Spring Boot-managed dependencies
   /*
   Versions are specified by the Sprint Boot BOM, which is added by `io.spring.dependency-management`.
   See the list of all managed dependencies here:
   https://docs.spring.io/spring-boot/docs/2.7.18/reference/htmlsingle/#appendix.dependency-versions
   */
-
-  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
   // Core starter, including auto-configuration support, logging and YAML
   implementation 'org.springframework.boot:spring-boot-starter'
 
   // Starter for building RESTful web apps using `JAX-RS` and `Jersey`. An alternative to `spring-boot-starter-web`.
   implementation 'org.springframework.boot:spring-boot-starter-jersey'
 
-  /*
-  Starter to provide the web app servlet, serving static content using Spring MVC and Tomcat as the default
-  embedded container.
-  */
-  implementation 'org.springframework.boot:spring-boot-starter-web'
-  //implementation 'org.springframework.boot:spring-boot-starter-tomcat'
-
-  // Starter for using Spring Security
-  //implementation 'org.springframework.boot:spring-boot-starter-security'
+  // Starter for developer testing with JUnit, Hamcrest and Mockito
+  // `implementation` configuration also enables application use of `MockHttpSession` and `MockHttpServletRequest`
+  implementation 'org.springframework.boot:spring-boot-starter-test'
 
   implementation 'org.slf4j:slf4j-api'
-  implementation 'org.slf4j:log4j-over-slf4j'
-  implementation 'org.apache.commons:commons-lang3'
+  //implementation 'org.slf4j:log4j-over-slf4j'
+  //implementation 'org.apache.commons:commons-lang3'
+
+  //region Lombok
+  compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+  //endregion
+
+  // Get Spring Boot configuration metadata and auto-completion in IDEs
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
   /*
   Spring Boot Developer Tools will be automatically disabled when running a JAR or if the app is started from a
   special classloader.
 
-  Note: Dev Tools will:
+  Dev Tools will:
       1. Disable the Spring caching options by default
       2. Enable DEBUG logging for the web logging group
       3. Automatically restart the app whenever files on the classpath change
       4. Embed `LiveReload` server
   */
-  //TBD Resolve the classpath INFO-level warning
-  //developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-  /*
-  Prints diagnostics at startup, but also temporarily migrate properties at runtime for you.
-  */
-  runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
+  // Spring Boot upgrade tool: prints diagnostics at startup, and also temporarily migrates properties at runtime.
+  //runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
   //endregion
 
   //region Other dependencies: specific (fixed or dynamic) versions. If you omit a version, the latest will be used.
@@ -134,15 +137,36 @@ dependencies {
   // Dynamic version + flavor (e.g. `guava-33.3.1-jre.jar`) can be specified using a version range, but not `.+`.
   implementation 'com.google.guava:guava:[33.3-jre,33.4-jre)'
 
-  // FindBugs: provides null-check annotations
-  implementation 'com.google.code.findbugs:jsr305:3.+'
+  /*
+  OpenAPI 3 + Swagger UI.
 
-  implementation 'io.jsonwebtoken:jjwt-api:0.12.+'
-  runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.+'
-  runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.+'
+  NOTE: Update this dependency version with each Spring Boot .MINOR update.
+  See https://springdoc.org/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot.
+  */
+  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.+'
+  //endregion
 
+  // Backward compatibility support for JUnit 4 tests
+  testImplementation('org.junit.vintage:junit-vintage-engine') {
+    exclude group: 'org.hamcrest', module: 'hamcrest-core'
+  }
   //endregion
 }
+
+//region Upgrades of individual managed dependencies
+// ST, 7/22/2025
+// ITASNG-1758
+// Temporary fix/mitigation to resolve 2x Highs and 2x Medium Tenable findings.
+// Upgrade Spring from 6.0.14
+// Last GA release in 6.0.x
+project.ext['spring-framework.version'] = '6.0.23'
+
+// Upgrade Spring Security from 5.7.11
+//project.ext['spring-security.version']='5.8.16'
+
+// Upgrade Tomcat from 9.0.83
+//project.ext['tomcat.version'] = '9.0.106'
+//endregion
 
 final def JAVA_VER = 17
 
@@ -154,12 +178,21 @@ java {
   */
   toolchain {
     languageVersion = JavaLanguageVersion.of(JAVA_VER)
-    vendor = JvmVendorSpec.AMAZON // optional, defaults to `AdoptOpenJDK`
+    //vendor = JvmVendorSpec.AMAZON // optional, defaults to `AdoptOpenJDK`
   }
 
   consistentResolution {
     useCompileClasspathVersions()
   }
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.incremental = true
+
+  //options.compilerArgs << '-Xlint:-removal,-unchecked'
+  //options.deprecation = true // warns about usage of deprecated members or classes
+  // When false, omit warning details and just print Notes about their existence. Prefer an IDE to work on warnings.
+  options.warnings = false
 }
 
 //region project Java toolchain info
@@ -176,6 +209,20 @@ logger.lifecycle "\nProject toolchain JVM: ${jvm.vendor} ${jvm.javaRuntimeVersio
 // Spring Boot Actuator’s info endpoint automatically publishes information about a build
 springBoot {
   buildInfo()
+  /*
+  {
+    properties {
+			//artifact = 'example-app'
+			//group = 'com.example'
+			//name = 'Example application'
+			//version = version
+      additional = [
+				'a': 'alpha',
+				'b': 'bravo'
+			]
+	  }
+  }
+  */
 }
 
 // The output directory for project's binary artifacts: `itasng.jar` and `itasng.sh` (formerly `project.libsDirectory`)

@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
@@ -28,10 +27,16 @@ public class DemoResource implements InitializingBean {
   //region Beans injected via the `RequiredArgsConstructor`
   @Nonnull
   private final AppServerConfiguration appServerConfiguration;
+
+  @Nonnull
+  private final StartupProperties startupProperties;
   //endregion
 
   @Override
   public void afterPropertiesSet() {
+    log.info("The application configuration (injected): `{}`", startupProperties);
+    log.info("The application configuration (non-Spring context): `{}`", StartupProperties.get());
+
     log.info("The Demo resource will be available at http://localhost:{}{}{}{}.",
         appServerConfiguration.getServerPort(), appServerConfiguration.getContextPath(),
         appServerConfiguration.getApiRoot(), RESOURCE_PATH);
@@ -43,8 +48,7 @@ public class DemoResource implements InitializingBean {
    * @param code an integer
    */
   @GET
-  public DemoResult render(@QueryParam("code") @DefaultValue("35") Integer code, @Context UriInfo uriInfo,
-      @Context Request request) {
+  public DemoResult render(@QueryParam("code") @DefaultValue("35") Integer code, @Context UriInfo uriInfo) {
     switch (code) {
       case 400:
         throw new FailedRequestException(Status.BAD_REQUEST, "This is a bad request", uriInfo, "Details of a problem");

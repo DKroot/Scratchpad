@@ -22,7 +22,6 @@ public class AppServerConfiguration {
   private static final String AJP_DEFAULT_SCHEME = HTTPS_URI_SCHEME;
   private static final int MAX_AJP_PACKET_SIZE = 58368;
 
-  //region Beans injected via the `RequiredArgsConstructor`
   /**
    * Application host name (works inside Docker containers too: returns the actual Linux host running the container).
    * "N/A" if the local host could not be resolved into an address.
@@ -35,7 +34,6 @@ public class AppServerConfiguration {
 
   @Value("${server.port}")
   private Integer serverPort;
-  //endregion
 
   @Value("${spring.jersey.application-path}")
   private String apiRoot;
