@@ -12,6 +12,10 @@
 # binds to `{bean}.port`).
 ---
 demo-app:
+
+  # Prints additional info in a few places
+  debug: 'no'
+
   foo:
     # YAML single-quoted flow scalar: line breaks and leading whitespace are stripped. Escapes are ignored.
     message: 'Spring Bean-bound leaf configuration fields should be resolved by IDEA after the project builds and  

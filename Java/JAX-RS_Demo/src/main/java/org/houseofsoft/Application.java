@@ -3,7 +3,7 @@ package org.houseofsoft;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.houseofsoft.rest.StartupProperties;
+import org.houseofsoft.rest.AppOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication // = @Configuration @EnableAutoConfiguration @ComponentScan
-@EnableConfigurationProperties(StartupProperties.class)
+@EnableConfigurationProperties(AppOptions.class)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Slf4j

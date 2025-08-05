@@ -29,13 +29,13 @@ public class DemoResource implements InitializingBean {
   private final AppServerConfiguration appServerConfiguration;
 
   @Nonnull
-  private final StartupProperties startupProperties;
+  private final AppOptions appOptions;
   //endregion
 
   @Override
   public void afterPropertiesSet() {
-    log.info("The application configuration (injected): `{}`", startupProperties);
-    log.info("The application configuration (non-Spring context): `{}`", StartupProperties.get());
+    log.info("The application configuration (injected): `{}`", appOptions);
+    log.info("The application configuration (non-Spring context): `{}`", AppOptions.get());
 
     log.info("The Demo resource will be available at http://localhost:{}{}{}{}.",
         appServerConfiguration.getServerPort(), appServerConfiguration.getContextPath(),

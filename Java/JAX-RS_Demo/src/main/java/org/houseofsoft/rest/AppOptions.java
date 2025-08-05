@@ -7,14 +7,16 @@ import org.houseofsoft.ApplicationContextProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "demo-app")
+@ConfigurationProperties("demo-app")
 @Data
 @Slf4j
-public class StartupProperties {
-  // Beans can't be injected here via the `@RequiredArgsConstructor` with Spring Boot 3.0+
+public class AppOptions {
+  //region Beans can't be injected here via `@RequiredArgsConstructor` with Spring Boot 3.0+
   @Autowired
   private AppServerConfiguration appServerConfiguration;
   //endregion
+
+  private String debug;
 
   private final FooProperties foo = new FooProperties();
 
@@ -29,7 +31,7 @@ public class StartupProperties {
    *
    * @return initialized bean
    */
-  public static StartupProperties get() {
-    return ApplicationContextProvider.getBean(StartupProperties.class);
+  public static AppOptions get() {
+    return ApplicationContextProvider.getBean(AppOptions.class);
   }
 }
