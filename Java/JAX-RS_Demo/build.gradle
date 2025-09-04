@@ -10,7 +10,7 @@ plugins {
 
   NOTE: temporarily enable `spring-boot-properties-migrator` dependency below after all Sprint Boot upgrades.
   */
-  id 'org.springframework.boot' version '3.0.+'
+  id 'org.springframework.boot' version '3.4.+'
 
   // Enables using the `spring-boot-dependencies` BOM and Spring Boot Starters inheriting versions from the BOM
   id 'io.spring.dependency-management' version '1.1.+'
@@ -116,14 +116,13 @@ dependencies {
   annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
   /*
-  Spring Boot Developer Tools will be automatically disabled when running a JAR or if the app is started from a
-  special classloader.
+  Spring Boot Developer Tools.
+    1. Disable the Spring caching options by default.
+    2. Enable DEBUG logging for the web logging group.
+    3. Automatically restart the app whenever files on the classpath change.
+    4. Embed `LiveReload` server.
 
-  Dev Tools will:
-      1. Disable the Spring caching options by default
-      2. Enable DEBUG logging for the web logging group
-      3. Automatically restart the app whenever files on the classpath change
-      4. Embed `LiveReload` server
+  `developmentOnly` dependencies are automatically excluded from an executable JAR.
   */
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -137,13 +136,10 @@ dependencies {
   // Dynamic version + flavor (e.g. `guava-33.3.1-jre.jar`) can be specified using a version range, but not `.+`.
   implementation 'com.google.guava:guava:[33.3-jre,33.4-jre)'
 
-  /*
-  OpenAPI 3 + Swagger UI.
-
-  NOTE: Update this dependency version with each Spring Boot .MINOR update.
-  See https://springdoc.org/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot.
-  */
-  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.+'
+  // OpenAPI 3 for JAX-RS
+  implementation 'org.springdoc:springdoc-openapi-jaxrs:1.8.+'
+  // Swagger UI
+  implementation 'org.springdoc:springdoc-openapi-ui:1.8.+'
   //endregion
 
   // Backward compatibility support for JUnit 4 tests
@@ -154,21 +150,17 @@ dependencies {
 }
 
 //region Upgrades of individual managed dependencies
-// ST, 7/22/2025
-// ITASNG-1758
-// Temporary fix/mitigation to resolve 2x Highs and 2x Medium Tenable findings.
-// Upgrade Spring from 6.0.14
-// Last GA release in 6.0.x
-project.ext['spring-framework.version'] = '6.0.23'
+// Upgrade Spring Framework from the Spring Boot 3.4.9-managed version:
+//project.ext['spring-framework.version']='6.2.10'
 
-// Upgrade Spring Security from 5.7.11
-//project.ext['spring-security.version']='5.8.16'
+// Upgrade Spring Security from the Spring Boot 3.4.9-managed version:
+//project.ext['spring-security.version']='6.4.9'
 
-// Upgrade Tomcat from 9.0.83
-//project.ext['tomcat.version'] = '9.0.106'
+// Upgrade Tomcat from from the Spring Boot 3.4.9-managed version:
+//project.ext['tomcat.version']='10.1.44'
 //endregion
 
-final def JAVA_VER = 17
+final def JAVA_VER = 21
 
 java {
   /*

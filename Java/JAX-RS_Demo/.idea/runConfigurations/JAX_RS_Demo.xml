@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="JAX-RS_Demo" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ENABLE_JMX_AGENT" value="false" />
+    <module name="jax-rs-demo.main" />
+    <option name="PASS_PARENT_ENVS" value="false" />
+    <selectedOptions>
+      <option name="environmentVariables" />
+    </selectedOptions>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.houseofsoft.Application" />
+    <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndTriggerFile" />
+    <method v="2">
+      <option name="MakeProject" enabled="true" />
+      <option name="LaunchBrowser.Before.Run" browser="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" url="http://localhost:4241/api/demo" />
+    </method>
+  </configuration>
+</component>

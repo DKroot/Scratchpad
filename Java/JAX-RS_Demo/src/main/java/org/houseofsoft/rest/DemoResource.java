@@ -1,13 +1,14 @@
 package org.houseofsoft.rest;
 
+//import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.houseofsoft.AppServerConfiguration;
 import org.houseofsoft.domain.DemoResult;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -21,7 +22,8 @@ import static org.houseofsoft.rest.DemoResource.RESOURCE_PATH;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class DemoResource implements InitializingBean {
+//@Api(tags = "Demo API", description = "Demo API endpoints")
+public class DemoResource {
   static final String RESOURCE_PATH = "/demo";
 
   //region Beans injected via the `RequiredArgsConstructor`
@@ -32,8 +34,8 @@ public class DemoResource implements InitializingBean {
   private final AppOptions appOptions;
   //endregion
 
-  @Override
-  public void afterPropertiesSet() {
+  @PostConstruct
+  public void init() {
     log.info("The application configuration (injected): `{}`", appOptions);
     log.info("The application configuration (non-Spring context): `{}`", AppOptions.get());
 
@@ -50,15 +52,13 @@ public class DemoResource implements InitializingBean {
   @GET
   public DemoResult render(@QueryParam("code") @DefaultValue("35") Integer code, @Context UriInfo uriInfo) {
     switch (code) {
-      case 400:
-        throw new FailedRequestException(Status.BAD_REQUEST, "This is a bad request", uriInfo, "Details of a problem");
-      case 401:
-        throw new FailedRequestException(Status.UNAUTHORIZED, "This is not authorized", uriInfo);
-      case 403:
-        throw new FailedRequestException(Status.FORBIDDEN, "This is forbidden");
-      case 500:
-        throw new RuntimeException("Unexpected error!");
+      case 400 -> throw new FailedRequestException(Status.BAD_REQUEST, "This is a bad request", uriInfo, "Details of a problem");
+      case 401 -> throw new FailedRequestException(Status.UNAUTHORIZED, "This is not authorized", uriInfo);
+      case 403 -> throw new FailedRequestException(Status.FORBIDDEN, "This is forbidden");
+      case 500 -> throw new RuntimeException("Unexpected error!");
+      default -> {
+        return new DemoResult(42, "foo");
+      }
     }
-    return new DemoResult(1, "foo");
   }
 }
