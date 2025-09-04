@@ -135,11 +135,6 @@ dependencies {
   // Google Guava: a common-purpose library
   // Dynamic version + flavor (e.g. `guava-33.3.1-jre.jar`) can be specified using a version range, but not `.+`.
   implementation 'com.google.guava:guava:[33.3-jre,33.4-jre)'
-
-  // OpenAPI 3 for JAX-RS
-  implementation 'org.springdoc:springdoc-openapi-jaxrs:1.8.+'
-  // Swagger UI
-  implementation 'org.springdoc:springdoc-openapi-ui:1.8.+'
   //endregion
 
   // Backward compatibility support for JUnit 4 tests

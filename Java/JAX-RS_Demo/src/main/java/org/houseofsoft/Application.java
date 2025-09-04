@@ -28,8 +28,6 @@ public class Application extends SpringBootServletInitializer {
   public static void main(String[] args) {
     var app = new SpringApplication(Application.class);
 
-    // ApplicationContextProvider is not initialized yet.
-
     // Start the web server.
     app.run(args);
   }
