@@ -44,9 +44,9 @@ if [[ ! $2 ]]; then
   echo "Argument 2 is blank or undefined"
 fi
 
-echo "All arguments (double-quoted): \$* = $*"
+echo "All arguments: \$* = $*"
 __IFS="$IFS"; IFS=';'
-echo "All arguments (double-quoted): IFS=';' \$* = $*"
+echo "All arguments: IFS=';' \$* = $*"
 IFS="$__IFS"
 
 cat <<'HEREDOC'
@@ -56,7 +56,11 @@ HEREDOC
 printf "%s\n" "$@"
 echo '-----'
 
-# Intermediate array is required in order to be indexed
+printf "All arguments, double-quoted: "
+printf '"%s" ' "$@"
+echo
+
+# An intermediate array is required for indexing
 args=("$@")
 if (($# > 0)); then
   tail="${args[$#- 1]}"
