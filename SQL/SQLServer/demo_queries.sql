@@ -24,3 +24,21 @@ WHERE group_id = 2;
 
 SELECT *
 FROM #demo_cursors dc;
+
+WITH sample_data AS (
+  SELECT *
+  FROM (
+    VALUES --
+      (1, 1, 2001, 'San Francisco'),
+      (2, 1, 2009, 'Chicago'),
+      (3, 1, 2009, 'New Orleans'),
+      (4, 2, 2006, 'Washington'),
+      (5, 2, 2007, 'New York'),
+      (6, 3, 2008, 'Seattle')
+  ) AS sample_data(tour_id, group_id, year, city)
+)
+SELECT tour_id, group_id, (
+  SELECT max(year)
+  FROM sample_data
+) AS latest_year, city
+FROM sample_data;

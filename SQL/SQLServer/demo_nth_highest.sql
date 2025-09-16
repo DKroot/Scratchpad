@@ -1,5 +1,5 @@
 -- 3 latest years
-SELECT DISTINCT TOP (3) year
+SELECT DISTINCT TOP 3 year
 FROM (
   VALUES --
     (1, 1, 2001, 'San Francisco'),
@@ -12,9 +12,9 @@ FROM (
 ORDER BY year DESC;
 
 -- 2nd latest year
-SELECT TOP (1) year
+SELECT TOP 1 year
 FROM (
-  SELECT DISTINCT TOP (2) year
+  SELECT DISTINCT TOP 2 year
   FROM (
     VALUES --
       (1, 1, 2001, 'San Francisco'),
