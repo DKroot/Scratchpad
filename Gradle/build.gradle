@@ -91,7 +91,7 @@ if (logger.isEnabled(LogLevel.LIFECYCLE)) {
 }
 //endregion
 
-// The output directory for project's binary artifacts: `itasng.jar` and `itasng.sh` (formerly `libsDirectory`)
+// The output directory for project's binary artifacts. It doesn't have to exist initially.
 def binDir = layout.buildDirectory.dir('libs')
 
 // Ad-hoc (extra) project properties must be *created* via `[project.]ext.`
@@ -302,18 +302,27 @@ tasks.register('execCommands') {
 }
 
 tasks.register('generateConfig') {
+  final def REQUIRED_VARS = ['CUSTOM_PROP']
+
   def configFileSource = 'config/example.service'
+  def props = [CUSTOM_PROP: '']
   def generatedConfigDir =  layout.buildDirectory.dir('generated')
-  Map<String, String> props = project.properties
+
+  inputs.property 'systemEnv', systemEnv
+  inputs.files configFileSource
+
+  outputs.file generatedConfigDir.get().file('example.service')
 
   doLast {
+    println "The output directory=${generatedConfigDir.get()}"
+
+    /*
     println("\n== Project Properties ==\n")
     for (def var in props.sort()) {
       println "${var.key}=${var.value}"
     }
-
-    def requiredVars = ['CUSTOM_PROP']
-    for (def requiredVar in requiredVars) {
+    */
+    for (def requiredVar in REQUIRED_VARS) {
       assert systemEnv.containsKey(requiredVar): "`$requiredVar` is not set in the environment"
       props[requiredVar] = systemEnv[requiredVar]
     }
