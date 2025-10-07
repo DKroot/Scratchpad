@@ -92,7 +92,7 @@ if (logger.isEnabled(LogLevel.LIFECYCLE)) {
 //endregion
 
 // The output directory for project's binary artifacts: `itasng.jar` and `itasng.sh` (formerly `libsDirectory`)
-def binDir = layout.buildDirectory.dir('libs').get()
+def binDir = layout.buildDirectory.dir('libs')
 
 // Ad-hoc (extra) project properties must be *created* via `[project.]ext.`
 project.ext.foo = 'foo extra initial value'
@@ -304,7 +304,7 @@ tasks.register('execCommands') {
 tasks.register('generateConfig') {
   def configFileSource = 'config/example.service'
   def generatedConfigDir =  layout.buildDirectory.dir('generated')
-  def props = project.properties
+  Map<String, String> props = project.properties
 
   doLast {
     println("\n== Project Properties ==\n")
@@ -387,7 +387,7 @@ tasks.register('printVars') {
     def logLevel = gradle.startParameter.logLevel
     println "Current logging level=${logLevel}"
     println "Project build directory=${layout.buildDirectory.get()}"
-    println "Binary output directory=${binDir}"
+    println "Binary output directory=${binDir.get()}"
 
     println '\n## Gradle JVM properties ##\n'
     System.properties.sort().each { key, value -> println "${key}=${value}"

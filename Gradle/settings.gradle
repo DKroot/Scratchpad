@@ -1,1 +1,40 @@
-rootProject.name = 'gradle_scratchpad'
+/*
+This settings file is used to specify settings that are used for all projects in the build.
+*/
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+plugins {
+    // This plugin must be applied in the settings, not the build script.
+    // See https://docs.gradle.com/enterprise/gradle-plugin/#applying_the_plugin
+    id 'com.gradle.develocity' version '4.2.+'
+}
+
+/*
+Build scans should be useful primarily for troubleshooting and build tuning.
+Create and publish a scan by running any build with `--scan`, e.g. `gradlew assemble --scan`.
+*/
+develocity {
+  //noinspection GrUnresolvedAccess
+  buildScan {
+    termsOfUseUrl = 'https://gradle.com/help/legal-terms-of-use'
+    termsOfUseAgree = 'yes'
+    // publish Build Scans when explicitly requested (`--scan`)
+    //noinspection GrUnresolvedAccess
+    publishing.onlyIf { false }
+    /*
+    By default, Build Scans are uploaded in the background after the build has finished. This allows the build to
+    finish sooner, but can be problematic in build environments (e.g. ephemeral CI agents) that terminate as soon as
+    the build is finished, as the upload may be terminated before it completes.
+    */
+    uploadInBackground = false
+  }
+}
+
+// build-info: `build.name`
+//rootProject.name = ''
