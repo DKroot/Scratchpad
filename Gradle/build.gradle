@@ -1,46 +1,98 @@
 /*
 ## Main tasks ##
-
-  main                        demo different Gradle features
+* main                        demo different Gradle features
 
 ## Informational tasks ##
-
-  vars (v)                    shows environment variables and JVM System Properties
-
-  properties (prop)           shows project properties
-
-  dependencies (depe)         shows dependency trees for all configurations
+*  vars (v)                    shows environment variables and JVM System Properties
+*  properties (prop)           shows project properties
+*  dependencies (depe)         shows dependency trees for all configurations
     Options:
       --configuration {dependency-configuration-name}
-
-  buildEnvironment (bE)       shows dependency tree for plugins
-
-  tiTree {task}               shows the task dependencies as a tree
-
-  tiOrder {task1} ...         shows order of all would be executed tasks
+*  buildEnvironment (bE)       shows dependency tree for plugins
+*  tiTree {task}               shows the task dependencies as a tree
+*  tiOrder {task1} ...         shows order of all would be executed tasks
 
 ## Common options ##
-
-  --info                      show detailed progress. Recommended for `docker`.
-
-  --scan                      create a Gradle build scan diagnostics, published to the Gradle-hosted website
+* --info                      show detailed progress. Recommended for `docker`.
+* --scan                      create a Gradle build scan diagnostics, published to the Gradle-hosted website
 */
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  // Make the `javax.inject API` available for the build script itself.
+  dependencies {
+    classpath 'javax.inject:javax.inject:1'
+  }
+}
 
 plugins {
   id 'base'
   id 'java'
 
-  id 'de.qualersoft.jmeter' version '2.4.+'
-
   // Prints task metadata and dependency information
   id 'org.barfuin.gradle.taskinfo' version '2.2.+'
 }
 
-println "Built by Gradle ${gradle.gradleVersion} (${gradle.gradleHomeDir})"
+
+import org.apache.tools.ant.util.TeeOutputStream
+
+import javax.inject.Inject
+
+interface ExecOps {
+  @Inject
+  ExecOperations getExecOps()
+}
+
+/*
+interface FsOps {
+  @Inject
+  FileSystemOperations getFsOps()
+}
+*/
+
+//region Startup Info
 def systemEnv = System.getenv()
-// a Java Map of env. vars
-def sysPath = systemEnv.getOrDefault("PATH", systemEnv.Path)
-println "Using PATH=${sysPath}"
+
+// Potential `os` values: `Linux`, `Mac OS X`, `Windows 11`, `Windows Server 2019`
+def os = System.getProperty('os.name')
+project.ext.isLinux = (os.contains('Linux'))
+project.ext.isWindows = (os.contains('Windows'))
+
+if (logger.isEnabled(LogLevel.LIFECYCLE)) {
+  print "Built by Gradle ${gradle.gradleVersion} on "
+  if (project.ext.isLinux) {
+    print 'Linux'
+  } else if (project.ext.isWindows) {
+    print 'Windows'
+  } else {
+    print os
+  }
+  println " @ ${gradle.gradleHomeDir}"
+  if (logger.isEnabled(LogLevel.DEBUG)) {
+    def execOps = project.objects.newInstance(ExecOps).execOps
+    println 'By the OS user:'
+    if (project.ext.isWindows) {
+      execOps.exec {
+        commandLine 'whoami', '/user'
+      }
+    } else {
+      execOps.exec {
+        commandLine 'id'
+      }
+    }
+  }
+
+  // `System.properties['java.vendor.version']` may point to a JVM different from Gradle's
+  logger.lifecycle "Gradle is running on: ${System.properties['java.vendor']} ${System.properties['java.vm.version']}" +
+      " @ ${System.properties['java.home']}"
+}
+//endregion
+
+// The output directory for project's binary artifacts: `itasng.jar` and `itasng.sh` (formerly `libsDirectory`)
+def binDir = layout.buildDirectory.dir('libs').get()
 
 // Ad-hoc (extra) project properties must be *created* via `[project.]ext.`
 project.ext.foo = 'foo extra initial value'
@@ -84,24 +136,31 @@ static boolean isTruthy(String s) {
   return s && s.toLowerCase() != 'false'
 }
 
-def boolProp = project.ext.has('boolProp') && isTruthy(project.ext.boolProp as String)
+/**
+ * Checks that the extra property is not absent/null, 'false' (case-insensitive), or ''.
+ */
+boolean isTruthyProp(String prop) {
+  project.ext.has(prop) && isTruthy(project.ext[prop] as String)
+}
+
+def boolProp = isTruthyProp('boolProp')
 if (boolProp) {
   println "Property boolProp is truthy."
 } else {
   println "Property boolProp is falsy."
 }
 
-final def JAVA_VER = 17
+final def JAVA_VER = 21
 
 java {
   /*
-  Set up all compile, test and javadoc tasks to use the defined toolchain which may be different than the one Gradle
-  itself uses. Gradle detects locally installed JVMs and chooses a JRE/JDK matching the requirements. If no match is
-  found, it will automatically download it from a specified vendor.
+  Set up all compile, test and javadoc tasks to use the defined Java toolchain which may be different than the one
+  Gradle itself uses. Locally installed JVMs are detected and JRE/JDK matching the requirements below is chosen. If no
+  match is found, Gradle will automatically download and use the right JDK from a specified vendor.
   */
   toolchain {
     languageVersion = JavaLanguageVersion.of(JAVA_VER)
-    vendor = JvmVendorSpec.AMAZON // optional, defaults to `AdoptOpenJDK`
+    //vendor = JvmVendorSpec.AMAZON // optional, defaults to `AdoptOpenJDK`
   }
 
   consistentResolution {
@@ -120,18 +179,6 @@ allprojects {
   }
 }
 
-import javax.inject.Inject
-
-interface ExecOps {
-  @Inject
-  ExecOperations getExecOps()
-}
-
-interface FsOps {
-  @Inject
-  FileSystemOperations getFsOps()
-}
-
 tasks.register('myExec', Exec) {
   doFirst { // Prologue
     println "\nmyExec: Executing a command"
@@ -145,9 +192,6 @@ tasks.register('myExec', Exec) {
     println '====='
   }
 }
-
-import org.apache.tools.ant.util.TeeOutputStream
-
 /**
  * Executes command, tees and captures stdout
  *
@@ -160,9 +204,9 @@ String runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
     execOps.exec {
-      commandLine cmdLineArgs
-      standardOutput new TeeOutputStream(System.out, cmdStdOut)
-      ignoreExitValue suppressFailures
+      commandLine = cmdLineArgs
+      standardOutput = new TeeOutputStream(System.out, cmdStdOut)
+      ignoreExitValue = suppressFailures
     }
     cmdStdOut.toString()
   }
@@ -180,10 +224,10 @@ Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs) {
   new ByteArrayOutputStream().withStream { cmdStdOut ->
     new ByteArrayOutputStream().withStream { cmdStdErr ->
       execOps.exec {
-        commandLine cmdLineArgs
-        standardOutput new TeeOutputStream(System.out, cmdStdOut)
-        errorOutput new TeeOutputStream(System.err, cmdStdErr)
-        ignoreExitValue true
+        commandLine = cmdLineArgs
+        standardOutput = new TeeOutputStream(System.out, cmdStdOut)
+        errorOutput = new TeeOutputStream(System.err, cmdStdErr)
+        ignoreExitValue = true
       }
       new Tuple2<>(cmdStdOut.toString(), cmdStdErr.toString())
     }
@@ -198,7 +242,7 @@ tasks.register('execCommands') {
     println '====='
     def result = execOps.exec {
       commandLine 'ls', 'foo'
-      ignoreExitValue true
+      ignoreExitValue = true
     }
     println "Completed with the exit code: ${result.exitValue}"
     println '====='
@@ -208,9 +252,9 @@ tasks.register('execCommands') {
     new ByteArrayOutputStream().withStream { cmdStdOut ->
       new ByteArrayOutputStream().withStream { cmdStdErr ->
         execOps.exec {
-          commandLine 'ls', '-l'
-          standardOutput cmdStdOut
-          errorOutput cmdStdErr
+          commandLine = ['ls', '-l']
+          standardOutput = cmdStdOut
+          errorOutput = cmdStdErr
         }
         println '===== stdout:'
         print cmdStdOut
@@ -228,8 +272,8 @@ tasks.register('execCommands') {
       new ByteArrayOutputStream().withStream { cmdStdErr ->
         execOps.exec {
           commandLine cmdLineArgs
-          standardOutput new TeeOutputStream(System.out, cmdStdOut)
-          errorOutput new TeeOutputStream(System.err, cmdStdErr)
+          standardOutput = new TeeOutputStream(System.out, cmdStdOut)
+          errorOutput = new TeeOutputStream(System.err, cmdStdErr)
         }
         println '===== Captured stdout:'
         print cmdStdOut
@@ -243,12 +287,12 @@ tasks.register('execCommands') {
     println '====='
     def cmdOutput = runAndCaptureStdOutStdErr(['ls', 'foo'])
     println '===== Captured stdout:'
-    print cmdOutput.first
+    print cmdOutput.v1
     println '===== Captured stderr:'
-    print cmdOutput.second
+    print cmdOutput.v2
     println '====='
 
-    println "\nExecuting a command andπ teeing stdout via generic function"
+    println "\nExecuting a command and teeing stdout via generic function"
     println '====='
     def cmdStdOut = runAndCaptureStdOut(['ls', '-l'])
     println '===== Captured stdout:'
@@ -259,48 +303,29 @@ tasks.register('execCommands') {
 
 tasks.register('generateConfig') {
   def configFileSource = 'config/example.service'
-  def generatedConfigDir = "${buildDir}/generated"
+  def generatedConfigDir =  layout.buildDirectory.dir('generated')
+  def props = project.properties
 
   doLast {
-    def requiredVars = ['custom_prop']
-    for (def requiredVar in requiredVars) {
-      assert systemEnv.containsKey(requiredVar): "`$requiredVar` is not set in the environment"
-      project.ext[requiredVar] = systemEnv[requiredVar]
-    }
-
     println("\n== Project Properties ==\n")
-    for (def var in project.properties.sort()) {
+    for (def var in props.sort()) {
       println "${var.key}=${var.value}"
     }
 
-    // Can't do filtering copy directly into the target: it requires sudo
+    def requiredVars = ['CUSTOM_PROP']
+    for (def requiredVar in requiredVars) {
+      assert systemEnv.containsKey(requiredVar): "`$requiredVar` is not set in the environment"
+      props[requiredVar] = systemEnv[requiredVar]
+    }
+
     copy {
       from "${configFileSource}"
-      into "${generatedConfigDir}"
-      expand(project.properties)
-      // TODO report. Blows up for an unclear reason.
-      //            expand(systemEnv)
+      into generatedConfigDir
+      expand(props)
       filteringCharset = 'UTF-8'
-      //            eachFile { println "${it.file} => ${generatedConfigDir}/" }
     }
   }
 }
-
-/*tasks.register('setFilePermissions') {
-  def fsOps = project.objects.newInstance(FsOps).fsOps
-  doLast {
-    //def fsOps = project.getExtensions().getByType(FileSystemOperations)
-    def file = file('gradlew.bat')
-    fsOps.filePermissions {
-      files = file('gradlew.bat')
-      user {
-        read = true
-        execute = true
-      }
-      other.execute = false
-    }
-  }
-}*/
 
 println "ext.foo=${ext.foo}"
 println "ext.baz=${ext.baz}"
@@ -320,13 +345,15 @@ void fun() {
 }
 
 tasks.register('printVars') {
-  group 'Help'
-  description 'Prints environment, JVM System Properties and other project info.'
+  group = 'Help'
+  description = 'Prints environment, JVM System Properties and other project info.'
 
   println 'task :printVars in configuration phase.'
   println "foo=${foo}"
   println "bar=${bar}"
   println "baz=${baz}"
+
+  def pe = project.ext
 
   /*
   Fail: extra properties extension does not exist.
@@ -347,35 +374,33 @@ tasks.register('printVars') {
     println "ext.baz=${ext.baz}"
     */
 
-    println "project.ext.foo=${project.ext.foo}"
-    println "project.ext.baz=${project.ext.baz}"
+    println "project.ext.foo=${pe.foo}"
+    println "project.ext.baz=${pe.baz}"
 
     fun()
 
-    println '== Environment variables ==\n'
-    systemEnv.sort().each { key, value -> println "${key}=${value}"
-    }
+    println '\n## Project Extra Properties ##\n'
+    pe.properties.sort().each { key, value -> println "${key}=${value}" }
+    println "Is `overwriteReleaseImage` truthy: ${isTruthyProp('overwriteReleaseImage')}"
 
-    println '\n== JVM System Properties ==\n'
+    println '\n## Gradle variables ##\n'
+    def logLevel = gradle.startParameter.logLevel
+    println "Current logging level=${logLevel}"
+    println "Project build directory=${layout.buildDirectory.get()}"
+    println "Binary output directory=${binDir}"
+
+    println '\n## Gradle JVM properties ##\n'
     System.properties.sort().each { key, value -> println "${key}=${value}"
     }
 
-    println '\n== Project Properties ==\n'
-    project.properties.sort().each { key, value ->
-      switch (key) {
-        case 'ext':
-          println '=== Extra Project Properties ==='
-          project.ext.properties.sort().each { k, v ->
-            println "${k}=${v}"
-          }
-          println '=== </Extra Project Properties> ==='
-          break
-        case 'properties':
-          break
-        default:
-          println "${key}=${value}"
-      }
+    println '\n## Environment variables ##\n'
+    systemEnv.sort().each { key, value -> println "${key}=${value}"
     }
+
+    /*
+    println '\n## Node.js executable ##\n'
+    println project.ext.nodeExecutableFile.get()
+    */
   }
 }
 
