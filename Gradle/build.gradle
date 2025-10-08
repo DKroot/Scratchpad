@@ -13,7 +13,7 @@
 ## Common options ##
 * --info                      show detailed progress. Recommended for `docker`.
 * --scan                      create a Gradle build scan diagnostics, published to the Gradle-hosted website
-* --dry-run                   run the builds with all task actions disabled
+* --dry-run                   run the build with all task actions disabled
 * --task-graph                print task graph instead of executing tasks
 */
 
