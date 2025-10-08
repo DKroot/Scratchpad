@@ -9,12 +9,12 @@
     Options:
       --configuration {dependency-configuration-name}
 *  buildEnvironment (bE)       shows dependency tree for plugins
-*  tiTree {task}               shows the task dependencies as a tree
-*  tiOrder {task1} ...         shows order of all would be executed tasks
 
 ## Common options ##
 * --info                      show detailed progress. Recommended for `docker`.
 * --scan                      create a Gradle build scan diagnostics, published to the Gradle-hosted website
+* --dry-run                   run the builds with all task actions disabled
+* --task-graph                print task graph instead of executing tasks
 */
 
 buildscript {
@@ -32,8 +32,10 @@ plugins {
   id 'base'
   id 'java'
 
-  // Prints task metadata and dependency information
-  id 'org.barfuin.gradle.taskinfo' version '2.2.+'
+  //region Client-side stack
+  // (automatically downloaded) `Node.js` and `npm` support
+  id 'com.github.node-gradle.node' version '7.1.+'
+  //endregion
 }
 
 
@@ -179,6 +181,34 @@ allprojects {
   }
 }
 
+/**
+ * Detects and returns the path to the Node.js executable depending on the current OS.
+ * The method assumes that Node.js is already set up through the `nodeSetup` task.
+ *
+ * @return RegularFile pointing to the node executable (`node.exe` on Windows, `node` on Unix-like systems)
+ */
+RegularFile detectNodeExecutable() {
+  //dependsOn nodeSetup
+  node.resolvedNodeDir.file(project.ext.isWindows ? 'node.exe' : 'bin/node').get()
+}
+
+/**
+ * Executes an OS command
+ *
+ * @param cmdLineArgs An array of the command line args, e.g., {@code ['/bin/echo', 'hello world']}
+ * @param suppressFailures Whether to ignore (continue after) failed commands, defaults to false
+ * @param extraEnvVars A map of additional environment variables to pass: {@code ['VAR1': 'value1', 'VAR2': 'value2']}
+ */
+ExecResult run(cmdLineArgs, suppressFailures = false, Map<String, ?> extraEnvVars = [:]) {
+  def execOps = project.objects.newInstance(ExecOps).execOps
+  logger.lifecycle "${projectDir}> `${cmdLineArgs.join ' '}`"
+  execOps.exec {
+    commandLine = cmdLineArgs
+    environment(extraEnvVars)
+    ignoreExitValue = suppressFailures
+  }
+}
+
 tasks.register('myExec', Exec) {
   doFirst { // Prologue
     println "\nmyExec: Executing a command"
@@ -218,7 +248,7 @@ String runAndCaptureStdOut(cmdLineArgs, suppressFailures = false) {
  * @param cmdLineArgs
  * @return a tuple of captured stdout + captured stderr
  */
-Tuple2<String, String> runAndCaptureStdOutStdErr(cmdLineArgs) {
+Tuple2<String, String> runAndTeeStdOutStdErr(cmdLineArgs) {
   def execOps = project.objects.newInstance(ExecOps).execOps
   println "${projectDir}> `${cmdLineArgs.join ' '}`"
   new ByteArrayOutputStream().withStream { cmdStdOut ->
@@ -240,10 +270,7 @@ tasks.register('execCommands') {
   doLast {
     println "\nexecCommands: Executing a command and suppressing a failure"
     println '====='
-    def result = execOps.exec {
-      commandLine 'ls', 'foo'
-      ignoreExitValue = true
-    }
+    def result = run(['bash', '-c', 'set'], true, [FOO: 'BAR'])
     println "Completed with the exit code: ${result.exitValue}"
     println '====='
 
@@ -265,7 +292,7 @@ tasks.register('execCommands') {
     }
 
     def cmdLineArgs = ['ls', '-l']
-    println "\nExecuting a command and teeing stdout and stderr"
+    println "\nExecuting a command and teeing stdout and stderr. It should stop on errors."
     println '====='
     println "<main>: ${projectDir}> `${cmdLineArgs.join ' '}`"
     new ByteArrayOutputStream().withStream { cmdStdOut ->
@@ -285,7 +312,7 @@ tasks.register('execCommands') {
 
     println "\nExecuting a command with error suppression and teeing stdout and stderr via generic function"
     println '====='
-    def cmdOutput = runAndCaptureStdOutStdErr(['ls', 'foo'])
+    def cmdOutput = runAndTeeStdOutStdErr(['ls', 'bar'])
     println '===== Captured stdout:'
     print cmdOutput.v1
     println '===== Captured stderr:'
@@ -306,7 +333,7 @@ tasks.register('generateConfig') {
 
   def configFileSource = 'config/example.service'
   def props = [CUSTOM_PROP: '']
-  def generatedConfigDir =  layout.buildDirectory.dir('generated')
+  def generatedConfigDir = layout.buildDirectory.dir('generated')
 
   inputs.property 'systemEnv', systemEnv
   inputs.files configFileSource
@@ -316,12 +343,6 @@ tasks.register('generateConfig') {
   doLast {
     println "The output directory=${generatedConfigDir.get()}"
 
-    /*
-    println("\n== Project Properties ==\n")
-    for (def var in props.sort()) {
-      println "${var.key}=${var.value}"
-    }
-    */
     for (def requiredVar in REQUIRED_VARS) {
       assert systemEnv.containsKey(requiredVar): "`$requiredVar` is not set in the environment"
       props[requiredVar] = systemEnv[requiredVar]
@@ -357,12 +378,15 @@ tasks.register('printVars') {
   group = 'Help'
   description = 'Prints environment, JVM System Properties and other project info.'
 
+  dependsOn nodeSetup
+
   println 'task :printVars in configuration phase.'
   println "foo=${foo}"
   println "bar=${bar}"
   println "baz=${baz}"
 
-  def pe = project.ext
+  def props = project.properties
+  def extProps = project.extensions.extraProperties.properties
 
   /*
   Fail: extra properties extension does not exist.
@@ -383,14 +407,17 @@ tasks.register('printVars') {
     println "ext.baz=${ext.baz}"
     */
 
-    println "project.ext.foo=${pe.foo}"
-    println "project.ext.baz=${pe.baz}"
+    println "project.ext.foo=${extProps.foo}"
+    println "project.ext.baz=${extProps.baz}"
 
     fun()
 
     println '\n## Project Extra Properties ##\n'
-    pe.properties.sort().each { key, value -> println "${key}=${value}" }
+    extProps.sort().each { key, value -> println "${key}=${value}" }
     println "Is `overwriteReleaseImage` truthy: ${isTruthyProp('overwriteReleaseImage')}"
+
+    println '\n## Project Properties ##\n'
+    props.sort().each { key, value -> println "${key}=${value}" }
 
     println '\n## Gradle variables ##\n'
     def logLevel = gradle.startParameter.logLevel
@@ -406,10 +433,8 @@ tasks.register('printVars') {
     systemEnv.sort().each { key, value -> println "${key}=${value}"
     }
 
-    /*
     println '\n## Node.js executable ##\n'
-    println project.ext.nodeExecutableFile.get()
-    */
+    println detectNodeExecutable()
   }
 }
 

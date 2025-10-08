@@ -37,4 +37,4 @@ develocity {
 }
 
 // build-info: `build.name`
-//rootProject.name = ''
+rootProject.name = 'Gradle_Scratchpad'
