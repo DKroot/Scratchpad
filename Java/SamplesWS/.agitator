@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<Agitator><Version>2.0</Version>
-<GUID>B526AB8E9CBA0D77F1C8436793313934</GUID>
-<AgitarDirectory>agitar</AgitarDirectory>
-<JavaArgs>-Xms128m -Xmx256m</JavaArgs>
-<LibraryPath></LibraryPath>
-</Agitator>
-
